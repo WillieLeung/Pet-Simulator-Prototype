@@ -6,20 +6,95 @@
  */
 
 import java.io.*;
+import java.util.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class WriteToFile {
 
-    public void writeToCSV() {
+    public void writeEventCSV(String csvFile, List<List<String>> optionsData, List<String> events) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
+            if (optionsData != null && !optionsData.isEmpty() && events != null && !events.isEmpty()) {
+                // Write the first row with event names (Event A, Event B, Event C)
+                bw.write(String.join(",", events));
+                bw.newLine();
+
+                // Write each row of options under each event column
+                for (List<String> optionRow : optionsData) {
+                    // Join the options for each event
+                    bw.write(String.join(",", optionRow));
+                    bw.newLine();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void writeToJSON() {
+
+    /**
+     * Function reads event-based CSV where the first row contains event names,
+     * and subsequent rows contain options for each event.
+     *
+     * @param csvFile The path to the CSV file
+     * @return A Map where each event name is associated with a list of options
+     */
+    public Map<String, List<String>> readEventCSV(String csvFile) {
+        Map<String, List<String>> eventsOptionsMap = new HashMap<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            String line;
+            List<String> events = null;
+            List<List<String>> options = new ArrayList<>();
+
+            // Read first row (event names)
+            if ((line = br.readLine()) != null) {
+                events = Arrays.asList(line.split(","));
+            }
+
+            // Read subsequent rows (options for each event)
+            while ((line = br.readLine()) != null) {
+                List<String> optionRow = Arrays.asList(line.split(","));
+                options.add(optionRow);
+            }
+            // Map each event to the options under it
+            if (events != null && !events.isEmpty()) {
+                for (int i = 0; i < events.size(); i++) {
+                    List<String> eventOptions = new ArrayList<>();
+                    for (List<String> optionRow : options) {
+                        if (i < optionRow.size()) {
+                            eventOptions.add(optionRow.get(i));
+                        }
+                    }
+                    eventsOptionsMap.put(events.get(i), eventOptions);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return eventsOptionsMap;
+    }
+
+    public void writeStatsCSV(String csvFile, Map<String, String> stats) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
+            if (stats != null && !stats.isEmpty()) {
+                // Write the first row with stat names, which are the keys of the map
+                bw.write(String.join(",", stats.keySet()));
+                bw.newLine();
+
+                // Write the second row with stat values, which are the values of the map
+                bw.write(String.join(",", stats.values()));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -28,35 +103,24 @@ public class WriteToFile {
      *
      * @return dataList
      */
-
-    public List<String[]> readFromCSV(String csv_file) throws IOException {
-        List<String[]> dataList = new ArrayList<>();
-        String line;
-        // Define the delimiter used to separate the values in the CSV (comma in this case)
-        String delimiter = ",";
-        try (BufferedReader br = new BufferedReader(new FileReader(csv_file))) {
-            br.readLine();
-            // Read each  line of the CSV file until end of file
-            while ((line = br.readLine()) != null) {
-            // Split the line into an array of strings using the delimiter
-                String[] data = line.split(delimiter);
-                dataList.add(data);   // Add the split data (which is equivalent to one row) to the dataList
-                for (String value : data) {
-                    System.out.print(value + "\t"); // testing output
+    public Map<String, String> readFromStatsCSV(String csvFile) {
+        Map<String, String> stats = new HashMap<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            String headerLine = br.readLine(); // First row with stat names
+            String valueLine = br.readLine(); // Second row with stat values
+            if (headerLine != null && valueLine != null) {
+                String[] headers = headerLine.split(",");
+                String[] values = valueLine.split(",");
+                for (int i = 0; i < headers.length && i < values.length; i++) {
+                    stats.put(headers[i].trim(), values[i].trim());
                 }
-
             }
-
         } catch (IOException e) {
-            e.printStackTrace(); // Handle any file reading errors
+            e.printStackTrace();
         }
-
-        return dataList;
+        return stats;
     }
 
-    public String[] readFromJSON() {
-        return null;
-    }
 
 
     public static void main(String[] args) {
