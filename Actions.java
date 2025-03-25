@@ -1,4 +1,4 @@
-/**
+ /**
  * This class represents actions that affect pet parameters
  *
  * @author Logan Ouellette-Tran
@@ -23,19 +23,21 @@ public class Actions {
 
     /**
      * Constructor of Actions class
-     *
+     * <p>
      * Initializes default variables for all actions
+     *
      * @param cooldown length of time to wait before pressing another button
-     * @param food default value for increasing pet hunger
-     * @param gift default value for increasing pet happiness
-     * @param vet  default value for increasing pet health
-     * @param sleep default value for increasing pet sleep
-     * @param play default value for increasing pet happiness
+     * @param food     default value for increasing pet hunger
+     * @param gift     default value for increasing pet happiness
+     * @param vet      default value for increasing pet health
+     * @param sleep    default value for increasing pet sleep
+     * @param play     default value for increasing pet happiness
      * @param exercise default value for increasing pet health
-     * @param score defualt value to increase score after action
+     * @param score    defualt value to increase score after action
      */
     public Actions(int cooldown, int food, int gift, int vet, int sleep, int play, int exercise, int score) {
         this.actionCooldown = LocalTime.now();
+        this.cooldown = cooldown;
         this.food = food;
         this.gift = gift;
         this.vet = vet;
@@ -51,8 +53,8 @@ public class Actions {
      *
      * @param pet
      */
-    public void feedPet(Pet pet){
-        if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
+    public void feedPet(Pet pet) {
+        if (before()) {
             pet.setFullness(pet.getFullness() + food);
             pet.setScore(pet.getScore() + score);
             actionCooldown = actionCooldown.plusSeconds(cooldown);
@@ -65,8 +67,8 @@ public class Actions {
      *
      * @param pet
      */
-    public void giftPet(Pet pet){
-        if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
+    public void giftPet(Pet pet) {
+        if (before()) {
             pet.setHappiness(pet.getHappiness() + gift);
             pet.setScore(pet.getScore() + score);
             actionCooldown = actionCooldown.plusSeconds(cooldown);
@@ -79,8 +81,8 @@ public class Actions {
      *
      * @param pet
      */
-    public void vetPet(Pet pet){
-        if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
+    public void vetPet(Pet pet) {
+        if (before()) {
             pet.setHealth(pet.getHealth() + vet);
             pet.setScore(pet.getScore() + score);
             actionCooldown = actionCooldown.plusSeconds(cooldown);
@@ -93,8 +95,8 @@ public class Actions {
      *
      * @param pet
      */
-    public void sleepPet(Pet pet){
-        if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
+    public void sleepPet(Pet pet) {
+        if (before()) {
             pet.setSleep(pet.getSleepiness() + sleep);
             pet.setScore(pet.getScore() + score);
             actionCooldown = actionCooldown.plusSeconds(cooldown);
@@ -107,8 +109,8 @@ public class Actions {
      *
      * @param pet
      */
-    public void playPet(Pet pet){
-        if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
+    public void playPet(Pet pet) {
+        if (before()) {
             pet.setHappiness(pet.getHappiness() + play);
             pet.setScore(pet.getScore() + score);
             actionCooldown = actionCooldown.plusSeconds(cooldown);
@@ -121,11 +123,15 @@ public class Actions {
      *
      * @param pet
      */
-    public void exercisePet(Pet pet){
-        if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
+    public void exercisePet(Pet pet) {
+        if (before()) {
             pet.setHealth(pet.getHealth() + exercise);
             pet.setScore(pet.getScore() + score);
             actionCooldown = actionCooldown.plusSeconds(cooldown);
         }
+    }
+
+    private boolean before() {
+        return actionCooldown.isBefore(LocalTime.now());
     }
 }

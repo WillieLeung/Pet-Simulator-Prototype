@@ -4,13 +4,17 @@ public class Event {
     String question;
     List<String> options;
     int correctAnswer;
-    int score;
+    int plusScore;
+    int minusScore;
+    String item;
 
-    public Event(String question, List<String> options, int correctAnswer, int score) {
+    public Event(String question, List<String> options, int correctAnswer, int plusScore, int minusScore, String item) {
         this.question = question;
         this.options = options;
         this.correctAnswer = correctAnswer;
-        this.score = score;
+        this.plusScore = plusScore;
+        this.minusScore = minusScore;
+        this.item = item;
     }
 
     public String getQuestion() {
@@ -21,11 +25,30 @@ public class Event {
         return options;
     }
 
-    public int getAnswer(){
+    public String getAnswer(){
+        return options.get(correctAnswer);
+    }
+
+    public int getAnswerIndex(){
         return correctAnswer;
     }
 
-    public int getScore() {
-        return score;
+    public int getPlusScore() {
+        return plusScore;
+    }
+
+    public int getMinusScore() {
+        return minusScore;
+    }
+
+    public int getScore(int optionIndex){
+        if(optionIndex == correctAnswer){
+            return plusScore;
+        }
+        return minusScore;
+    }
+
+    public String getItem(){
+        return item;
     }
 }

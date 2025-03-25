@@ -9,10 +9,7 @@ public class Events{
 
     public Events(String filename){
         WriteToFile reader = new WriteToFile();
-        Map<String, List<String>> mappedEvents = reader.readEventCSV();
-        for (String key : mappedEvents.keySet()) {
-            events.add(new Event(key, mappedEvents.get(key), 1, 10));
-        }
+        Map<String, List<String>> mappedEvents = reader.readEventCSV(filename);
         currentEvent = events.getFirst();
     }
 
@@ -30,11 +27,16 @@ public class Events{
         return currentEvent.getOptions();
     }
 
-    public int getEventAnswer(){
+    public String getEventAnswer(){
         return currentEvent.getAnswer();
     }
 
-    public int getEventScore(){
-        return currentEvent.getScore();
+    public int getEventScore(int index){
+        return currentEvent.getScore(index);
+    }
+
+    public void addEvent(String question, List<String> options, int correctAnswer, int plus, int minus, String item){
+        Event newEvent = new Event(question, options, correctAnswer, plus, minus, item);
+        events.add(newEvent);
     }
 }
