@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6c7eb811-7efa-4cae-aba3-000e28eb7d62" name="Changes" comment="Actions testing file">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Actions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Actions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Event.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Events.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Events.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Group57 Events - Sheet1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/resources/Group57 Events - Sheet1.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WriteToFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/WriteToFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/com/testing/TestActions.java" beforeDir="false" afterPath="$PROJECT_DIR$/testing/TestActions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/com/testing/TestGameInventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/testing/TestGameInventory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/com/testing/TestPet.java" beforeDir="false" afterPath="$PROJECT_DIR$/testing/TestPet.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit5 Test Class" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="testing" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2uUvsKuWoudcUplibaaLDKMIqgD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "build.tools",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\logan\git_repos\group57\testing" />
+      <recent name="C:\Users\logan\git_repos\group57/resources" />
+      <recent name="C:\Users\logan\git_repos\group57" />
+      <recent name="C:\Users\logan\git_repos\group57\src" />
+      <recent name="C:\Users\logan\git_repos\/src" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="actionstesting" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="actionstesting" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6c7eb811-7efa-4cae-aba3-000e28eb7d62" name="Changes" comment="" />
+      <created>1742316174671</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1742316174671</updated>
+      <workItem from="1742316175701" duration="3419000" />
+      <workItem from="1742398583540" duration="3104000" />
+      <workItem from="1742866612665" duration="4065000" />
+      <workItem from="1742871109914" duration="852000" />
+      <workItem from="1742872035985" duration="52000" />
+      <workItem from="1742872089414" duration="7266000" />
+    </task>
+    <task id="LOCAL-00001" summary="Actions Class">
+      <option name="closed" value="true" />
+      <created>1742316903227</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742316903227</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Comments and Cooldown Added">
+      <option name="closed" value="true" />
+      <created>1742400433666</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742400433666</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Events finished, small edits to Actions and Event">
+      <option name="closed" value="true" />
+      <created>1742868822181</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1742868822181</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Maven module added for testing">
+      <option name="closed" value="true" />
+      <created>1742870584247</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742870584247</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Updates to Event class">
+      <option name="closed" value="true" />
+      <created>1742927882678</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742927882678</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Actions testing file">
+      <option name="closed" value="true" />
+      <created>1742940186936</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1742940186936</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Actions Class" />
+    <MESSAGE value="Comments and Cooldown Added" />
+    <MESSAGE value="Events finished, small edits to Actions and Event" />
+    <MESSAGE value="Maven module added for testing" />
+    <MESSAGE value="Updates to Event class" />
+    <MESSAGE value="Actions testing file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Actions testing file" />
+  </component>
+</project>

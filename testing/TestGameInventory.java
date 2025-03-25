@@ -1,4 +1,4 @@
-package com.testing;
+package testing;
 
 import java.util.HashMap;
 import org.junit.*;
