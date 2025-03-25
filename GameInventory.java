@@ -15,15 +15,17 @@ public class GameInventory {
     private HashMap<String, Integer> giftItems = new HashMap<String, Integer>();
 
     /**
-     * Constructor of GameInventory class
+     * Constructor of com.testing.GameInventory class
      *
      * Initializes food and gift HashMaps
-     * @param food
-     * @param gift
+     * @param saveSlot, JSON file to read from to load inventory
      */
-    public GameInventory(HashMap<String, Integer> food, HashMap<String, Integer> gift) {
-        foodItems = food;
-        giftItems = gift;
+    public GameInventory(String saveSlot) {
+        WriteToFile file = new WriteToFile();
+        HashMap<String, Integer>[] inventories = file.readInventory(saveSlot);
+
+        foodItems = inventories[0];
+        giftItems = inventories[1];
     }
 
     /**
@@ -67,16 +69,6 @@ public class GameInventory {
     }
 
     /**
-     * Function displays food HashMap on GUI
-     */
-    public void displayFoodItems() {}
-
-    /**
-     * Function displays gift HashMap on GUI
-     */
-    public void displayGiftItems() {}
-
-    /**
      * Function depletes food from food HashMap
      *
      * @param food, String
@@ -103,4 +95,18 @@ public class GameInventory {
             else {giftItems.put(gift, stored - amount);}
         }
     }
+
+    /**
+     * Function to return food inventory
+     *
+     * @return HashMap<String, Integer> representing food inventory
+     */
+    public HashMap<String, Integer> getFoodItems() {return foodItems;}
+
+    /**
+     * Function to return gift inventory
+     *
+     * @return HashMap<String, Integer> representing gift inventory
+     */
+    public HashMap<String, Integer> getGiftItems() {return giftItems;}
 }

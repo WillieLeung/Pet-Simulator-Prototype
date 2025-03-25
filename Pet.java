@@ -9,22 +9,21 @@ public class Pet {
     private String petName, state, sprite;
     private int health, happiness, sleepiness, fullness, score;
     private GameInventory inventory;
-    private Actions actions;
 
     /**
      * Constructor of Pet class
      *
      * Initializes private fields
-     * @param health
-     * @param happiness
-     * @param sleepiness
-     * @param fullness
-     * @param score
-     * @param petName
-     * @param state
-     * @param sprite
+     * @param health, Integer
+     * @param happiness, Integer
+     * @param sleepiness, Integer
+     * @param fullness, Integer
+     * @param score, Integer
+     * @param petName, String
+     * @param state, String
+     * @param sprite, String
      */
-    public Pet (int health, int happiness, int sleepiness, int fullness, int score, String petName, String state, String sprite) {
+    public Pet (int health, int happiness, int sleepiness, int fullness, int score, String petName, String state, String sprite, GameInventory inventory) {
         this.health = health;
         this.happiness = happiness;
         this.sleepiness = sleepiness;
@@ -33,6 +32,7 @@ public class Pet {
         this.petName = petName;
         this.state = state;
         this.sprite = sprite;
+        this.inventory = inventory;
     }
 
     /**
@@ -170,7 +170,14 @@ public class Pet {
         }
         else {
             if (itemType.equals("Food")){inventory.depleteFoodItems(itemName, amount);}
-            else{inventory.depleteGiftItems(itemName, amount);}}
+            else{inventory.depleteGiftItems(itemName, amount);}
         }
     }
+
+    /**
+     * Function returns the inventory of this Pet
+     *
+     * @return inventory, GameInventory of this Pet
+     */
+    public GameInventory getInventory(){return inventory;}
 }
