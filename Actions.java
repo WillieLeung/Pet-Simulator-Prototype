@@ -5,43 +5,43 @@
  * @version 1.0
  */
 
-import java.time.LocalTime
+import java.time.LocalTime;
 
 public class Actions {
     //Action cooldown timer so that buttons can't be spammed
 
     //Default variables that each action will implement
     private LocalTime actionCooldown;
-    private int cooldown
+    private int cooldown;
     private int food;
     private int gift;
     private int vet;
     private int sleep;
     private int play;
-    private int excercise;
-    private int score
+    private int exercise;
+    private int score;
 
     /**
      * Constructor of Actions class
      *
      * Initializes default variables for all actions
-     * @param cooldwown length
-     * @param food
-     * @param gift
-     * @param vet
-     * @param sleep
-     * @param play
-     * @param excercise
-     * @param score
+     * @param cooldown length of time to wait before pressing another button
+     * @param food default value for increasing pet hunger
+     * @param gift default value for increasing pet happiness
+     * @param vet  default value for increasing pet health
+     * @param sleep default value for increasing pet sleep
+     * @param play default value for increasing pet happiness
+     * @param exercise default value for increasing pet health
+     * @param score defualt value to increase score after action
      */
-    public Actions(int cooldown, int food, int gift, int vet, int sleep, int play, int excercise, int score) {
+    public Actions(int cooldown, int food, int gift, int vet, int sleep, int play, int exercise, int score) {
         this.actionCooldown = LocalTime.now();
         this.food = food;
         this.gift = gift;
         this.vet = vet;
         this.sleep = sleep;
         this.play = play;
-        this.excercise = excercise;
+        this.exercise = exercise;
         this.score = score;
     }
 
@@ -55,7 +55,7 @@ public class Actions {
         if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
             pet.setFullness(pet.getFullness() + food);
             pet.setScore(pet.getScore() + score);
-            actionCooldown.plusSeconds(cooldown)
+            actionCooldown = actionCooldown.plusSeconds(cooldown);
         }
     }
 
@@ -69,7 +69,7 @@ public class Actions {
         if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
             pet.setHappiness(pet.getHappiness() + gift);
             pet.setScore(pet.getScore() + score);
-            actionCooldown.plusSeconds(cooldown)
+            actionCooldown = actionCooldown.plusSeconds(cooldown);
         }
     }
 
@@ -83,7 +83,7 @@ public class Actions {
         if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
             pet.setHealth(pet.getHealth() + vet);
             pet.setScore(pet.getScore() + score);
-            actionCooldown.plusSeconds(cooldown)
+            actionCooldown = actionCooldown.plusSeconds(cooldown);
         }
     }
 
@@ -97,7 +97,7 @@ public class Actions {
         if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
             pet.setSleep(pet.getSleepiness() + sleep);
             pet.setScore(pet.getScore() + score);
-            actionCooldown.plusSeconds(cooldown)
+            actionCooldown = actionCooldown.plusSeconds(cooldown);
         }
     }
 
@@ -111,7 +111,7 @@ public class Actions {
         if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
             pet.setHappiness(pet.getHappiness() + play);
             pet.setScore(pet.getScore() + score);
-            actionCooldown.plusSeconds(cooldown)
+            actionCooldown = actionCooldown.plusSeconds(cooldown);
         }
     }
 
@@ -121,11 +121,11 @@ public class Actions {
      *
      * @param pet
      */
-    public void excercisePet(Pet pet){
+    public void exercisePet(Pet pet){
         if(actionCooldown.compareTo(LocalTime.now()) >= 0) {
-            pet.setHealth(pet.getHealth() + excercise);
+            pet.setHealth(pet.getHealth() + exercise);
             pet.setScore(pet.getScore() + score);
-            actionCooldown.plusSeconds(cooldown)
+            actionCooldown = actionCooldown.plusSeconds(cooldown);
         }
     }
 }

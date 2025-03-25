@@ -1,10 +1,12 @@
+import java.util.List;
+
 public class Event {
     String question;
-    String[] options;
+    List<String> options;
     int correctAnswer;
     int score;
 
-    public Event(String question, String[] options, int correctAnswer, int score) {
+    public Event(String question, List<String> options, int correctAnswer, int score) {
         this.question = question;
         this.options = options;
         this.correctAnswer = correctAnswer;
@@ -15,7 +17,7 @@ public class Event {
         return question;
     }
 
-    public String[] getOptions() {
+    public List<String> getOptions() {
         return options;
     }
 
