@@ -252,25 +252,25 @@ public class WriteToFile {
             }
 
             // Add each gift and quantity to the foodItems hashmap.
-            if (giftItems.contains("Ball")) {
+            if (giftItems.containsKey("Ball")) {
                 gifts.put("Ball", giftItems.get("Ball"));
             }
             else {
                 throw new NullPointerException("\"Ball\" is not present.");
             }
-            if (giftItems.contains("Yarn")) {
+            if (giftItems.containsKey("Yarn")) {
                 gifts.put("Yarn", giftItems.get("Yarn"));
             }
             else {
                 throw new NullPointerException("\"Yarn\" is not present.");
             }
-            if (giftItems.contains("Coin")) {
+            if (giftItems.containsKey("Coin")) {
                 gifts.put("Coin", giftItems.get("Coin"));
             }
             else {
                 throw new NullPointerException("\"Coin\" is not present.");
             }
-            if (giftItems.contains("Wood")) {
+            if (giftItems.containsKey("Wood")) {
                 gifts.put("Wood", giftItems.get("Wood"));
             }
             else {
