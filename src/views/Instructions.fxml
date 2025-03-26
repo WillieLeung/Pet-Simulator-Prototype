@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.InstructionsController">
+
+    <center>
+        <TextArea fx:id="instructionText" wrapText="true" prefRowCount="20">
+            <text>
+                instructions instructions instructions instructions
+                instructions instructions instructions instructions
+                instructions instructions instructions instructions
+                instructions instructions instructions instructions
+            </text>
+        </TextArea>
+    </center>
+
+    <bottom>
+        <Button fx:id="returnBtn" text="Return to Main Menu" BorderPane.alignment="CENTER"/>
+    </bottom>
+</BorderPane>

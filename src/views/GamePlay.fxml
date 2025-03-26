@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.GamePlayController">
+
+    <top>
+        <HBox spacing="10" alignment="TOP_RIGHT">
+            <Button fx:id="saveExitBtn" text="Exit and Save Game"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox spacing="10" alignment="TOP_LEFT">
+            <Label text="Health"/>
+            <ProgressBar fx:id="healthBar" progress="0.75"/>
+
+            <Label text="Sleep"/>
+            <ProgressBar fx:id="sleepBar" progress="0.6"/>
+
+            <Label text="Fullness"/>
+            <ProgressBar fx:id="fullnessBar" progress="0.5"/>
+
+            <Label text="Happiness"/>
+            <ProgressBar fx:id="happinessBar" progress="0.9"/>
+
+            <ComboBox fx:id="foodInventory" promptText="Food Inventory"/>
+            <ComboBox fx:id="giftInventory" promptText="Gift Inventory"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox alignment="CENTER" spacing="10">
+            <ImageView fx:id="petImage" fitWidth="100" fitHeight="100"/>
+            <Label fx:id="scoreLabel" text="Score: 420 XP"/>
+            <Label fx:id="petStateLabel" text="Current Pet State: Normal"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Go to Sleep"/>
+            <Button text="Feed"/>
+            <Button text="Gift"/>
+            <Button text="Take to the Vet"/>
+            <Button text="Play"/>
+            <Button text="Exercise"/>
+        </HBox>
+    </bottom>
+</BorderPane>

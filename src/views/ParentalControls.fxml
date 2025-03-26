@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.ParentalControlsController" alignment="CENTER" spacing="10">
+
+    <CheckBox fx:id="limitPlayTime" text="Play time Limit"/>
+    <TextField fx:id="startTimeField" promptText="Input start time (use hh:mm format)"/>
+    <TextField fx:id="endTimeField" promptText="Input end time (use hh:mm format)"/>
+
+    <Label text="Play Statistics"/>
+    <Label fx:id="statsLabel" text="Total Time Played: XX hours XX min
+Average play time per gaming session: XX hours XX min"/>
+
+    <Button fx:id="resetStatsBtn" text="Reset Statistics"/>
+
+    <ComboBox fx:id="reviveList" promptText="Select Pet to Revive"/>
+    <Button fx:id="reviveBtn" text="Revive Pet"/>
+
+    <Button fx:id="backBtn" text="Return to Main Menu"/>
+</VBox>
