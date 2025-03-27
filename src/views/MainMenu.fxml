@@ -9,7 +9,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainMenuController">
+<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="src.controllers.MainMenuController">
 
     <top>
         <HBox alignment="TOP_RIGHT" spacing="10" BorderPane.alignment="TOP_RIGHT">
@@ -36,7 +37,8 @@
 
             <Button fx:id="newGameBtn" text="New Game" />
             <Button fx:id="loadGameBtn" text="Load Game" />
-            
+            <Label fx:id="errorLabel" text="" textFill="red" visible="false" />
+
             <ComboBox fx:id="prevGames" prefWidth="300" promptText="Select Previous Game" />
         </VBox>
     </center>

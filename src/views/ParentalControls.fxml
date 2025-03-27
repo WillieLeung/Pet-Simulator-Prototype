@@ -4,21 +4,31 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
 
-<VBox minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controllers.ParentalControlsController" alignment="CENTER" spacing="10">
+<VBox xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="src.controllers.ParentalControlsController"
+      alignment="CENTER" spacing="20"
+      minHeight="356.0" minWidth="536.0"
+      prefHeight="600.0" prefWidth="800.0">
 
-    <CheckBox fx:id="limitPlayTime" text="Play time Limit"/>
-    <TextField fx:id="startTimeField" promptText="Input start time (use hh:mm format)"/>
-    <TextField fx:id="endTimeField" promptText="Input end time (use hh:mm format)"/>
+    <CheckBox fx:id="limitPlayTime" text="Play Time Limit"/>
 
-    <Label text="Play Statistics"/>
-    <Label fx:id="statsLabel" text="Total Time Played: XX hours XX min
-Average play time per gaming session: XX hours XX min"/>
+    <TextField fx:id="startTimeField" promptText="Input start time (hh:mm)" maxWidth="200"/>
+    <TextField fx:id="endTimeField" promptText="Input end time (hh:mm)" maxWidth="200"/>
 
-    <Button fx:id="resetStatsBtn" text="Reset Statistics"/>
+    <Label text="Play Statistics" style="-fx-font-weight: bold;"/>
+    <Label fx:id="statsLabel" text="Total Time Played: XX hours XX min&#10;Average play time per session: XX hours XX min"
+           wrapText="true" maxWidth="400"/>
 
-    <ComboBox fx:id="reviveList" promptText="Select Pet to Revive"/>
+    <Button fx:id="resetStatsBtn" text="Reset Statistics" />
+
+    <Label text="Revive Pet" style="-fx-font-weight: bold;"/>
+    <ComboBox fx:id="reviveList" promptText="Select Pet to Revive" maxWidth="300"/>
     <Button fx:id="reviveBtn" text="Revive Pet"/>
+
+    <Label fx:id="notificationLabel" text="" textFill="green" wrapText="true" maxWidth="500"/>
+
+    <Separator />
 
     <Button fx:id="backBtn" text="Return to Main Menu"/>
 </VBox>

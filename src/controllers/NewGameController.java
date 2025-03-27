@@ -1,4 +1,4 @@
-package controllers;
+package src.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -24,20 +24,20 @@ public class NewGameController {
         loadImage(dogImage, "dog.png");
         loadImage(goombaImage, "goomba.png");
 
-        petTypes.getItems().addAll("Snake", "Dragon", "Dog", "Gumba");
+        petTypes.getItems().addAll("Snake", "Dragon", "Dog", "Goomba");
 
         createBtn.setOnAction(e -> switchToMainMenu());
     }
 
     private void loadImage(ImageView view, String fileName) {
-        Image img = new Image("file:images/" + fileName);
+        Image img = new Image("file:resources/images/" + fileName);
         view.setImage(img);
     }
 
     private void switchToMainMenu() {
         try {
             Stage stage = (Stage) createBtn.getScene().getWindow();
-            Scene newScene = new Scene(FXMLLoader.load(getClass().getResource("/views/MainMenu.fxml")));
+            Scene newScene = new Scene(FXMLLoader.load(getClass().getResource("/src/views/MainMenu.fxml")));
             stage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
