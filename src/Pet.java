@@ -148,14 +148,6 @@ public class Pet {
     public void setSprite(String sprite) {this.sprite = sprite;}
 
     /**
-     * Function performs an action to the pet, such as feeding the pet, taking pet to the vet, etc
-     *
-     * @param action, Actions
-     * @param state, String
-     */
-    public void performAction (Actions action, String state){}
-
-    /**
      * Function controls all inventory related functions such as storing food/gifts or using up food/gifts
      *
      * @param itemType, String

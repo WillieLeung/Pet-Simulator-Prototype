@@ -8,7 +8,7 @@ public class Events{
     private Event currentEvent = null;
 
     public Events(String filename){
-        WriteToFile reader = new WriteToFile();
+        ReadWriteFile reader = new ReadWriteFile();
         Map<String, List<String>> mappedEvents = reader.readEventCSV(filename);
         currentEvent = events.getFirst();
     }
