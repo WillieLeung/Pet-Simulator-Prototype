@@ -167,6 +167,13 @@ public class Pet {
     }
 
     /**
+     * Function sets the inventory of this Pet
+     *
+     * @param inv, GameInventory to set this Pet's inventory to
+     */
+    public void setInventory (GameInventory inv) {inventory = inv;}
+
+    /**
      * Function returns the inventory of this Pet
      *
      * @return inventory, GameInventory of this Pet
