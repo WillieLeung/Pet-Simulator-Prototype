@@ -11,13 +11,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.json.JSONObject;
-import org.json.JSONArray;
 import org.json.JSONException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
-public class WriteToFile {
+public class ReadWriteFile {
 
     public void writeEventCSV(String csvFile, List<List<String>> optionsData, List<String> events) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
@@ -123,17 +122,9 @@ public class WriteToFile {
 
 
 
-    public static void main(String[] args) {
-
-    }
-
-    public String[] getEvent(String petType) {
-
-    }
-
     /**
-     * Function reads specified inventory from JSON inventory file
-     * Returns an array of hashmaps for each type of item
+     * Function reads specified inventory from JSON inventory file.
+     * Returns an array of hashmaps for each type of item.
      *
      * @param saveSlot, Integer
      *
@@ -146,7 +137,7 @@ public class WriteToFile {
                 throw new IllegalArgumentException("No such save slot exists.");
             }
 
-            // Initalize the hashmaps and the return array.
+            // Initialize the hashmaps and the return array.
             HashMap<String, Integer> foodItems = new HashMap<String, Integer>();
             HashMap<String, Integer> giftItems = new HashMap<String, Integer>();
             HashMap<String, Integer>[] items = new HashMap[]{foodItems, giftItems};
@@ -197,7 +188,7 @@ public class WriteToFile {
 
 
     /**
-     * Function reads specified inventory from JSON inventory file
+     * Function reads specified inventory from JSON inventory file.
      * Updates values in JSON inventory file using values in given hashmaps.
      * Returns true/false based on if the update is successful.
      *
@@ -226,25 +217,25 @@ public class WriteToFile {
             JSONObject gifts = inventory.getJSONObject("gifts");
 
             // Save the quantities from the foodItems hashmap.
-            if (foodItems.contains("Pizza")) {
+            if (foodItems.containsKey("Pizza")) {
                 foods.put("Pizza", foodItems.get("Pizza"));
             }
             else {
                 throw new NullPointerException("\"Pizza\" is not present.");
             }
-            if (foodItems.contains("Chocolate")) {
+            if (foodItems.containsKey("Chocolate")) {
                 foods.put("Chocolate", foodItems.get("Chocolate"));
             }
             else {
                 throw new NullPointerException("\"Chocolate\" is not present.");
             }
-            if (foodItems.contains("Leaves")) {
+            if (foodItems.containsKey("Leaves")) {
                 foods.put("Leaves", foodItems.get("Leaves"));
             }
             else {
                 throw new NullPointerException("\"Leaves\" is not present.");
             }
-            if (foodItems.contains("Chicken")) {
+            if (foodItems.containsKey("Chicken")) {
                 foods.put("Chicken", foodItems.get("Chicken"));
             }
             else {

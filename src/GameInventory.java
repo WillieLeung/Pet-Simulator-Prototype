@@ -21,7 +21,7 @@ public class GameInventory {
      * @param saveSlot, JSON file to read from to load inventory
      */
     public GameInventory(String saveSlot) {
-        WriteToFile file = new WriteToFile();
+        ReadWriteFile file = new ReadWriteFile();
         HashMap<String, Integer>[] inventories = file.readInventory(saveSlot);
 
         foodItems = inventories[0];
