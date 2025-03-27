@@ -1,4 +1,4 @@
-package controllers;
+package src.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -15,13 +15,13 @@ public class ParentalPasswordController {
     @FXML
     public void initialize() {
         continueBtn.setOnAction(e -> checkPassword());
-        backBtn.setOnAction(e -> switchScene("views/MainMenu.fxml"));
+        backBtn.setOnAction(e -> switchScene("src/views/MainMenu.fxml"));
     }
 
     private void checkPassword() {
         String password = passwordField.getText();
         if ("group57".equals(password)) {
-            switchScene("views/ParentalControls.fxml");
+            switchScene("src/views/ParentalControls.fxml");
         } else {
             errorLabel.setText("Incorrect password.");
         }

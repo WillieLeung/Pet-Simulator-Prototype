@@ -14,7 +14,7 @@ public class InstructionsController {
         returnBtn.setOnAction(e -> {
             try {
                 Stage stage = (Stage) returnBtn.getScene().getWindow();
-                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/views/MainMenu.fxml")));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/src/views/MainMenu.fxml")));
                 stage.setScene(scene);
             } catch (Exception ex) {
                 ex.printStackTrace();
