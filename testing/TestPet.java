@@ -1,11 +1,14 @@
 package testing;
 
 import java.util.HashMap;
+
+import logic.GameInventory;
+import logic.Pet;
 import org.junit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit Tests for Pet class
+ * Unit Tests for logic.Pet class
  *
  * @author Willie Leung
  * @version 1.0
@@ -198,7 +201,7 @@ public class TestPet {
     }
 
     /**
-     * Test getting inventory of Pet for food items
+     * Test getting inventory of logic.Pet for food items
      */
     @Test
     public void testGetInventoryFoodItems(){
@@ -209,7 +212,7 @@ public class TestPet {
     }
 
     /**
-     * Test getting inventory of Pet for gift items
+     * Test getting inventory of logic.Pet for gift items
      */
     @Test
     public void testGetInventoryGiftItems(){
@@ -220,7 +223,7 @@ public class TestPet {
     }
 
     /**
-     * Test setting inventory of Pet
+     * Test setting inventory of logic.Pet
      */
     @Test
     public void testSetInventory(){
