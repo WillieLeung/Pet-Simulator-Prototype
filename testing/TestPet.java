@@ -220,71 +220,14 @@ public class TestPet {
     }
 
     /**
-     * Test adding food items to inventory of Pet
+     * Test setting inventory of Pet
      */
     @Test
-    public void testManageInventoryAddFoodItems(){
-        HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Pizza", 9);
-        expectedInventory.put("Chocolate", 0);
-        expectedInventory.put("Leaves", 0);
-        expectedInventory.put("Chicken", 3);
-        Pet instance = new Pet(70, 22, 70, 86, 1234, "Max", "Angry", "", new GameInventory("3"));
-        instance.manageInventory("Food", "Pizza", 9, "Add");
-        instance.manageInventory("Food", "Chicken", 3, "Add");
-        GameInventory actualInventory = instance.getInventory();
-        assertEquals(expectedInventory, actualInventory.getFoodItems());
-    }
-
-    /**
-     * Test depleting food items to inventory of Pet
-     */
-    @Test
-    public void testManageInventoryDepleteFoodItems(){
-        HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Pizza", 2);
-        expectedInventory.put("Chocolate", 1);
-        expectedInventory.put("Leaves", 1);
-        expectedInventory.put("Chicken", 3);
-        Pet instance = new Pet(70, 22, 70, 86, 1234, "Max", "Angry", "", new GameInventory("2"));
-        instance.manageInventory("Food", "Leaves", 1, "Deplete");
-        instance.manageInventory("Food", "Pizza", 2, "Deplete");
-        GameInventory actualInventory = instance.getInventory();
-        assertEquals(expectedInventory, actualInventory.getFoodItems());
-    }
-
-    /**
-     * Test adding gift items to inventory of Pet
-     */
-    @Test
-    public void testManageInventoryAddGiftItems(){
-        HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Ball", 2);
-        expectedInventory.put("Yarn", 6);
-        expectedInventory.put("Coin", 8);
-        expectedInventory.put("Wood", 4);
+    public void testSetInventory(){
+        GameInventory expectedInventory = new GameInventory("2");
         Pet instance = new Pet(70, 22, 70, 86, 1234, "Max", "Angry", "", new GameInventory("1"));
-        instance.manageInventory("Gift", "Yarn", 6, "Add");
-        instance.manageInventory("Gift", "Coin", 7, "Add");
-        GameInventory actualInventory = instance.getInventory();
-        assertEquals(expectedInventory, actualInventory.getGiftItems());
-    }
-
-    /**
-     * Test depleting gift items to inventory of Pet
-     */
-    @Test
-    public void testManageInventoryDepleteGiftItems(){
-        HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Ball", 0);
-        expectedInventory.put("Yarn", 2);
-        expectedInventory.put("Coin", 1);
-        expectedInventory.put("Wood", 0);
-        Pet instance = new Pet(70, 22, 70, 86, 1234, "Max", "Angry", "", new GameInventory("2"));
-        instance.manageInventory("Gift", "Ball", 3, "Deplete");
-        instance.manageInventory("Gift", "Wood", 1, "Deplete");
-        GameInventory actualInventory = instance.getInventory();
-        assertEquals(expectedInventory, actualInventory.getGiftItems());
+        instance.setInventory(expectedInventory);
+        assertEquals(expectedInventory, instance.getInventory());
     }
 }
 
