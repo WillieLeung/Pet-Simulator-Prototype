@@ -1,5 +1,6 @@
-package src.controllers;
+package controllers;
 
+import logic.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -39,6 +40,8 @@ public class GamePlayController {
     private double hunger = 0.7;
 
     public void initialize() {
+
+        Pet pet = MainMenuController.myPet;
 
         //show pet (listens to pet class to assign)
         loadImage(petImage, "dragon");
