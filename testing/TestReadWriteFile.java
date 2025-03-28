@@ -1,11 +1,12 @@
 package testing;
 
+import logic.ReadWriteFile;
 import org.junit.jupiter.api.*;
 import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit Tests for ReadWriteFile class
+ * Unit Tests for logic.ReadWriteFile class
  *
  * @author Shahob Zekria, Abdul Hamdan
  * @version 1.0
@@ -14,14 +15,14 @@ public class TestReadWriteFile {
 
     @Test
     public void testWriteEventCSV() {
-        System.out.println("\nWrite Event CSV");
+        System.out.println("\nWrite logic.Event CSV");
         fail();
     }
 
 
     @Test
     public void testReadEventCSV() {
-        System.out.println("\nRead Event CSV");
+        System.out.println("\nRead logic.Event CSV");
         fail();
     }
 

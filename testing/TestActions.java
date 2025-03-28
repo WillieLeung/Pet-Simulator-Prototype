@@ -1,10 +1,13 @@
 package testing;
 
+import logic.Actions;
+import logic.GameInventory;
+import logic.Pet;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for Actions class
+ * Unit tests for logic.Actions class
  *
  * @author Logan Ouellette
  * @version 1.0

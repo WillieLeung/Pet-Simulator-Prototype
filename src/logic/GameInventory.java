@@ -1,3 +1,5 @@
+package logic;
+
 import java.util.HashMap;
 
 /**
@@ -15,7 +17,7 @@ public class GameInventory {
     private HashMap<String, Integer> giftItems = new HashMap<String, Integer>();
 
     /**
-     * Constructor of com.testing.GameInventory class
+     * Constructor of GameInventory class
      *
      * Initializes food and gift HashMaps
      * @param saveSlot, JSON file to read from to load inventory

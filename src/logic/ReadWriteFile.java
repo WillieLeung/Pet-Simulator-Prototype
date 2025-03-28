@@ -1,3 +1,5 @@
+package logic;
+
 /**
  * This class represents reading and writing to both JSON and CSV files
  *
