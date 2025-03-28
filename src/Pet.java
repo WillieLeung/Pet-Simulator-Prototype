@@ -148,25 +148,6 @@ public class Pet {
     public void setSprite(String sprite) {this.sprite = sprite;}
 
     /**
-     * Function controls all inventory related functions such as storing food/gifts or using up food/gifts
-     *
-     * @param itemType, String
-     * @param itemName, String
-     * @param amount, Integer
-     * @param addOrDeplete, String
-     */
-    public void manageInventory (String itemType, String itemName, int amount, String addOrDeplete){
-        if (addOrDeplete.equals("Add")){
-            if (itemType.equals("Food")){inventory.addFoodItems(itemName, amount);}
-            else{inventory.addGiftItems(itemName, amount);}
-        }
-        else {
-            if (itemType.equals("Food")){inventory.depleteFoodItems(itemName, amount);}
-            else{inventory.depleteGiftItems(itemName, amount);}
-        }
-    }
-
-    /**
      * Function sets the inventory of this Pet
      *
      * @param inv, GameInventory to set this Pet's inventory to
