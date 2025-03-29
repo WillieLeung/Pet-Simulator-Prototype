@@ -86,7 +86,7 @@ public class Actions {
      */
     public void vetPet(Pet pet) {
         pet.setHealth(pet.getHealth() + vet);
-        pet.setScore(pet.getScore() + score);
+        pet.setScore(pet.getScore() - score);
     }
 
     /**
