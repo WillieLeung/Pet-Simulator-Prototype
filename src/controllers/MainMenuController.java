@@ -1,4 +1,6 @@
-package src.controllers;
+package controllers;
+
+import logic.*;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +12,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainMenuController {
+
+    //Pet variable that will be accessible in GamePlayController
+    public static Pet myPet;
 
     @FXML private ComboBox<String> prevGames;
     @FXML private Button newGameBtn;

@@ -1,3 +1,5 @@
+package logic;
+
 import java.util.HashMap;
 
 /**
@@ -15,7 +17,7 @@ public class GameInventory {
     private HashMap<String, Integer> giftItems = new HashMap<String, Integer>();
 
     /**
-     * Constructor of com.testing.GameInventory class
+     * Constructor of GameInventory class
      *
      * Initializes food and gift HashMaps
      * @param saveSlot, JSON file to read from to load inventory
@@ -73,13 +75,22 @@ public class GameInventory {
      *
      * @param food, String
      * @param amount, Integer
+     *
+     * @return 0 if no issues, 1 if food doesn't exist in inventory and negative number if amount removed is more than whats in the inventory
      */
-    public void depleteFoodItems(String food, int amount) {
+    public int depleteFoodItems(String food, int amount) {
         if (foodItems.get(food) != null) {
             int stored = foodItems.get(food);
-            if (stored - amount < 0) {foodItems.put(food, 0);}
-            else {foodItems.put(food, stored - amount);}
+            if (stored - amount < 0) {
+                foodItems.put(food, 0);
+                return stored - amount;
+            }
+            else {
+                foodItems.put(food, stored - amount);
+                return 0;
+            }
         }
+        return 1;
     }
 
     /**
@@ -87,13 +98,22 @@ public class GameInventory {
      *
      * @param gift, String
      * @param amount, Integer
+     *
+     * @return 0 if no issues, 1 if food doesn't exist in inventory and negative number if amount removed is more than whats in the inventory
      */
-    public void depleteGiftItems(String gift, int amount) {
+    public int depleteGiftItems(String gift, int amount) {
         if (giftItems.get(gift) != null) {
             int stored = giftItems.get(gift);
-            if (stored - amount < 0) {giftItems.put(gift, 0);}
-            else {giftItems.put(gift, stored - amount);}
+            if (stored - amount < 0) {
+                giftItems.put(gift, 0);
+                return stored - amount;
+            }
+            else {
+                giftItems.put(gift, stored - amount);
+                return 0;
+            }
         }
+        return 1;
     }
 
     /**

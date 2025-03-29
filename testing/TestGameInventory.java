@@ -1,11 +1,13 @@
 package testing;
 
 import java.util.HashMap;
+
+import logic.GameInventory;
 import org.junit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit Tests for GameInventory class
+ * Unit Tests for logic.GameInventory class
  *
  * @author Willie Leung
  * @version 1.0

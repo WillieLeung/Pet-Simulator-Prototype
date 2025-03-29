@@ -1,10 +1,13 @@
 package testing;
 
+import logic.Actions;
+import logic.GameInventory;
+import logic.Pet;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for Actions class
+ * Unit tests for logic.Actions class
  *
  * @author Logan Ouellette
  * @version 1.0
@@ -16,9 +19,9 @@ class TestActions {
      * Test updating pets fullness with food
      */
     @Test
-    void feedPet() {
+    public void feedPet() {
         Actions actions = new Actions(0,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
         int expectedResult = 101;
         actions.feedPet(pet);
         int result = pet.getFullness();
@@ -31,7 +34,7 @@ class TestActions {
     @Test
     void giftPet() {
         Actions actions = new Actions(0,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
         int expectedResult = 102;
         actions.giftPet(pet);
         int result = pet.getHappiness();
@@ -44,7 +47,7 @@ class TestActions {
     @Test
     void vetPet() {
         Actions actions = new Actions(0,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
         int expectedResult = 103;
         actions.vetPet(pet);
         int result = pet.getHealth();
@@ -57,7 +60,7 @@ class TestActions {
     @Test
     void sleepPet() {
         Actions actions = new Actions(0,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
         int expectedResult = 104;
         actions.sleepPet(pet);
         int result = pet.getSleepiness();
@@ -70,7 +73,7 @@ class TestActions {
     @Test
     void playPet() {
         Actions actions = new Actions(0,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
         int expectedResult = 105;
         actions.playPet(pet);
         int result = pet.getHappiness();
@@ -83,7 +86,7 @@ class TestActions {
     @Test
     void exercisePet() {
         Actions actions = new Actions(0,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
         int expectedResult = 106;
         actions.exercisePet(pet);
         int result = pet.getHealth();
@@ -96,7 +99,7 @@ class TestActions {
     @Test
     void score() {
         Actions actions = new Actions(0,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
         int expectedResult = 107;
         actions.exercisePet(pet);
         int result = pet.getScore();
@@ -109,7 +112,7 @@ class TestActions {
     @Test
     public void cooldown() {
         Actions actions = new Actions(10,1,2,3,4,5,6,7);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite");
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
 
         actions.feedPet(pet);
         actions.feedPet(pet);

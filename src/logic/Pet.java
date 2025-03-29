@@ -1,3 +1,5 @@
+package logic;
+
 /**
  * This class represents a pet in the game
  *
@@ -148,23 +150,11 @@ public class Pet {
     public void setSprite(String sprite) {this.sprite = sprite;}
 
     /**
-     * Function controls all inventory related functions such as storing food/gifts or using up food/gifts
+     * Function sets the inventory of this Pet
      *
-     * @param itemType, String
-     * @param itemName, String
-     * @param amount, Integer
-     * @param addOrDeplete, String
+     * @param inv, GameInventory to set this Pet's inventory to
      */
-    public void manageInventory (String itemType, String itemName, int amount, String addOrDeplete){
-        if (addOrDeplete.equals("Add")){
-            if (itemType.equals("Food")){inventory.addFoodItems(itemName, amount);}
-            else{inventory.addGiftItems(itemName, amount);}
-        }
-        else {
-            if (itemType.equals("Food")){inventory.depleteFoodItems(itemName, amount);}
-            else{inventory.depleteGiftItems(itemName, amount);}
-        }
-    }
+    public void setInventory (GameInventory inv) {inventory = inv;}
 
     /**
      * Function returns the inventory of this Pet
