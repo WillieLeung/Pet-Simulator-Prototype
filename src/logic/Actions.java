@@ -1,4 +1,5 @@
-package logic; /**
+package logic;
+/**
  * This class represents actions that affect pet parameters
  *
  * @author Logan Ouellette-Tran
@@ -8,11 +9,7 @@ package logic; /**
 import java.time.LocalTime;
 
 public class Actions {
-    //Action cooldown timer so that buttons can't be spammed
-
-    //Default variables that each action will implement
-    private LocalTime actionCooldown;
-    private int cooldown;
+    //Values for each button to raise stats by
     private int food;
     private int gift;
     private int vet;
@@ -35,9 +32,7 @@ public class Actions {
      * @param exercise default value for increasing pet health
      * @param score    defualt value to increase score after action
      */
-    public Actions(int cooldown, int food, int gift, int vet, int sleep, int play, int exercise, int score) {
-        this.actionCooldown = LocalTime.now();
-        this.cooldown = cooldown;
+    public Actions(int food, int gift, int vet, int sleep, int play, int exercise, int score) {
         this.food = food;
         this.gift = gift;
         this.vet = vet;
@@ -53,11 +48,15 @@ public class Actions {
      *
      * @param pet
      */
-    public void feedPet(Pet pet) {
-        if (before()) {
-            pet.setFullness(pet.getFullness() + food);
-            pet.setScore(pet.getScore() + score);
-            actionCooldown = actionCooldown.plusSeconds(cooldown);
+    public void feedPet(Pet pet, String foodType) {
+        GameInventory currInventory = pet.getInventory();
+        if(currInventory.depleteFoodItems(foodType, 1) == 0){
+            int currValue = pet.getFullness();
+            int currScore = pet.getScore();
+            currValue += food;
+            currScore += score;
+            pet.setFullness(currValue);
+            pet.setScore(currScore);
         }
     }
 
@@ -67,11 +66,15 @@ public class Actions {
      *
      * @param pet
      */
-    public void giftPet(Pet pet) {
-        if (before()) {
-            pet.setHappiness(pet.getHappiness() + gift);
-            pet.setScore(pet.getScore() + score);
-            actionCooldown = actionCooldown.plusSeconds(cooldown);
+    public void giftPet(Pet pet, String giftType) {
+        GameInventory currInventory = pet.getInventory();
+        if(currInventory.depleteFoodItems(giftType, 1) == 0){
+            int currValue = pet.getHappiness();
+            int currScore = pet.getScore();
+            currValue += gift;
+            currScore += score;
+            pet.setHappiness(currValue);
+            pet.setScore(currScore);
         }
     }
 
@@ -82,11 +85,8 @@ public class Actions {
      * @param pet
      */
     public void vetPet(Pet pet) {
-        if (before()) {
-            pet.setHealth(pet.getHealth() + vet);
-            pet.setScore(pet.getScore() + score);
-            actionCooldown = actionCooldown.plusSeconds(cooldown);
-        }
+        pet.setHealth(pet.getHealth() + vet);
+        pet.setScore(pet.getScore() - score);
     }
 
     /**
@@ -96,11 +96,8 @@ public class Actions {
      * @param pet
      */
     public void sleepPet(Pet pet) {
-        if (before()) {
-            pet.setSleep(pet.getSleepiness() + sleep);
-            pet.setScore(pet.getScore() + score);
-            actionCooldown = actionCooldown.plusSeconds(cooldown);
-        }
+        pet.setSleep(pet.getSleepiness() + sleep);
+        pet.setScore(pet.getScore() + score);
     }
 
     /**
@@ -110,11 +107,8 @@ public class Actions {
      * @param pet
      */
     public void playPet(Pet pet) {
-        if (before()) {
-            pet.setHappiness(pet.getHappiness() + play);
-            pet.setScore(pet.getScore() + score);
-            actionCooldown = actionCooldown.plusSeconds(cooldown);
-        }
+        pet.setHappiness(pet.getHappiness() + play);
+        pet.setScore(pet.getScore() + score);
     }
 
     /**
@@ -124,14 +118,8 @@ public class Actions {
      * @param pet
      */
     public void exercisePet(Pet pet) {
-        if (before()) {
-            pet.setHealth(pet.getHealth() + exercise);
-            pet.setScore(pet.getScore() + score);
-            actionCooldown = actionCooldown.plusSeconds(cooldown);
-        }
-    }
 
-    private boolean before() {
-        return actionCooldown.isBefore(LocalTime.now());
+        pet.setHealth(pet.getHealth() + exercise);
+        pet.setScore(pet.getScore() + score);
     }
 }
