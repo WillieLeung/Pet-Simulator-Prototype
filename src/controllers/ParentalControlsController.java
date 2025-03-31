@@ -40,7 +40,7 @@ public class ParentalControlsController {
     private ComboBox<String> reviveList;
 
     // Initialize parental screen data variables.
-    private String timeLimit = (parent.get("is_enabled").equals("Y")) ? "Current limit: " + parent.get("start_time") + " to " + parent.get("end_time") : "None";
+    private String timeLimit = (parent.get("is_enabled").equals("Y")) ? "Current limit: " + parent.get("start_time") + " to " + parent.get("end_time") : "Current limit: None";
     private int totalMinutesPlayed = 0;
     // Integer.parseInt(stats1.get("Play_time")) + Integer.parseInt(stats2.get("Play_time")) + Integer.parseInt(stats3.get("Play_time"));
     private int numSessions = 0;
@@ -121,7 +121,7 @@ public class ParentalControlsController {
                                     (endHour >= 0) && (endHour < 24) &&
                                     (startMins >= 0) && (startMins < 60) &&
                                     (endMins >= 0) && (endMins < 60) &&
-                                    (startMins != endMins)) {
+                                    ((startHour != endHour) || (startMins != endMins))) {
                                 // Update the limit.
                                 parent.put("start_time", startTime);
                                 parent.put("end_time", endTime);
@@ -135,21 +135,21 @@ public class ParentalControlsController {
                                 currentLimit.setText(timeLimit);
                             }
                             // Notify the user that their input is invalid.
-                            else notification.set("Please enter two valid times (or none for resetting).");
+                            else notification.set("Please enter two unique valid times (or no times for resetting).");
                         }
                         catch (NumberFormatException exc) {
                             // Notify the user that their input is invalid.
-                            notification.set("Please enter two valid times (or none for resetting).");
+                            notification.set("Please enter two valid times (or no times for resetting).");
                         }
                     }
                     // Notify the user that their input is invalid.
-                    else notification.set("Please enter two valid times (or none for resetting).");
+                    else notification.set("Please enter two valid times (or no times for resetting).");
                 }
                 // Notify the user that their input is invalid.
-                else notification.set("Please enter two valid times (or none for resetting).");
+                else notification.set("Please enter two valid times (or no times for resetting).");
             }
             // Notify the user that their input is invalid.
-            else notification.set("Please enter two valid times (or none for resetting).");
+            else notification.set("Please enter two valid times (or no times for resetting).");
         });
 
 
