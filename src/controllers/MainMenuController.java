@@ -217,12 +217,8 @@ public class MainMenuController {
                 }
             }
         } else {
-            // If no save files found, use default demo data
-            prevGames.getItems().addAll(
-                "Pet Name: Bruce Lee; Animal: Dragon",
-                "Pet Name: Mr Snake; Animal: Snake",
-                "Pet Name: Bobby; Animal: Dog"
-            );
+            // No save files found - leave dropdown empty
+            loadGameBtn.setDisable(true); 
         }
     }
 
