@@ -259,6 +259,7 @@ public class GamePlayController {
             pet.statLimit();
             score.set(pet.getScore());
             startCooldown(triggerEventBtn, eventCooldownLabel);
+            updateInventory(pet);
         });
     }
 
