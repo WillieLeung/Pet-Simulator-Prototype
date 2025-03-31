@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import logic.ReadWriteFile;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ParentalControlsController {
@@ -17,7 +18,7 @@ public class ParentalControlsController {
     // Create file readers.
     private final ReadWriteFile fileParser = new ReadWriteFile();
     private final String[] saveFileNames = populateGamesList();
-    private Map<String, Map<String, String>> saveFiles;
+    private Map<String, Map<String, String>> saveFiles = new HashMap<>();
 //    private Map<String, String> stats1 = fileParser.readFromStatsCSV("statscsv1.csv");
 //    private Map<String, String> stats2 = fileParser.readFromStatsCSV("statscsv2.csv");
 //    private Map<String, String> stats3 = fileParser.readFromStatsCSV("statscsv3.csv");
@@ -59,8 +60,9 @@ public class ParentalControlsController {
         if (saveFileNames != null) {
             String[] items = new String[saveFileNames.length];
             for (int i = 0; i < saveFileNames.length; i++) {
-                saveFiles.put(saveFileNames[i], fileParser.readFromStatsCSV("saves/"+saveFileNames[i]+".csv"));
-                items[i] = "Pet Name: " + saveFileNames[i] + "; Animal: " + saveFiles.get(saveFileNames[i]).get("Sprite");
+                String petName = saveFileNames[i].split("\\.")[0];
+                saveFiles.put(petName, fileParser.readFromStatsCSV("saves/"+saveFileNames[i]));
+                items[i] = "Pet Name: " + petName + "; Animal: " + saveFiles.get(petName).get("Sprite");
             }
             // Populate the dropdown list.
             reviveList.getItems().addAll(items);
@@ -76,7 +78,7 @@ public class ParentalControlsController {
         // Initialize the play time data if the user has played before.
         if (saveFileNames != null) {
             for (int i = 0; i < saveFileNames.length; i++) {
-                Map<String, String> saveFile = saveFiles.get(saveFileNames[i]);
+                Map<String, String> saveFile = saveFiles.get(saveFileNames[i].split("\\.")[0]);
                 totalMinutesPlayed += Integer.parseInt(saveFile.get("Play_time"));
                 numSessions += Integer.parseInt(saveFile.get("Num_session"));
             }
@@ -108,7 +110,8 @@ public class ParentalControlsController {
                     // Verify the format.
                     String[] startTimes = startTime.split(":");
                     String[] endTimes = endTime.split(":");
-                    if ((startTimes.length == 2) && (endTimes.length == 2)) {
+                    if ((startTimes.length == 2) && (endTimes.length == 2) &&
+                        (startTimes[1].length() == 2) && (endTimes[1].length() == 2)) {
                         try {
                             // Get the hours and minutes.
                             int startHour = Integer.parseInt(startTimes[0]);
@@ -122,6 +125,13 @@ public class ParentalControlsController {
                                     (startMins >= 0) && (startMins < 60) &&
                                     (endMins >= 0) && (endMins < 60) &&
                                     ((startHour != endHour) || (startMins != endMins))) {
+                                // Fix the formatting.
+                                if (startHour < 10) {
+                                    startTime = "0" + startTime;
+                                }
+                                if (endHour < 10) {
+                                    endTime = "0" + endTime;
+                                }
                                 // Update the limit.
                                 parent.put("start_time", startTime);
                                 parent.put("end_time", endTime);
@@ -169,10 +179,10 @@ public class ParentalControlsController {
                 else if (saveFile.get("Sprite").equals("Dragon")) saveFile.put("Health", "200");
                 else saveFile.put("Health", "100");
                 fileParser.writeStatsCSV("saves/"+saveFileName+".csv", saveFile);
-                int saveFileNum = Integer.parseInt(selectedPetToRevive.split(" -")[0]);
-                String name = selectedPetToRevive.split(": ")[1].split(";")[0];
-                String sprite = selectedPetToRevive.split("l: ")[1];
-//                if (saveFileNum == 1) {
+//                int saveFileNum = Integer.parseInt(selectedPetToRevive.split(" -")[0]);
+//                String name = selectedPetToRevive.split(": ")[1].split(";")[0];
+//                String sprite = selectedPetToRevive.split("l: ")[1];
+////                if (saveFileNum == 1) {
 //                    stats1.put("Happiness", "100");
 //                    stats1.put("Sleep", "100");
 //                    stats1.put("State", "Normal");
@@ -202,7 +212,7 @@ public class ParentalControlsController {
 //                    else stats3.put("Health", "100");
 //                    fileParser.writeStatsCSV("statscsv3.csv", stats3);
 //                }
-                notification.set("Pet has been revived: " + name);
+                notification.set("Pet has been revived: " + saveFileName);
             }
             else {
                 notification.set("Please select a pet to revive.");
@@ -216,10 +226,10 @@ public class ParentalControlsController {
                 totalMinutesPlayed = 0;
                 averageMinutesPerSession = 0;
                 for (int i = 0; i < saveFileNames.length; i++) {
-                    Map<String, String> saveFile = saveFiles.get(saveFileNames[i]);
+                    Map<String, String> saveFile = saveFiles.get(saveFileNames[i].split("\\.")[0]);
                     saveFile.put("Play_time", "0");
                     saveFile.put("Num_session", "0");
-                    fileParser.writeStatsCSV("saves/" + saveFileNames[i] + ".csv", saveFile);
+                    fileParser.writeStatsCSV("saves/" + saveFileNames[i], saveFile);
                 }
                 //            stats1.put("Play_time","0");
                 //            stats1.put("Num_session","0");
