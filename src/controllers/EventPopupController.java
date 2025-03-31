@@ -10,7 +10,7 @@ import logic.*;
 
 public class EventPopupController {
     private Events events;
-    private Pet pet;
+    private Pet pet = MainMenuController.myPet;
 
     @FXML private Label eventTitle;
     @FXML private Label eventDescription;
@@ -19,8 +19,7 @@ public class EventPopupController {
     @FXML private Label resultLabel;
 
     public void initialize() {
-        events.newEvent();
-        pet = MainMenuController.myPet;
+        events = new Events("resources/eventsFile.csv");
 
         eventDescription.setText(events.getEventQuestion());
 
@@ -57,9 +56,5 @@ public class EventPopupController {
         });
     }
 
-    public void setEvents(Events events) {
-        this.events = events;
-        initialize();
-    }
 }
 

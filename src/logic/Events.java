@@ -32,7 +32,7 @@ public class Events{
      */
     public void newEvent(){
         Random rand = new Random();
-        int index = rand.nextInt(events.size() - 1);
+        int index = rand.nextInt(events.size());
         currentEvent = events.get(index);
     }
 
