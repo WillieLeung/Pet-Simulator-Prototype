@@ -79,7 +79,7 @@ public class NewGameController {
             stats.put("Score", "0");
             stats.put("Name", petName);
             
-            file.writeStatsCSV(petName + ".csv", stats);
+            file.writeStatsCSV("saves/" + petName + ".csv", stats);
             
             System.out.println("New game created with pet: " + dictionaryToString(petName, petType));
         } catch (Exception e) {
