@@ -128,17 +128,12 @@ public class ReadWriteFile {
      * Function reads specified inventory from JSON inventory file.
      * Returns an array of hashmaps for each type of item.
      *
-     * @param saveSlot, Integer
+     * @param petName, String
      *
      * @return items, HashMap<String, Integer>[]
      */
-    public HashMap<String, Integer>[] readInventory(String saveSlot) {
+    public HashMap<String, Integer>[] readInventory(String petName) {
         try {
-            // Check to make sure that the save slot is valid.
-            if ((Integer.parseInt(saveSlot) > 3) || (Integer.parseInt(saveSlot) < 1)) {
-                throw new IllegalArgumentException("No such save slot exists.");
-            }
-
             // Initialize the hashmaps and the return array.
             HashMap<String, Integer> foodItems = new HashMap<String, Integer>();
             HashMap<String, Integer> giftItems = new HashMap<String, Integer>();
@@ -146,8 +141,15 @@ public class ReadWriteFile {
 
             // Extract the inventories from the JSON file.
             JSONObject inventories = new JSONObject(Files.readString(Paths.get("inventory.json")));
-            // Extract the inventory for the save slot in question.
-            JSONObject inventory = inventories.getJSONObject(saveSlot);
+
+            // Check if the petName exists in the JSON file
+            if (!inventories.has(petName)) {
+                throw new IllegalArgumentException("No such pet exists.");
+            }
+
+            // Extract the inventory for the pet in question.
+            JSONObject inventory = inventories.getJSONObject(petName);
+
             // Extract the nested foods and gifts dictionaries from the inventory.
             JSONObject foods = inventory.getJSONObject("foods");
             JSONObject gifts = inventory.getJSONObject("gifts");
@@ -158,7 +160,7 @@ public class ReadWriteFile {
             foodItems.put("Leaves", foods.getInt("Leaves"));
             foodItems.put("Chicken", foods.getInt("Chicken"));
 
-            // Add each gift and quantity to the foodItems hashmap.
+            // Add each gift and quantity to the giftItems hashmap.
             giftItems.put("Ball", gifts.getInt("Ball"));
             giftItems.put("Yarn", gifts.getInt("Yarn"));
             giftItems.put("Coin", gifts.getInt("Coin"));
@@ -191,29 +193,51 @@ public class ReadWriteFile {
 
     /**
      * Function reads specified inventory from JSON inventory file.
+     * If the inventory doesn't exist, it is created.
      * Updates values in JSON inventory file using values in given hashmaps.
      * Returns true/false based on if the update is successful.
      *
-     * @param saveSlot, Integer
+     * @param petName, Integer
      * @param items, HashMap<String, Integer>[]
      *
      * @return boolean
      */
-    public boolean updateInventory(String saveSlot, HashMap<String, Integer>[] items) {
+    public boolean updateInventory(String petName, HashMap<String, Integer>[] items) {
         try {
-            // Check to make sure that the save slot is valid.
-            if ((Integer.parseInt(saveSlot) > 3) || (Integer.parseInt(saveSlot) < 1)) {
-                throw new IllegalArgumentException("No such save slot exists.");
-            }
-
             // Get the hashmaps from the given array.
             HashMap<String, Integer> foodItems = items[0];
             HashMap<String, Integer> giftItems = items[1];
 
             // Extract the inventories from the JSON file.
             JSONObject inventories = new JSONObject(Files.readString(Paths.get("inventory.json")));
+
+            // Check if the pet name exists in the JSON file.
+            if (!inventories.has(petName)) {
+                // Add the new pet if it doesn't exist.
+                JSONObject newInventory = new JSONObject();
+                newInventory.put("foods", foodItems);
+                newInventory.put("gifts", giftItems);
+
+                // Set the item quantities to zero.
+                foodItems.put("Pizza", 0);
+                foodItems.put("Chocolate", 0);
+                foodItems.put("Leaves", 0);
+                foodItems.put("Chicken", 0);
+                giftItems.put("Ball", 0);
+                giftItems.put("Yarn", 0);
+                giftItems.put("Coin", 0);
+                giftItems.put("Wood", 0);
+                inventories.put(petName, newInventory);
+
+                // Update the JSON file.
+                Files.write(Paths.get("inventory.json"), inventories.toString(4).getBytes());
+
+                // Return true.
+                return true;
+            }
+
             // Extract the inventory for the save slot in question.
-            JSONObject inventory = inventories.getJSONObject(saveSlot);
+            JSONObject inventory = inventories.getJSONObject(petName);
             // Extract the nested foods and gifts dictionaries from the inventory.
             JSONObject foods = inventory.getJSONObject("foods");
             JSONObject gifts = inventory.getJSONObject("gifts");
