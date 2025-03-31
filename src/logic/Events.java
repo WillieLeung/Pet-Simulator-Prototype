@@ -74,6 +74,10 @@ public class Events{
         return currentEvent.getMinusScore();
     }
 
+    public String getEventType(){
+        return currentEvent.getItemType();
+    }
+
     /**
      * Function to get current Event item reward
      * @return item String
