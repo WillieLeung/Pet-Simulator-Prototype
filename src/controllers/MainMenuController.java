@@ -97,7 +97,7 @@ public class MainMenuController {
         // Load pet data
         try {
             ReadWriteFile fileReader = new ReadWriteFile();
-            Map<String, String> petData = fileReader.readFromStatsCSV(selectedFile);
+            Map<String, String> petData = fileReader.readFromStatsCSV("saves/" + selectedFile);
             
             // Create pet object with data from file
             String petType = petData.get("Sprite");
