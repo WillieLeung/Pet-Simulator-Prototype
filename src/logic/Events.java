@@ -1,8 +1,6 @@
 package logic;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -14,7 +12,7 @@ import java.util.Random;
 
 public class Events{
     //Stored array list of all event classes and current event option chosen
-    private ArrayList<Event> events = new ArrayList<Event>();
+    private List<Event> events;
     private Event currentEvent = null;
 
     /**
@@ -24,10 +22,8 @@ public class Events{
      */
     public Events(String filename){
         ReadWriteFile reader = new ReadWriteFile();
-        Map<String, List<String>> mappedEvents = reader.readEventCSV(filename);
-        for(String key : mappedEvents.keySet()){
-            addEvent(key, mappedEvents.get(key), 1, 50, -75,"Food", "Pizza");
-        }
+        List<Event> readEvents = reader.readEventCSV(filename);
+        events = readEvents;
         newEvent();
     }
 
@@ -95,8 +91,4 @@ public class Events{
      * @param minus points to deduct from score if incorrect
      * @param item item to reward if correct
      */
-    private void addEvent(String question, List<String> options, int correctAnswer, int plus, int minus,String itemType, String item){
-        Event newEvent = new Event(question, options, correctAnswer, plus, minus,itemType, item);
-        events.add(newEvent);
-    }
 }
