@@ -73,8 +73,8 @@ public class GamePlayController {
         //Pet pet = MainMenuController.myPet; <- will be used in actual game below is placeholder
         Pet pet = new Pet(100,100,100,100,50,"Bob", "Normal", "dog", new GameInventory("2"));
         Actions actions = new Actions(10, 1, 10, -10, 10, 10);
-        int [] actionsModifier = setActionModifier(pet.getSprite());
-        int [] depleteModifiers = setDepleteModifier(pet.getSprite());
+        double [] actionsModifier = setActionModifier(pet.getSprite());
+        double [] depleteModifiers = setDepleteModifier(pet.getSprite());
 
         //Check if there are parental limits
         ReadWriteFile file = new ReadWriteFile();
@@ -206,8 +206,8 @@ public class GamePlayController {
                 else {
                     String foodAndAmount = (String) foodInventory.getValue();
                     String food = foodAndAmount.split(" ")[0];
-                    actions.feedPet(pet, food, getFoodValue(food) * actionsModifier[3]);
-                    statLimit(pet);
+                    actions.feedPet(pet, food, (int)(getFoodValue(food) * actionsModifier[3]));
+                    pet.statLimit();
                     fullness.set(pet.getFullness());
                     score.set(pet.getScore());
                     updateInventory(pet);
@@ -226,8 +226,8 @@ public class GamePlayController {
                 else{
                     String giftAndAmount = (String) giftInventory.getValue();
                     String gift = giftAndAmount.split(" ")[0];
-                    actions.giftPet(pet, gift, getGiftValue(gift) * actionsModifier[2]);
-                    statLimit(pet);
+                    actions.giftPet(pet, gift, (int)(getGiftValue(gift) * actionsModifier[2]));
+                    pet.statLimit();
                     happiness.set(pet.getHappiness());
                     score.set(pet.getScore());
                     updateInventory(pet);
@@ -236,29 +236,29 @@ public class GamePlayController {
             }
         });
         vetButton.setOnAction(e -> {
-            actions.vetPet(pet, value * actionsModifier[0]);
-            statLimit(pet);
+            actions.vetPet(pet, (int)(value * actionsModifier[0]));
+            pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
             startCooldown(vetButton, vetCooldownLabel);
         });
         playButton.setOnAction(e -> {
-            actions.playPet(pet, value * actionsModifier[2]);
-            statLimit(pet);
+            actions.playPet(pet, (int)(value * actionsModifier[2]));
+            pet.statLimit();
             happiness.set(pet.getHappiness());
             score.set(pet.getScore());
             startCooldown(playButton, playCooldownLabel);
         });
         exerciseButton.setOnAction(e -> {
-            actions.exercisePet(pet, value * actionsModifier[0], value * actionsModifier[1], value * actionsModifier[3]);
-            statLimit(pet);
+            actions.exercisePet(pet, (int)(value * actionsModifier[0]), (int)(value * actionsModifier[1]), (int)(value * actionsModifier[3]));
+            pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
             startCooldown(exerciseButton, exerciseCooldownLabel);
         });
         triggerEventBtn.setOnAction(e -> {
             showEventPopup();
-            statLimit(pet);
+            pet.statLimit();
             score.set(pet.getScore());
             startCooldown(triggerEventBtn, eventCooldownLabel);
         });
@@ -336,20 +336,20 @@ public class GamePlayController {
      * @param sprite, sprite of user's current pet
      * @return array of action modifiers for action modifiers of health, sleep, happiness and fullness respectively
      */
-    private int[] setActionModifier(String sprite){
+    private double[] setActionModifier(String sprite){
         //Health, sleep, happiness and fullness
-        int [] modifiers = {1, 1, 1, 1};
+        double [] modifiers = {1, 1, 1, 1};
 
         if (sprite.equals("snake")){
-            modifiers[0] = 3/2; //More HP
-            modifiers[1] = 3/2; //Needs less sleep
+            modifiers[0] = 1.5; //More HP
+            modifiers[1] = 1.5; //Needs less sleep
         }
         else if (sprite.equals("dragon")){
-            modifiers[0] = 3/2; //More HP
-            modifiers[1] = 1/2; //Needs more sleep
+            modifiers[0] = 1.5; //More HP
+            modifiers[1] = 0.5; //Needs more sleep
         }
         else if (sprite.equals("dog")){
-            modifiers[2] = 1/2; //Needs lots of play
+            modifiers[2] = 0.5; //Needs lots of play
         }
         else if (sprite.equals("goomba")){
             modifiers[1] = 2; //Needs little sleep
@@ -365,15 +365,15 @@ public class GamePlayController {
      * @param sprite, sprite of user's current pet
      * @return array of deplete modifiers for action modifiers of health, sleep, happiness and fullness respectively
      */
-    private int[] setDepleteModifier(String sprite){
+    private double[] setDepleteModifier(String sprite){
         //Health, sleep, happiness and fullness
-        int [] modifiers = {1, 1, 1, 1};
+        double [] modifiers = {1, 1, 1, 1};
 
         if (sprite.equals("snake")){
-            modifiers[0] = 1/2; //More HP
+            modifiers[0] = 0.5; //More HP
         }
         else if (sprite.equals("dragon")){
-            modifiers[0] = 1/4; //More HP and more dmg
+            modifiers[0] = 0.25; //More HP and more dmg
         }
         else if (sprite.equals("dog")){
             modifiers[2] = 2;   //Gets sad faster
@@ -433,23 +433,6 @@ public class GamePlayController {
     }
 
     /**
-     * Function limits pets stat between 0 and 100, score is kept non-negative
-     *
-     * @param pet, pet to limit stats and score on
-     */
-    private void statLimit(Pet pet){
-        if (pet.getHealth() > 100){pet.setHealth(100);}
-        else if (pet.getHealth() < 0){pet.setHealth(0);}
-        if (pet.getSleepiness() > 100){pet.setSleep(100);}
-        else if (pet.getSleepiness() < 0){pet.setSleep(0);}
-        if (pet.getFullness() > 100){pet.setFullness(100);}
-        else if (pet.getFullness() < 0){pet.setFullness(0);}
-        if (pet.getHappiness() > 100){pet.setHappiness(100);}
-        else if (pet.getHappiness() < 0){pet.setHappiness(0);}
-        if (pet.getScore() < 0){pet.setScore(0);}
-    }
-
-    /**
      * Function makes pet sleep until their sleepiness is full
      *
      * @param action, Action class with all actions that can be applied to the pet
@@ -457,7 +440,7 @@ public class GamePlayController {
      * @param duration, the higher the duration, the longer the pet sleeps
      * @param modifier, sleep modifier of pet
      */
-    private void sleepFull(Actions action, Pet pet, int duration, int modifier){
+    private void sleepFull(Actions action, Pet pet, int duration, double modifier){
         if (pet.getState().equals("Sleeping")){ //Health penalty
             pet.setHealth(pet.getHealth() - 15);
             health.set(pet.getHealth());
@@ -465,7 +448,7 @@ public class GamePlayController {
         disableButtons(true);
         sleepTimer = new Timeline(new KeyFrame(Duration.seconds(duration), e -> {
             if (pet.getSleepiness() < 100) {
-                action.sleepPet(pet, value * modifier);
+                action.sleepPet(pet, (int)(value * modifier));
                 sleep.set(pet.getSleepiness());
             }
             else {
@@ -473,7 +456,7 @@ public class GamePlayController {
                 disableButtons(false);
                 score.set(pet.getScore());
                 statusImage.setVisible(false);
-                statLimit(pet);
+                pet.statLimit();
                 startCooldown(sleepButton, sleepCooldownLabel);
                 resumePetFlipTimer();
                 pet.setState("Normal");
@@ -541,23 +524,23 @@ public class GamePlayController {
      * @param pet, pet to deplete the stats of
      * @param depleteModifiers, deplete modifiers of the pet
      */
-    private void deteriorate(Pet pet, int[] depleteModifiers){
+    private void deteriorate(Pet pet, double[] depleteModifiers){
         deteriorateTimer = new Timeline(new KeyFrame(Duration.seconds(10), e -> {
             if (pet.getState().equals("Hungry")) {
-                pet.setHealth(pet.getHealth() - value * depleteModifiers[0]);
+                pet.setHealth(pet.getHealth() - (int)(value * depleteModifiers[0]));
                 health.set(pet.getHealth());
-                pet.setHappiness(pet.getHappiness() - 2 * value * depleteModifiers[2]);
+                pet.setHappiness(pet.getHappiness() - (int)(2 * value * depleteModifiers[2]));
                 happiness.set(pet.getHappiness());
             }
-            pet.setSleep(pet.getSleepiness() - value * depleteModifiers[1]);
+            pet.setSleep(pet.getSleepiness() - (int)(value * depleteModifiers[1]));
             sleep.set(pet.getSleepiness());
             if (!pet.getState().equals("Hungry")) {
-                pet.setHappiness(pet.getHappiness() - value * depleteModifiers[2]);
+                pet.setHappiness(pet.getHappiness() - (int)(value * depleteModifiers[2]));
                 happiness.set(pet.getHappiness());
             }
-            pet.setFullness(pet.getFullness() - value * depleteModifiers[3]);
+            pet.setFullness(pet.getFullness() - (int)(value * depleteModifiers[3]));
             fullness.set(pet.getFullness());
-            statLimit(pet);
+            pet.statLimit();
         }));
         deteriorateTimer.setCycleCount(Timeline.INDEFINITE);
         deteriorateTimer.play();
@@ -599,37 +582,8 @@ public class GamePlayController {
      */
     private void checkStatus(Pet pet){
         statusTimer = new Timeline( new KeyFrame(Duration.seconds(1), e -> {
-            if (pet.getHealth() <= 0){ //Check for dead state/status
-                pet.setState("Dead");
-                status.set(pet.getState());
-            }
-            else if (pet.getSleepiness() <= 0){ //Check for sleep state/status
-                pet.setState("Sleeping");
-                status.set(pet.getState());
-            }
-            else if (pet.getState().equals("Sleeping") && pet.getSleepiness() < 100){ //Stay in sleep state/status until full
-                status.set(pet.getState());
-            }
-            else if (pet.getHappiness() <= 0 && pet.getFullness() <= 0) { //Check for both hungry and angry, hunger will be the state since it can lead to death
-                pet.setState("Hungry");
-                status.set(pet.getState());
-            }
-            else if (pet.getHappiness() <= 0){ //Check for angry state/status
-                pet.setState("Angry");
-                status.set(pet.getState());
-            }
-            else if (pet.getState().equals("Angry") && pet.getHappiness() < 51){ //Remain angry if pet is in an angry state and happiness is less than half
-                pet.setState("Angry");
-                status.set(pet.getState());
-            }
-            else if (pet.getFullness() <= 0) { //Check for hungry state/status
-                pet.setState("Hungry");
-                status.set(pet.getState());
-            }
-            else {
-                pet.setState("Normal"); //If none of the above, then state is normal
-                status.set(pet.getState());
-            }
+            pet.checkState();
+            status.set(pet.getState());
         }));
         statusTimer.setCycleCount(Timeline.INDEFINITE);
         statusTimer.play();
