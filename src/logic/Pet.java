@@ -162,4 +162,33 @@ public class Pet {
      * @return inventory, GameInventory of this Pet
      */
     public GameInventory getInventory(){return inventory;}
+
+    /**
+     * Function limits pet stats between 0 and 100, also limits score to be non-negative
+     */
+    public void statLimit(){
+        if (health > 100){health = 100;}
+        else if (health < 0){health = 0;}
+        if (sleepiness > 100){sleepiness = 100;}
+        else if (sleepiness < 0){sleepiness = 0;}
+        if (fullness > 100){fullness = 100;}
+        else if (fullness < 0){fullness = 0;}
+        if (happiness > 100){happiness = 100;}
+        else if (happiness < 0){happiness = 0;}
+        if (score < 0){score = 0;}
+    }
+
+    /**
+     * Function sets the pet's state bases on its stats
+     */
+    public void checkState(){
+        if (health <= 0){state = "Dead";}
+        else if (sleepiness <= 0){state = "Sleeping";}
+        else if (state.equals("Sleeping") && sleepiness < 100){state = "Sleeping";} //Stay in sleep state/status until full
+        else if (happiness <= 0 && fullness <= 0) {state = "Hungry";} //Check for both hungry and angry, hunger will be the state since it can lead to death
+        else if (happiness <= 0){state = "Angry";}
+        else if (state.equals("Angry") && happiness < 51){state = "Angry";} //Remain angry if pet is in an angry state and happiness is less than half
+        else if (fullness <= 0) {state = "Hungry";}
+        else {state = "Normal";} //If none of the above, then state is normal
+    }
 }

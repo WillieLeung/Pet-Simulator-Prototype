@@ -232,5 +232,77 @@ public class TestPet {
         instance.setInventory(expectedInventory);
         assertEquals(expectedInventory, instance.getInventory());
     }
+
+    @Test
+    public void testStatLimitMax(){
+        int expectedValue = 100;
+        Pet instance = new Pet(170, 22, 70, 86, 1234, "Max", "Angry", "", new GameInventory("1"));
+        instance.statLimit();
+        assertEquals(expectedValue, instance.getHealth());
+    }
+
+    @Test
+    public void testStatLimitHealthMin(){
+        int expectedValue = 0;
+        Pet instance = new Pet(70, 22, -70, 86, 1234, "Max", "Angry", "", new GameInventory("1"));
+        instance.statLimit();
+        assertEquals(expectedValue, instance.getSleepiness());
+    }
+
+    @Test
+    public void testCheckStateDead(){
+        String expectedValue = "Dead";
+        Pet instance = new Pet(0, 22, 70, 86, 1234, "Max", "Normal", "", new GameInventory("1"));
+        instance.checkState();
+        assertEquals(expectedValue, instance.getState());
+    }
+
+    @Test
+    public void testCheckStateAngry(){
+        String expectedValue = "Angry";
+        Pet instance = new Pet(70, 0, 70, 86, 1234, "Max", "Normal", "", new GameInventory("1"));
+        instance.checkState();
+        assertEquals(expectedValue, instance.getState());
+    }
+
+    @Test
+    public void testCheckStateStillAngry(){
+        String expectedValue = "Angry";
+        Pet instance = new Pet(70, 49, 70, 86, 1234, "Max", "Angry", "", new GameInventory("1"));
+        instance.checkState();
+        assertEquals(expectedValue, instance.getState());
+    }
+
+    @Test
+    public void testCheckStateSleeping(){
+        String expectedValue = "Sleeping";
+        Pet instance = new Pet(70, 22, 0, 86, 1234, "Max", "Normal", "", new GameInventory("1"));
+        instance.checkState();
+        assertEquals(expectedValue, instance.getState());
+    }
+
+    @Test
+    public void testCheckStateStillSleeping(){
+        String expectedValue = "Sleeping";
+        Pet instance = new Pet(70, 22, 95, 86, 1234, "Max", "Sleeping", "", new GameInventory("1"));
+        instance.checkState();
+        assertEquals(expectedValue, instance.getState());
+    }
+
+    @Test
+    public void testCheckStateHungry(){
+        String expectedValue = "Hungry";
+        Pet instance = new Pet(70, 22, 95, 0, 1234, "Max", "Normal", "", new GameInventory("1"));
+        instance.checkState();
+        assertEquals(expectedValue, instance.getState());
+    }
+
+    @Test
+    public void testCheckStateNormal(){
+        String expectedValue = "Normal";
+        Pet instance = new Pet(70, 22, 95, 78, 1234, "Max", "Normal", "", new GameInventory("1"));
+        instance.checkState();
+        assertEquals(expectedValue, instance.getState());
+    }
 }
 
