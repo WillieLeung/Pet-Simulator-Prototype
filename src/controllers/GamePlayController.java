@@ -11,12 +11,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import java.time.*;
 
 public class GamePlayController {
 
@@ -36,18 +42,38 @@ public class GamePlayController {
     private Timeline petFlipTimer;
     private Timeline deteriorateTimer;
     private Timeline sleepTimer;
-    private final StringProperty status = new SimpleStringProperty("normal");
+    private Timeline focusTimer;
+    private Timeline statusTimer;
+    private Timeline limitTimer;
+    private final StringProperty status = new SimpleStringProperty("Normal");
     private final DoubleProperty health = new SimpleDoubleProperty(0);
     private final DoubleProperty sleep = new SimpleDoubleProperty(0);
     private final DoubleProperty happiness = new SimpleDoubleProperty(0);
     private final DoubleProperty fullness = new SimpleDoubleProperty(0);
     private final IntegerProperty score = new SimpleIntegerProperty(0);
 
+    private final int value = 4;
+
     public void initialize() {
 
         //Pet pet = MainMenuController.myPet; <- will be used in actual game below is placeholder
-        Pet pet = new Pet(20,100,20,100,50,"Bob", "Normal", "goomba", new GameInventory("2"));
-        Actions actions = new Actions(10, 10, 10, 10, 10, 10, 10);
+        Pet pet = new Pet(100,100,100,100,50,"Bob", "Normal", "dog", new GameInventory("2"));
+        Actions actions = new Actions(10, 1, 10, -10, 10, 10);
+        int [] actionsModifier = setActionModifier(pet.getSprite());
+        int [] depleteModifiers = setDepleteModifier(pet.getSprite());
+
+        ReadWriteFile file = new ReadWriteFile();
+        Map<String, String> timeLimit = file.readFromStatsCSV("parent.csv");
+        String is_enabled = timeLimit.get("is_enabled");
+
+        if (is_enabled.equals("Y")){
+            String startTime = timeLimit.get("start_time");
+            String endTime = timeLimit.get("end_time");
+
+            LocalTime start = LocalTime.parse(startTime);
+            LocalTime end = LocalTime.parse(endTime);
+            checkTimeLimit(pet, start, end);
+        }
 
         //update score at the beginning
         scoreLabel.setText("Score: " + pet.getScore() + " XP");
@@ -65,29 +91,20 @@ public class GamePlayController {
         });
 
         //listeners to update health, sleep, etc bars when stats change
-        health.addListener((obs, oldHealth, newHealth) -> {
-            updateProgressBars(pet);
-            checkStatus(pet);
-        });
-        sleep.addListener((obs, oldSleep, newSleep) -> {
-            updateProgressBars(pet);
-            checkStatus(pet);
-        });
-        happiness.addListener((obs, oldHappiness, newHappiness) -> {
-            updateProgressBars(pet);
-            checkStatus(pet);
-        });
-        fullness.addListener((obs, oldFullness, newFullness) -> {
-            updateProgressBars(pet);
-            checkStatus(pet);
-        });
+        health.addListener((obs, oldHealth, newHealth) -> {updateProgressBars(pet);});
+        sleep.addListener((obs, oldSleep, newSleep) -> {updateProgressBars(pet);});
+        happiness.addListener((obs, oldHappiness, newHappiness) -> {updateProgressBars(pet);});
+        fullness.addListener((obs, oldFullness, newFullness) -> {updateProgressBars(pet);});
         score.addListener((obs, oldScore, newScore) -> scoreLabel.setText("Score: " + pet.getScore() + " XP"));
 
         //makes pet flip
         startPetFlipTimer();
 
         //lowers pets stats over time
-        deteriorate(pet);
+        deteriorate(pet, depleteModifiers);
+
+        //set inventory lists at the beginning
+        loadInventory(pet);
 
         //set pet status at the beginning
         updateStatusImage(pet.getState(), actions, pet);
@@ -95,80 +112,261 @@ public class GamePlayController {
         //set stat bars with pet stats at the beginning
         updateProgressBars(pet);
 
-        //set inventory lists at the beginning
-        updateInventory(pet);
+        //focus on save and exit button
+        focus();
+
+        //continously check the status of pet
+        checkStatus(pet);
+
+        // key shortcuts
+        saveExitBtn.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {saveExitBtn.fire();}
+            else if (e.getCode() == KeyCode.S) {sleepButton.fire();}
+            else if (e.getCode() == KeyCode.F) {feedButton.fire();}
+            else if (e.getCode() == KeyCode.G) {giftButton.fire();}
+            else if (e.getCode() == KeyCode.V) {vetButton.fire();}
+            else if (e.getCode() == KeyCode.P) {playButton.fire();}
+            else if (e.getCode() == KeyCode.E) {exerciseButton.fire();}
+            else if (e.getCode() == KeyCode.T){triggerEventBtn.fire();}
+        });
+
+        // if food inventory is open then key shortcuts cant be used
+        foodInventory.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (isNowFocused){
+                pauseFocusTimer();
+                foodInventory.requestFocus();
+                foodInventory.getSelectionModel().selectedItemProperty().addListener((ob, oldValue, newValue) -> {
+                    if (newValue != null){resumeFocusTimer();}
+                });
+                foodInventory.showingProperty().addListener((ob, wasShowing, isShowing) -> {
+                    if (!isShowing && foodInventory.getSelectionModel().isEmpty()) {resumeFocusTimer();}
+                    if (!isShowing){resumeFocusTimer();}
+                });
+            }
+            else {resumeFocusTimer();}
+        });
+
+        // if gift inventory is open then key shortcuts cant be used
+        giftInventory.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (isNowFocused){
+                pauseFocusTimer();
+                giftInventory.requestFocus();
+                giftInventory.getSelectionModel().selectedItemProperty().addListener((ob, oldValue, newValue) -> {
+                    if (newValue != null){resumeFocusTimer();}
+                });
+                giftInventory.showingProperty().addListener((ob, wasShowing, isShowing) -> {
+                    if (!isShowing && giftInventory.getSelectionModel().isEmpty()) {resumeFocusTimer();}
+                    if (!isShowing){resumeFocusTimer();}
+                });
+            }
+            else {resumeFocusTimer();}
+        });
+
+        // if event popup is open then key shortcuts cant be used
+        triggerEventBtn.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (isNowFocused){
+                pauseFocusTimer();
+                triggerEventBtn.requestFocus();
+            }
+            else {resumeFocusTimer();}
+        });
 
         //button actions
-        //saveExitBtn.setOnAction(e -> saveAndExit(pet)); <- Not done yet
+        saveExitBtn.setOnAction(e -> saveAndExit(pet));
         sleepButton.setOnAction(e -> {
             loadImage(statusImage, "sleeping");
             statusImage.setVisible(true);
             pausePetFlipTimer();
-            sleep(actions, pet, 1);
-            startCooldown(sleepButton, sleepCooldownLabel);
+            sleepFull(actions, pet, 1, actionsModifier[1]);
         });
         feedButton.setOnAction(e -> {
-            String foodAndAmount = (String) foodInventory.getValue();
-            String food = foodAndAmount.split(" ")[0];
-            actions.feedPet(pet, food);
-            statLimit(pet);
-            fullness.set(pet.getFullness());
-            score.set(pet.getScore());
-            int newAmount = pet.getInventory().getFoodItems().get(food);
-            if (newAmount > 0) foodInventory.setValue(food + " (" + newAmount + ")");
-            else {
-                foodInventory.setValue(null);
-                foodInventory.getSelectionModel().clearSelection();
-                foodInventory.setPromptText("Food Inventory");
+            if (foodInventory.getItems().isEmpty()){
+                showEmptyFoodInventoryWarningPopup();
+                feedButton.setDisable(true);
             }
-            updateInventory(pet);
-
-            checkStatus(pet);
-            startCooldown(feedButton, feedCooldownLabel);
+            else {
+                feedButton.setDisable(false);
+                if (foodInventory.getValue() == null){showNoSelectedFoodWarningPopup();}
+                else {
+                    String foodAndAmount = (String) foodInventory.getValue();
+                    String food = foodAndAmount.split(" ")[0];
+                    actions.feedPet(pet, food, getFoodValue(food) * actionsModifier[3]);
+                    statLimit(pet);
+                    fullness.set(pet.getFullness());
+                    score.set(pet.getScore());
+                    updateInventory(pet);
+                    //int newAmount = pet.getInventory().getFoodItems().get(food);
+                    //if (newAmount > 0) {foodInventory.setValue(food + " (" + pet.getInventory().getFoodItems().get(food) + ")");}
+                    //else if (newAmount == 0) {
+                    //foodInventory.setEditable(true); <- kinda works
+                    //foodInventory.setValue("test");
+                    //}
+                    startCooldown(feedButton, feedCooldownLabel);
+                }
+            }
         });
         giftButton.setOnAction(e -> {
-            String giftAndAmount = (String) giftInventory.getValue();
-            String gift = giftAndAmount.split(" ")[0];
-            actions.giftPet(pet, gift);
-            statLimit(pet);
-            happiness.set(pet.getHappiness());
-            score.set(pet.getScore());
-            updateInventory(pet);
-            giftInventory.setValue(gift + " (" + pet.getInventory().getGiftItems().get(gift) + ")");
-            checkStatus(pet);
-            startCooldown(giftButton, giftCooldownLabel);
+            if (giftInventory.getItems().isEmpty()){
+                showEmptyGiftInventoryWarningPopup();
+                giftButton.setDisable(true);
+            }
+            else{
+                giftButton.setDisable(false);
+                if (giftInventory.getValue() == null){showNoSelectedGiftWarningPopup();}
+                else{
+                    String giftAndAmount = (String) giftInventory.getValue();
+                    String gift = giftAndAmount.split(" ")[0];
+                    actions.giftPet(pet, gift, getGiftValue(gift) * actionsModifier[2]);
+                    statLimit(pet);
+                    happiness.set(pet.getHappiness());
+                    score.set(pet.getScore());
+                    updateInventory(pet);
+                    startCooldown(giftButton, giftCooldownLabel);
+                }
+            }
         });
         vetButton.setOnAction(e -> {
-            actions.vetPet(pet);
+            actions.vetPet(pet, value * actionsModifier[0]);
             statLimit(pet);
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            checkStatus(pet);
             startCooldown(vetButton, vetCooldownLabel);
         });
         playButton.setOnAction(e -> {
-            actions.playPet(pet);
+            actions.playPet(pet, value * actionsModifier[2]);
             statLimit(pet);
             happiness.set(pet.getHappiness());
             score.set(pet.getScore());
-            checkStatus(pet);
             startCooldown(playButton, playCooldownLabel);
         });
         exerciseButton.setOnAction(e -> {
-            actions.exercisePet(pet);
+            actions.exercisePet(pet, value * actionsModifier[0], value * actionsModifier[1], value * actionsModifier[3]);
             statLimit(pet);
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            checkStatus(pet);
             startCooldown(exerciseButton, exerciseCooldownLabel);
         });
         triggerEventBtn.setOnAction(e -> {
             showEventPopup();
             statLimit(pet);
             score.set(pet.getScore());
-            checkStatus(pet);
             startCooldown(triggerEventBtn, eventCooldownLabel);
         });
+    }
+
+    public boolean isBetween(LocalTime time, LocalTime start, LocalTime end) {return time.isAfter(start) && time.isBefore(end);}
+
+    private void checkTimeLimit(Pet pet, LocalTime start, LocalTime end){
+        limitTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+
+            LocalTime now = LocalTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            String formattedDate = now.format(formatter);
+            LocalTime current = LocalTime.parse(formattedDate);
+
+            if (!isBetween(current, start, end)){
+                limitTimer.stop();
+                saveAndExit(pet);
+            }
+        }));
+        limitTimer.setCycleCount(Timeline.INDEFINITE);
+        limitTimer.play();
+    }
+
+    private int getFoodValue(String food){
+        switch (food){
+            case "Pizza":return 20;
+            case "Leaves": return 15;
+            case "Chocolate": return 10;
+            case "Chicken": return 5;
+        }
+        return 0;
+    }
+
+    private int getGiftValue(String gift){
+        switch (gift){
+            case "Ball": return 20;
+            case "Coin": return 15;
+            case "Wood": return 10;
+            case "Yarn": return 5;
+        }
+        return 0;
+    }
+
+    private int[] setActionModifier(String sprite){
+        //Health, sleep, happiness and fullness
+        int [] modifiers = {1, 1, 1, 1};
+
+        if (sprite.equals("snake")){
+            modifiers[0] = 3/2; //More HP
+            modifiers[1] = 3/2; //Needs less sleep
+        }
+        else if (sprite.equals("dragon")){
+            modifiers[0] = 3/2; //More HP
+            modifiers[1] = 1/2; //Needs more sleep
+        }
+        else if (sprite.equals("dog")){
+            modifiers[2] = 1/2; //Needs lots of play
+        }
+        else if (sprite.equals("goomba")){
+            modifiers[1] = 2; //Needs little sleep
+            modifiers[3] = 2; //Needs little food
+        }
+
+        return modifiers;
+    }
+
+    private int[] setDepleteModifier(String sprite){
+        //Health, sleep, happiness and fullness
+        int [] modifiers = {1, 1, 1, 1};
+
+        if (sprite.equals("snake")){
+            modifiers[0] = 1/2; //More HP
+        }
+        else if (sprite.equals("dragon")){
+            modifiers[0] = 1/4; //More HP and more dmg
+        }
+        else if (sprite.equals("dog")){
+            modifiers[2] = 2;   //Gets sad faster
+            modifiers[3] = 2;   //Gets hungry quickly
+        }
+        else if (sprite.equals("goomba")){
+            modifiers[0] = 2;   //Hurts easy
+        }
+
+        return modifiers;
+    }
+
+    private void focus(){
+        focusTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            saveExitBtn.requestFocus();
+        }));
+        focusTimer.setCycleCount(Timeline.INDEFINITE);
+        focusTimer.play();
+    }
+
+    private void pauseFocusTimer() {
+        if (focusTimer != null) {
+            focusTimer.pause();
+            System.out.println("Focus timer paused.");
+        }
+    }
+
+    private void resumeFocusTimer() {
+        if (focusTimer != null) {
+            focusTimer.play();
+            System.out.println("Focus timer resumed.");
+        }
+    }
+
+    private void disableButtons(boolean disabled){
+        sleepButton.setDisable(disabled);
+        feedButton.setDisable(disabled);
+        giftButton.setDisable(disabled);
+        vetButton.setDisable(disabled);
+        playButton.setDisable(disabled);
+        exerciseButton.setDisable(disabled);
+        triggerEventBtn.setDisable(disabled);
     }
 
     private void statLimit(Pet pet){
@@ -182,29 +380,56 @@ public class GamePlayController {
         else if (pet.getHappiness() < 0){pet.setHappiness(0);}
     }
 
-    private void sleep(Actions action, Pet pet, int duration){
+    private void sleepFull(Actions action, Pet pet, int duration, int modifier){
+        if (pet.getState().equals("Sleeping")){ // health penalty
+            pet.setHealth(pet.getHealth() - 15);
+            health.set(pet.getHealth());
+        }
+        disableButtons(true);
         sleepTimer = new Timeline(new KeyFrame(Duration.seconds(duration), e -> {
             if (pet.getSleepiness() < 100) {
-                action.sleepPet(pet);
+                action.sleepPet(pet, value * modifier);
                 sleep.set(pet.getSleepiness());
             }
             else {
                 sleepTimer.stop();
+                disableButtons(false);
                 score.set(pet.getScore());
                 statusImage.setVisible(false);
                 statLimit(pet);
-                checkStatus(pet);
+                startCooldown(sleepButton, sleepCooldownLabel);
                 resumePetFlipTimer();
+                pet.setState("Normal");
+                status.set(pet.getState());
             }
         }));
         sleepTimer.setCycleCount(Timeline.INDEFINITE);
         sleepTimer.play();
     }
 
+    private void loadInventory (Pet pet){
+        GameInventory inv = pet.getInventory();
+        HashMap<String, Integer> foodInv = inv.getFoodItems();
+        HashMap<String, Integer> giftInv = inv.getGiftItems();
+
+        foodInventory.getItems().addAll(foodInv.entrySet().stream().filter(entry -> entry.getValue() != 0).map(entry -> entry.getKey() + " (" + entry.getValue() + ")").toList());
+        giftInventory.getItems().addAll(giftInv.entrySet().stream().filter(entry -> entry.getValue() != 0).map(entry -> entry.getKey() + " (" + entry.getValue() + ")").toList());
+    }
+
     private void updateInventory(Pet pet){
         GameInventory inv = pet.getInventory();
         HashMap<String, Integer> foodInv = inv.getFoodItems();
         HashMap<String, Integer> giftInv = inv.getGiftItems();
+
+        String gift = "";
+        String food = "";
+
+        String foodAndAmount = (String) foodInventory.getValue();
+        if (foodAndAmount != null) {food = foodAndAmount.split(" ")[0];}
+
+        String giftAndAmount = (String) giftInventory.getValue();
+        if (giftAndAmount != null) {gift = giftAndAmount.split(" ")[0];}
+
         //clear inventory lists
         foodInventory.getItems().clear();
         giftInventory.getItems().clear();
@@ -212,17 +437,32 @@ public class GamePlayController {
         //set inventory lists to current inventory if the amount is not zero
         foodInventory.getItems().addAll(foodInv.entrySet().stream().filter(entry -> entry.getValue() != 0).map(entry -> entry.getKey() + " (" + entry.getValue() + ")").toList());
         giftInventory.getItems().addAll(giftInv.entrySet().stream().filter(entry -> entry.getValue() != 0).map(entry -> entry.getKey() + " (" + entry.getValue() + ")").toList());
+
+        if (foodInv.get(food) != null){
+            if (foodInv.get(food) > 0){foodInventory.setValue(food + " (" + foodInv.get(food) + ")");}
+            else {foodInventory.getSelectionModel().select(0);}
+        }
+        if (giftInv.get(gift) != null){
+            if (giftInv.get(gift) > 0){giftInventory.setValue(gift + " (" + giftInv.get(gift) + ")");}
+            else {giftInventory.getSelectionModel().select(0);}
+        }
     }
 
-    private void deteriorate(Pet pet){
-        deteriorateTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            //pet.setHealth(pet.getHealth() - 1); <- for testing purposes
-            //health.set(pet.getHealth());
-            pet.setSleep(pet.getSleepiness() - 1);
+    private void deteriorate(Pet pet, int[] depleteModifiers){
+        deteriorateTimer = new Timeline(new KeyFrame(Duration.seconds(10), e -> {
+            if (pet.getState().equals("Hungry")) {
+                pet.setHealth(pet.getHealth() - value * depleteModifiers[0]);
+                health.set(pet.getHealth());
+                pet.setHappiness(pet.getHappiness() - 2 * value * depleteModifiers[2]);
+                happiness.set(pet.getHappiness());
+            }
+            pet.setSleep(pet.getSleepiness() - value * depleteModifiers[1]);
             sleep.set(pet.getSleepiness());
-            pet.setHappiness(pet.getHappiness() - 1);
-            happiness.set(pet.getHappiness());
-            pet.setFullness(pet.getFullness() - 1);
+            if (!pet.getState().equals("Hungry")) {
+                pet.setHappiness(pet.getHappiness() - value * depleteModifiers[2]);
+                happiness.set(pet.getHappiness());
+            }
+            pet.setFullness(pet.getFullness() - value * depleteModifiers[3]);
             fullness.set(pet.getFullness());
             statLimit(pet);
         }));
@@ -251,98 +491,83 @@ public class GamePlayController {
     }
 
     private void checkStatus(Pet pet){
-        if (pet.getHealth() == 0){
-            pet.setState("Dead");
-            status.set(pet.getState());
-        }
-        else if (pet.getSleepiness() == 0){
-            pet.setState("Sleeping");
-            status.set(pet.getState());
-        }
-        else if (pet.getHappiness() == 0){
-            pet.setState("Angry");
-            status.set(pet.getState());
-        }
-        else if (pet.getState().equals("Angry") && pet.getHappiness() < 51){ //remain angry if pet is in an angry state and happiness is less than half
-            pet.setState("Angry");
-            status.set(pet.getState());
-        }
-        else if (pet.getFullness() == 0) {
-            pet.setState("Hungry");
-            status.set(pet.getState());
-        }
-        else {
-            pet.setState("Normal");
-            status.set(pet.getState());
-        }
+        statusTimer = new Timeline( new KeyFrame(Duration.seconds(1), e -> {
+            if (pet.getHealth() <= 0){
+                pet.setState("Dead");
+                status.set(pet.getState());
+            }
+            else if (pet.getSleepiness() <= 0){
+                pet.setState("Sleeping");
+                status.set(pet.getState());
+            }
+            else if (pet.getState().equals("Sleeping") && pet.getSleepiness() < 100){
+                pet.setState("Sleeping");
+                status.set(pet.getState());
+            }
+            else if (pet.getHappiness() <= 0 && pet.getFullness() <= 0) {
+                pet.setState("Hungry");
+                status.set(pet.getState());
+            }
+            else if (pet.getHappiness() <= 0){
+                pet.setState("Angry");
+                status.set(pet.getState());
+            }
+            else if (pet.getState().equals("Angry") && pet.getHappiness() < 51){ //remain angry if pet is in an angry state and happiness is less than half
+                pet.setState("Angry");
+                status.set(pet.getState());
+            }
+            else if (pet.getFullness() <= 0) {
+                pet.setState("Hungry");
+                status.set(pet.getState());
+            }
+            else {
+                pet.setState("Normal");
+                status.set(pet.getState());
+            }
+        }));
+        statusTimer.setCycleCount(Timeline.INDEFINITE);
+        statusTimer.play();
     }
 
     private void updateStatusImage(String state, Actions action, Pet pet) {
         switch (state) {
             case "Dead":
+                flipPetImage();
                 loadImage(petImage, "dead");
                 pausePetFlipTimer();
                 pauseDeteriorateTimer();
                 statusImage.setVisible(false);
-                sleepButton.setDisable(true);
-                feedButton.setDisable(true);
-                giftButton.setDisable(true);
-                vetButton.setDisable(true);
-                playButton.setDisable(true);
-                exerciseButton.setDisable(true);
-                triggerEventBtn.setDisable(true);
+                disableButtons(true);
                 break;
             case "Angry":
                 loadImage(statusImage, "angry");
-                pauseDeteriorateTimer();
+                resumeDeteriorateTimer();
                 statusImage.setVisible(true);
-                sleepButton.setDisable(true);
-                feedButton.setDisable(true);
+                disableButtons(true);
                 giftButton.setDisable(false);
-                vetButton.setDisable(true);
                 playButton.setDisable(false);
-                exerciseButton.setDisable(true);
-                triggerEventBtn.setDisable(true);
                 break;
             case "Normal":
                 loadImage(petImage, pet.getSprite());
+                resumePetFlipTimer();
                 resumeDeteriorateTimer();
                 statusImage.setVisible(false);
-                sleepButton.setDisable(false);
-                feedButton.setDisable(false);
-                giftButton.setDisable(false);
-                vetButton.setDisable(false);
-                playButton.setDisable(false);
-                exerciseButton.setDisable(false);
-                triggerEventBtn.setDisable(false);
+                disableButtons(false);
+                if (foodInventory.getItems().isEmpty()){feedButton.setDisable(true);}
+                if (giftInventory.getItems().isEmpty()){giftButton.setDisable(true);}
                 break;
             case "Sleeping":
                 loadImage(petImage, "bed");
                 pausePetFlipTimer();
-                pauseDeteriorateTimer();
-                sleep(action, pet, 2);
-                statusImage.setVisible(false);
-                sleepButton.setDisable(true);
-                feedButton.setDisable(true);
-                giftButton.setDisable(true);
-                vetButton.setDisable(true);
-                playButton.setDisable(true);
-                exerciseButton.setDisable(true);
-                triggerEventBtn.setDisable(true);
-                pet.setState("Normal");
-                status.set(pet.getState());
+                disableButtons(true);
+                sleepFull(action, pet, 2, setActionModifier(pet.getSprite())[1]);
                 break;
             case "Hungry":
                 loadImage(statusImage, "hungry");
-                pauseDeteriorateTimer();
                 statusImage.setVisible(true);
-                sleepButton.setDisable(false);
-                feedButton.setDisable(false);
-                giftButton.setDisable(false);
-                vetButton.setDisable(false);
-                playButton.setDisable(false);
-                exerciseButton.setDisable(false);
-                triggerEventBtn.setDisable(false);
+                disableButtons(false);
+                if (foodInventory.getItems().isEmpty()){feedButton.setDisable(true);}
+                if (giftInventory.getItems().isEmpty()){giftButton.setDisable(true);}
                 break;
         }
     }
@@ -437,10 +662,26 @@ public class GamePlayController {
     private void saveAndExit(Pet pet) {
         ReadWriteFile file = new ReadWriteFile();
         GameInventory inventory = pet.getInventory();
+
+        //store inventory
         HashMap<String, Integer>[] inventories = new HashMap[2];
         inventories[0] = inventory.getFoodItems();
         inventories[1] = inventory.getGiftItems();
-        file.updateInventory("3", inventories);
+        file.updateInventory(pet.getInventory().getSaveSlot(), inventories);
+
+        //store stats
+        HashMap<String, String> stats = new HashMap<String, String>();
+        stats.put("Health", String.valueOf(pet.getHealth()));
+        stats.put("Happiness", String.valueOf(pet.getHappiness()));
+        stats.put("Sleepiness", String.valueOf(pet.getSleepiness()));
+        stats.put("Fullness", String.valueOf(pet.getFullness()));
+        stats.put("State", pet.getState());
+        stats.put("Sprite", pet.getSprite());
+        stats.put("Score", String.valueOf(pet.getScore()));
+        stats.put("Name", pet.getPetName());
+        file.writeStatsCSV(pet.getPetName(), stats);
+
+        System.out.println("Saving and Exiting to Main Menu");
 
         switchToMainMenu();
     }
@@ -453,5 +694,37 @@ public class GamePlayController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showNoSelectedFoodWarningPopup(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("FEED WARNING");
+        alert.setHeaderText("NO FOOD SELECTED!!!");
+        alert.setContentText("Select a food in the inventory on the left side");
+        alert.showAndWait();
+    }
+
+    private void showNoSelectedGiftWarningPopup(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("GIFT WARNING");
+        alert.setHeaderText("NO GIFT SELECTED!!!");
+        alert.setContentText("Select a gift in the inventory on the left side");
+        alert.showAndWait();
+    }
+
+    private void showEmptyFoodInventoryWarningPopup() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("FEED WARNING");
+        alert.setHeaderText("NO MORE FOOD ITEMS!!!");
+        alert.setContentText("Obtain some through events");
+        alert.showAndWait();
+    }
+
+    private void showEmptyGiftInventoryWarningPopup() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("GIFT WARNING");
+        alert.setHeaderText("NO MORE GIFT ITEMS!!!");
+        alert.setContentText("Obtain some through events");
+        alert.showAndWait();
     }
 }
