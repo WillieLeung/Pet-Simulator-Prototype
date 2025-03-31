@@ -172,7 +172,7 @@ public class ParentalControlsController {
                 String saveFileName = selectedPetToRevive.split(";")[0].split(": ")[1];
                 Map<String, String> saveFile = saveFiles.get(saveFileName);
                 saveFile.put("Happiness", "100");
-                saveFile.put("Sleep", "100");
+                saveFile.put("Sleepiness", "100");
                 saveFile.put("State", "Normal");
                 saveFile.put("Fullness", "100");
                 if (saveFile.get("Sprite").equals("Snake")) saveFile.put("Health", "150");

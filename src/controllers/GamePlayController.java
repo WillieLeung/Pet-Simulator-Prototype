@@ -14,10 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import static javafx.util.Duration.seconds;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -65,6 +66,9 @@ public class GamePlayController {
     private final DoubleProperty happiness = new SimpleDoubleProperty(0);
     private final DoubleProperty fullness = new SimpleDoubleProperty(0);
     private final IntegerProperty score = new SimpleIntegerProperty(0);
+
+    // Declare the variable for holding the start time of the game session.
+    private final LocalTime seshStart = LocalTime.now();
 
     private final int value = 4; //Default stat increase and decrease value
 
@@ -280,7 +284,7 @@ public class GamePlayController {
      * @param end, end time
      */
     private void checkTimeLimit(Pet pet, LocalTime start, LocalTime end){
-        limitTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        limitTimer = new Timeline(new KeyFrame(seconds(1), e -> {
 
             LocalTime now = LocalTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -388,7 +392,7 @@ public class GamePlayController {
      * Function infinitely focuses on the save and exit button which allows for key shortcuts
      */
     private void focus(){
-        focusTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        focusTimer = new Timeline(new KeyFrame(seconds(1), e -> {
             saveExitBtn.requestFocus();
         }));
         focusTimer.setCycleCount(Timeline.INDEFINITE);
@@ -444,7 +448,7 @@ public class GamePlayController {
             health.set(pet.getHealth());
         }
         disableButtons(true);
-        sleepTimer = new Timeline(new KeyFrame(Duration.seconds(duration), e -> {
+        sleepTimer = new Timeline(new KeyFrame(seconds(duration), e -> {
             if (pet.getSleepiness() < 100) {
                 action.sleepPet(pet, (int)(value * modifier));
                 sleep.set(pet.getSleepiness());
@@ -523,7 +527,7 @@ public class GamePlayController {
      * @param depleteModifiers, deplete modifiers of the pet
      */
     private void deteriorate(Pet pet, double[] depleteModifiers){
-        deteriorateTimer = new Timeline(new KeyFrame(Duration.seconds(10), e -> {
+        deteriorateTimer = new Timeline(new KeyFrame(seconds(10), e -> {
             if (pet.getState().equals("Hungry")) {
                 pet.setHealth(pet.getHealth() - (int)(value * depleteModifiers[0]));
                 health.set(pet.getHealth());
@@ -568,7 +572,7 @@ public class GamePlayController {
      * Function makes pet flip every 2 seconds
      */
     private void startPetFlipTimer() {
-        petFlipTimer = new Timeline(new KeyFrame(Duration.seconds(2), e -> flipPetImage()));
+        petFlipTimer = new Timeline(new KeyFrame(seconds(2), e -> flipPetImage()));
         petFlipTimer.setCycleCount(Timeline.INDEFINITE);
         petFlipTimer.play();
     }
@@ -579,7 +583,7 @@ public class GamePlayController {
      * @param pet, pet to the status/state of
      */
     private void checkStatus(Pet pet){
-        statusTimer = new Timeline( new KeyFrame(Duration.seconds(1), e -> {
+        statusTimer = new Timeline( new KeyFrame(seconds(1), e -> {
             pet.checkState();
             status.set(pet.getState());
         }));
@@ -736,7 +740,7 @@ public class GamePlayController {
         button.setDisable(true);  //Disable the button
 
         Timeline finalCooldownTimer = cooldownTimer;
-        cooldownTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        cooldownTimer = new Timeline(new KeyFrame(seconds(1), e -> {
             seconds[0]--;
             if (seconds[0] >= 0) {
                 label.setText("Cooldown: " + seconds[0]);
@@ -760,12 +764,17 @@ public class GamePlayController {
     private void saveAndExit(Pet pet) {
         ReadWriteFile file = new ReadWriteFile();
         GameInventory inventory = pet.getInventory();
+        LocalTime seshEnd = LocalTime.now();
 
         //Store inventory
         HashMap<String, Integer>[] inventories = new HashMap[2];
         inventories[0] = inventory.getFoodItems();
         inventories[1] = inventory.getGiftItems();
         file.updateInventory(pet.getInventory().getSaveSlot(), inventories);
+
+        // Get time the user has played for.
+        long playTimeMins = Duration.between(seshStart, seshEnd).toMinutes() + MainMenuController.minsPlayed;
+        String playTime = playTimeMins + "";
 
         //Store stats
         HashMap<String, String> stats = new HashMap<String, String>();
@@ -777,6 +786,8 @@ public class GamePlayController {
         stats.put("Sprite", pet.getSprite());
         stats.put("Score", String.valueOf(pet.getScore()));
         stats.put("Name", pet.getPetName());
+        stats.put("Play_time", playTime);
+        stats.put("Num_session", Integer.toString(MainMenuController.numSesh + 1));
         file.writeStatsCSV("saves/" + pet.getPetName() + ".csv", stats);
 
         System.out.println("Saving and Exiting to Main Menu");
