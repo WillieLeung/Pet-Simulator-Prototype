@@ -69,8 +69,7 @@ public class GamePlayController {
     private final int value = 4; //Default stat increase and decrease value
 
     public void initialize() {
-        //Pet pet = MainMenuController.myPet; <- will be used in actual game below is placeholder
-        Pet pet = new Pet(100,100,100,100,50,"Bob", "Normal", "dog", new GameInventory("2"));
+        Pet pet = MainMenuController.myPet;
         Actions actions = new Actions(10, 1, 10, -10, 10, 10);
         double [] actionsModifier = setActionModifier(pet.getSprite());
         double [] depleteModifiers = setDepleteModifier(pet.getSprite());

@@ -40,6 +40,7 @@ public class EventPopupController {
                     pet.getInventory().addFoodItems(events.getEventItem(), 1);
                 }
                 else {
+                    System.out.println("gift");
                     pet.getInventory().addGiftItems(events.getEventItem(), 1);
                 }
                 pet.setScore(pet.getScore() + events.getEventPlus());
@@ -49,6 +50,7 @@ public class EventPopupController {
                 pet.setScore(pet.getScore() - events.getEventMinus());
             }
 
+            events.newEvent();
             submitButton.setDisable(true);
             PauseTransition delay = new PauseTransition(Duration.seconds(2));
             delay.setOnFinished(ev -> ((Stage) submitButton.getScene().getWindow()).close());

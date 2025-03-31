@@ -104,7 +104,7 @@ public List<Event> readEventCSV(String csvFile) {
                 }
 
                 // Create Event object with default scores (can be customized)
-                Event event = new Event(question, options, correctAnswer, 10, -5, itemType, item);
+                Event event = new Event(question, options, correctAnswer, 10, 5, itemType, item);
                 eventsList.add(event);
             }
         }

@@ -110,7 +110,7 @@ public class MainMenuController {
             String state = petData.getOrDefault("State", "Normal");
             
             // Create a GameInventory for the pet
-            GameInventory inventory = new GameInventory(selectedFile.substring(0, 1)); // Assuming saveSlot is first character
+            GameInventory inventory = new GameInventory("1"); // Assuming saveSlot is first character
             
             // Create the Pet object
             myPet = new Pet(health, happiness, sleep, fullness, score, petName, state, petType, inventory);
