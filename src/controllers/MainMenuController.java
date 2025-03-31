@@ -199,7 +199,7 @@ public class MainMenuController {
     /**
      * Reads save files and populates dropdown list with formatted pet data
      */
-    private void populateGamesList() {
+    public void populateGamesList() {
         ReadWriteFile fileReader = new ReadWriteFile();
         File saveDir = new File("saves");
         boolean filesFound = false;
