@@ -825,7 +825,7 @@ public class GamePlayController {
         stats.put("Sprite", pet.getSprite());
         stats.put("Score", String.valueOf(pet.getScore()));
         stats.put("Name", pet.getPetName());
-        file.writeStatsCSV(pet.getPetName(), stats);
+        file.writeStatsCSV("saves/" + petName + ".csv", stats);
 
         System.out.println("Saving and Exiting to Main Menu");
 
