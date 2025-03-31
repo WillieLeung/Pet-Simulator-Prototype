@@ -6,40 +6,31 @@ package logic;
  * @version 1.0
  */
 
-import java.time.LocalTime;
-
 public class Actions {
-    //Values for each button to raise stats by
-    private int food;
-    private int gift;
-    private int vet;
-    private int sleep;
-    private int play;
-    private int exercise;
-    private int score;
+    //Private variables to record amount of score awarded for each action
+    int feedScore;
+    int sleepScore;
+    int giftScore;
+    int vetScore;
+    int exerciseScore;
+
 
     /**
      * Constructor of Actions class
-     * <p>
-     * Initializes default variables for all actions
-     *
-     * @param cooldown length of time to wait before pressing another button
-     * @param food     default value for increasing pet hunger
-     * @param gift     default value for increasing pet happiness
-     * @param vet      default value for increasing pet health
-     * @param sleep    default value for increasing pet sleep
-     * @param play     default value for increasing pet happiness
-     * @param exercise default value for increasing pet health
-     * @param score    defualt value to increase score after action
+     * Default value to increase score by for each action
+     * @param feed Amount given for feeding pet
+     * @param sleep Amount given for putting pet to sleep
+     * @param gift Amount given for giftin pet an item
+     * @param vet Amount given for taking pet to vet
+     * @param play Amount given for playing with pet
+     * @param exercise Amount given for exercising pet
      */
-    public Actions(int food, int gift, int vet, int sleep, int play, int exercise, int score) {
-        this.food = food;
-        this.gift = gift;
-        this.vet = vet;
-        this.sleep = sleep;
-        this.play = play;
-        this.exercise = exercise;
-        this.score = score;
+    public Actions(int feed, int sleep, int gift, int vet, int play, int exercise) {
+        this.feedScore = feed;
+        this.sleepScore = sleep;
+        this.giftScore = gift;
+        this.vetScore = vet;
+        this.exerciseScore = exercise;
     }
 
     /**
@@ -48,14 +39,14 @@ public class Actions {
      *
      * @param pet
      */
-    public void feedPet(Pet pet, String foodType) {
+    public void feedPet(Pet pet, String foodType, int foodValue) {
         GameInventory currInventory = pet.getInventory();
         if(currInventory.depleteFoodItems(foodType, 1) == 0){
-            int currValue = pet.getFullness();
+            int currFood = pet.getFullness();
             int currScore = pet.getScore();
-            currValue += food;
-            currScore += score;
-            pet.setFullness(currValue);
+            currFood += foodValue;
+            currScore += feedScore;
+            pet.setFullness(currFood);
             pet.setScore(currScore);
         }
     }
@@ -66,14 +57,14 @@ public class Actions {
      *
      * @param pet
      */
-    public void giftPet(Pet pet, String giftType) {
+    public void giftPet(Pet pet, String giftType, int giftValue) {
         GameInventory currInventory = pet.getInventory();
-        if(currInventory.depleteFoodItems(giftType, 1) == 0){
-            int currValue = pet.getHappiness();
+        if(currInventory.depleteGiftItems(giftType, 1) == 0){
+            int currGift = pet.getHappiness();
             int currScore = pet.getScore();
-            currValue += gift;
-            currScore += score;
-            pet.setHappiness(currValue);
+            currGift += giftValue;
+            currScore += giftScore;
+            pet.setHappiness(currGift);
             pet.setScore(currScore);
         }
     }
@@ -84,9 +75,13 @@ public class Actions {
      *
      * @param pet
      */
-    public void vetPet(Pet pet) {
-        pet.setHealth(pet.getHealth() + vet);
-        pet.setScore(pet.getScore() - score);
+    public void vetPet(Pet pet, int vetValue) {
+        int currHealth = pet.getHealth();
+        int currScore = pet.getScore();
+        currHealth += vetValue;
+        currScore += vetScore;
+        pet.setHealth(currHealth);
+        pet.setScore(currScore);
     }
 
     /**
@@ -95,9 +90,13 @@ public class Actions {
      *
      * @param pet
      */
-    public void sleepPet(Pet pet) {
-        pet.setSleep(pet.getSleepiness() + sleep);
-        pet.setScore(pet.getScore() + score);
+    public void sleepPet(Pet pet, int sleepValue) {
+        int currSleep = pet.getSleepiness();
+        int currScore = pet.getScore();
+        currSleep += sleepValue;
+        currScore += sleepScore;
+        pet.setSleep(currSleep);
+        pet.setScore(currScore);
     }
 
     /**
@@ -106,9 +105,13 @@ public class Actions {
      *
      * @param pet
      */
-    public void playPet(Pet pet) {
-        pet.setHappiness(pet.getHappiness() + play);
-        pet.setScore(pet.getScore() + score);
+    public void playPet(Pet pet, int playValue) {
+        int currHappiness = pet.getHappiness();
+        int currScore = pet.getScore();
+        currHappiness += playValue;
+        currScore += playValue;
+        pet.setHappiness(currHappiness);
+        pet.setScore(currScore);
     }
 
     /**
@@ -117,9 +120,19 @@ public class Actions {
      *
      * @param pet
      */
-    public void exercisePet(Pet pet) {
+    public void exercisePet(Pet pet, int addHealth, int subSleep, int subHunger) {
+        int currHealth = pet.getHealth();
+        int currSleep = pet.getSleepiness();
+        int currFullness = pet.getFullness();
+        int currScore = pet.getScore();
+        currHealth += addHealth;
+        currSleep -= subSleep;
+        currFullness -= subHunger;
+        currScore += exerciseScore;
+        pet.setHealth(currHealth);
+        pet.setSleep(currSleep);
+        pet.setFullness(currFullness);
+        pet.setScore(currScore);
 
-        pet.setHealth(pet.getHealth() + exercise);
-        pet.setScore(pet.getScore() + score);
     }
 }

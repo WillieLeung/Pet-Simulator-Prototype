@@ -15,6 +15,7 @@ public class GameInventory {
      */
     private HashMap<String, Integer> foodItems = new HashMap<String, Integer>();
     private HashMap<String, Integer> giftItems = new HashMap<String, Integer>();
+    private String saveslot; //File name to save the inventory into later
 
     /**
      * Constructor of GameInventory class
@@ -23,6 +24,7 @@ public class GameInventory {
      * @param saveSlot, JSON file to read from to load inventory
      */
     public GameInventory(String saveSlot) {
+        this.saveslot = saveSlot;
         ReadWriteFile file = new ReadWriteFile();
         HashMap<String, Integer>[] inventories = file.readInventory(saveSlot);
 
@@ -36,6 +38,13 @@ public class GameInventory {
      * Creates empty inventory
      */
     public GameInventory() {}
+
+    /**
+     * Function returns the save file it was loaded from so the file can be updated
+     *
+     * @return save slot this inventory was loaded from
+     */
+    public String getSaveSlot(){return saveslot;}
 
     /**
      * Function adds food to the food HashMap
@@ -130,3 +139,4 @@ public class GameInventory {
      */
     public HashMap<String, Integer> getGiftItems() {return giftItems;}
 }
+

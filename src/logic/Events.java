@@ -26,7 +26,7 @@ public class Events{
         ReadWriteFile reader = new ReadWriteFile();
         Map<String, List<String>> mappedEvents = reader.readEventCSV(filename);
         for(String key : mappedEvents.keySet()){
-            addEvent(key, mappedEvents.get(key), 1, 50, -75, "Pizza");
+            addEvent(key, mappedEvents.get(key), 1, 50, -75,"Food", "Pizza");
         }
         newEvent();
     }
@@ -70,8 +70,12 @@ public class Events{
      * @param index
      * @return int score based on index
      */
-    public int getEventScore(int index){
-        return currentEvent.getScore(index);
+    public int getEventPlus(){
+        return currentEvent.getPlusScore();
+    }
+
+    public int getEventMinus(){
+        return currentEvent.getMinusScore();
     }
 
     /**
@@ -91,8 +95,8 @@ public class Events{
      * @param minus points to deduct from score if incorrect
      * @param item item to reward if correct
      */
-    private void addEvent(String question, List<String> options, int correctAnswer, int plus, int minus, String item){
-        Event newEvent = new Event(question, options, correctAnswer, plus, minus, item);
+    private void addEvent(String question, List<String> options, int correctAnswer, int plus, int minus,String itemType, String item){
+        Event newEvent = new Event(question, options, correctAnswer, plus, minus,itemType, item);
         events.add(newEvent);
     }
 }
