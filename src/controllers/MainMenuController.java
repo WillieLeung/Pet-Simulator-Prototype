@@ -198,31 +198,32 @@ public class MainMenuController {
      * Reads save files and populates dropdown list with formatted pet data
      */
     private void populateGamesList() {
-    ReadWriteFile fileReader = new ReadWriteFile();
-    File saveDir = new File("saves");
-    
-    if (saveDir.exists() && saveDir.isDirectory()) {
-        File[] saveFiles = saveDir.listFiles((dir, name) -> name.endsWith(".csv"));
+        ReadWriteFile fileReader = new ReadWriteFile();
+        File saveDir = new File("saves");
+        boolean filesFound = false;
         
-        if (saveFiles != null && saveFiles.length > 0) {
-            for (File file : saveFiles) {
-                Map<String, String> petData = fileReader.readFromStatsCSV(file.getPath());
-                String petName = petData.get("Name");
-                String petType = petData.get("Sprite");
-                
-                if (petName != null && petType != null) {
-                    String displayText = dictionaryToString(petName, petType);
-                    prevGames.getItems().add(displayText);
+        if (saveDir.exists() && saveDir.isDirectory()) {
+            File[] saveFiles = saveDir.listFiles((dir, name) -> name.endsWith(".csv"));
+            
+            if (saveFiles != null && saveFiles.length > 0) {
+                filesFound = true;
+                for (File file : saveFiles) {
+                    Map<String, String> petData = fileReader.readFromStatsCSV(file.getPath());
+                    String petName = petData.get("Name");
+                    String petType = petData.get("Sprite");
+                    
+                    if (petName != null && petType != null) {
+                        String displayText = dictionaryToString(petName, petType);
+                        prevGames.getItems().add(displayText);
+                    }
                 }
             }
-        } else {
-            // No save files found. leave dropdown empty
+        }
+        // Disable the load button if no files were found
+        if (!filesFound) {
             loadGameBtn.setDisable(true);
-
-        // Directory doesn't exist. leave dropdown empty
-        loadGameBtn.setDisable(true);
+        }
     }
-}
 
     /**
      * Formats pet data into display strings for the dropdown
@@ -232,6 +233,5 @@ public class MainMenuController {
      */
     private String dictionaryToString(String petName, String petType) {
         return "Pet Name: " + petName + "; Animal: " + petType;
-    }
     }   
 }
