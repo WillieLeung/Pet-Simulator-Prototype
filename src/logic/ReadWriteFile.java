@@ -40,47 +40,80 @@ public class ReadWriteFile {
     }
 
 
-    /**
-     * Function reads event-based CSV where the first row contains event names,
-     * and subsequent rows contain options for each event.
-     *
-     * @param csvFile The path to the CSV file
-     * @return A Map where each event name is associated with a list of options
-     */
-    public Map<String, List<String>> readEventCSV(String csvFile) {
-        Map<String, List<String>> eventsOptionsMap = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String line;
-            List<String> events = null;
-            List<List<String>> options = new ArrayList<>();
-
-            // Read first row (event names)
-            if ((line = br.readLine()) != null) {
-                events = Arrays.asList(line.split(","));
-            }
-
-            // Read subsequent rows (options for each event)
-            while ((line = br.readLine()) != null) {
-                List<String> optionRow = Arrays.asList(line.split(","));
-                options.add(optionRow);
-            }
-            // Map each event to the options under it
-            if (events != null && !events.isEmpty()) {
-                for (int i = 0; i < events.size(); i++) {
-                    List<String> eventOptions = new ArrayList<>();
-                    for (List<String> optionRow : options) {
-                        if (i < optionRow.size()) {
-                            eventOptions.add(optionRow.get(i));
-                        }
-                    }
-                    eventsOptionsMap.put(events.get(i), eventOptions);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+ /**
+ * Function reads event-based CSV in vertical format where:
+ * - First row contains event names/questions
+ * - Rows 2-5 contain options for each event (with (C) marking correct answers)
+ * - Row 6 contains item types (food or gift)
+ * - Row 7 contains specific item names
+ *
+ * @param csvFile The path to the CSV file
+ * @return A List of Event objects for use in the game
+ */
+public List<Event> readEventCSV(String csvFile) {
+    List<Event> eventsList = new ArrayList<>();
+    
+    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+        List<String> allLines = new ArrayList<>();
+        String line;
+        while ((line = br.readLine()) != null) {
+            allLines.add(line);
         }
-        return eventsOptionsMap;
+        
+        // Need at least questions + options + item type + item name (7 rows)
+        if (allLines.size() >= 6) {
+            // First row: event names/questions
+            String[] questions = allLines.get(0).split(",");
+            
+            // Process each event (column)
+            for (int col = 0; col < questions.length; col++) {
+                // Get event question
+                String question = questions[col].trim();
+                
+                // Get options and find correct answer
+                List<String> options = new ArrayList<>();
+                int correctAnswer = -1;
+                
+                // Read options from rows 1-4
+                for (int row = 1; row <= 4; row++) {
+                    String[] rowValues = allLines.get(row).split(",");
+                    if (col < rowValues.length) {
+                        String option = rowValues[col].trim();
+                        
+                        // Check if this option is marked correct
+                        if (option.contains("(C)")) {
+                            correctAnswer = row - 1; // Option index (0-3)
+                            option = option.replace("(C)", "").trim();
+                        }
+                        
+                        options.add(option);
+                    }
+                }
+                
+                // Get item type (food or gift)
+                String[] itemTypes = allLines.get(5).split(",");
+                String itemType = (col < itemTypes.length) ? itemTypes[col].trim() : "Food";
+                
+                //  Get item name (if available)
+                String item = "Pizza"; // Default item
+                if (allLines.size() >= 7) {
+                    String[] itemNames = allLines.get(6).split(",");
+                    if (col < itemNames.length) {
+                        item = itemNames[col].trim();
+                    }
+                }
+                
+                // Create Event object with default scores (can be customized)
+                Event event = new Event(question, options, correctAnswer, 10, -5, itemType, item);
+                eventsList.add(event);
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+    
+    return eventsList;
+}
 
     public void writeStatsCSV(String csvFile, Map<String, String> stats) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
