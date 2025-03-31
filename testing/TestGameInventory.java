@@ -15,6 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGameInventory {
 
+    @Test
+    public void testGetSaveSlot(){
+        String expectedValue = "1";
+        GameInventory instance = new GameInventory("1");
+        assertEquals(expectedValue, instance.getSaveSlot());
+    }
+
     /**
      * Test getting food items
      */
