@@ -68,7 +68,12 @@ public class GamePlayController {
 
     private final int value = 4; //Default stat increase and decrease value
 
+    //Events to be used in popup
+    private Events events;
+
     public void initialize() {
+        //Read file and initialize class for Events
+        events = new Events("eventsfile.csv");
 
         //Pet pet = MainMenuController.myPet; <- will be used in actual game below is placeholder
         Pet pet = new Pet(100,100,100,100,50,"Bob", "Normal", "dog", new GameInventory("2"));
@@ -694,6 +699,10 @@ public class GamePlayController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/src/views/EventPopup.fxml"));
             Scene popupScene = new Scene(loader.load());
+
+            EventPopupController controller = loader.getController();
+            controller.setEvents(events);
+
             Stage popupStage = new Stage();
             popupStage.setScene(popupScene);
             popupStage.setTitle("Event Notification");
