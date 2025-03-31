@@ -30,7 +30,7 @@
     <ComboBox fx:id="reviveList" promptText="Select Pet to Revive" maxWidth="300"/>
     <Button fx:id="reviveBtn" text="Revive Pet"/>
 
-    <Label fx:id="notificationLabel" text="" textFill="green" wrapText="true" maxWidth="500"/>
+    <Label fx:id="notificationLabel" text="" textFill="red" wrapText="true" maxWidth="500"/>
 
     <Separator />
 
