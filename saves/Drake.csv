@@ -1,2 +1,2 @@
-Happiness,Score,Sprite,Health,State,Fullness,Sleepiness,Name
-72,60,Snake,100,Normal,97,72,Drake
+Play_time,Happiness,Score,Sprite,Health,State,Fullness,Sleepiness,Name,Num_session
+100,100,60,Snake,150,Normal,100,72,Drake,2
