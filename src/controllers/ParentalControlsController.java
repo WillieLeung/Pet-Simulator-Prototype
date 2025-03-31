@@ -283,7 +283,7 @@ public class ParentalControlsController {
         // Return to the main menu.
         try {
             Stage stage = (Stage) backBtn.getScene().getWindow();
-            Scene newScene = new Scene(FXMLLoader.load(getClass().getResource("/src/views/MainMenu.fxml")));
+            Scene newScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("views/MainMenu.fxml")));
             stage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();

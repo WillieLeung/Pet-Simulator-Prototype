@@ -30,7 +30,7 @@ public class ParentalPasswordController {
     private void switchScene(String fxmlPath) {
         try {
             Stage stage = (Stage) continueBtn.getScene().getWindow();
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/" + fxmlPath)));
+            Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource(fxmlPath.replace("src/", ""))));
             stage.setScene(scene);
         } catch (Exception ex) {
             ex.printStackTrace();

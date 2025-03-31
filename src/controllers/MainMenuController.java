@@ -9,7 +9,15 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
+import java.util.Map;
+import javafx.scene.control.Alert;
+
+/**
+ * Note needs heavy debugging.
+ */ 
 
 public class MainMenuController {
 
@@ -25,8 +33,8 @@ public class MainMenuController {
     @FXML private Label errorLabel;
 
     //stores
-    private String selectedOption = null;
-
+    private String selectedFile = null; // File to load from dropdown selection
+    
     @FXML private ImageView snakeImage, dragonImage, dogImage, goombaImage;
 
     @FXML
@@ -39,11 +47,7 @@ public class MainMenuController {
 
 
         // add previous games to dropdown menu (combo box)
-        prevGames.getItems().addAll(
-                "Pet Name: Bruce Lee; Animal: Dragon",
-                "Pet Name: Mr Snake; Animal: Snake",
-                "Pet Name: Bobby; Animal: Dog"
-        );
+        populateGamesList();
 
         //store selected option in dropdown of prev games
         String selectedOption = prevGames.getValue();
@@ -69,18 +73,106 @@ public class MainMenuController {
         view.setImage(img);
     }
 
+    /**
+     * Loads the selected game after checking parental controls
+     */
     private void loadGame() {
-        switchScene("src/views/GamePlay.fxml");
+        // Get selected game from dropdown
+        String selectedSave = prevGames.getValue();
+        if (selectedSave == null) return;
+        
+        // Extract pet name from selection for filename
+        String petName = selectedSave.split(";")[0].replace("Pet Name: ", "").trim();
+        selectedFile = petName + ".csv";
+        
+        // Check parental time limits if they exist
+        if (!checkParentalTimeLimits()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Parental Controls");
+            alert.setHeaderText("Outside of Allowed Play Time");
+            alert.setContentText("You can only play during the hours set in parental controls.");
+            alert.showAndWait();
+            return;
+        }
+        
+        // Load pet data
+        try {
+            ReadWriteFile fileReader = new ReadWriteFile();
+            Map<String, String> petData = fileReader.readFromStatsCSV("saves/" + selectedFile);
+            
+            // Create pet object with data from file
+            String petType = petData.get("Sprite");
+            int health = Integer.parseInt(petData.getOrDefault("Health", "100"));
+            int happiness = Integer.parseInt(petData.getOrDefault("Happiness", "100"));
+            int sleep = Integer.parseInt(petData.getOrDefault("Sleepiness", "100"));
+            int fullness = Integer.parseInt(petData.getOrDefault("Fullness", "100"));
+            int score = Integer.parseInt(petData.getOrDefault("Score", "0"));
+            String state = petData.getOrDefault("State", "Normal");
+            
+            // Create a GameInventory for the pet
+            GameInventory inventory = new GameInventory("1"); // Assuming saveSlot is first character
+            
+            // Create the Pet object
+            myPet = new Pet(health, happiness, sleep, fullness, score, petName, state, petType, inventory);
+            
+            System.out.println("Loading: " + selectedSave);
+            
+            // Switch to gameplay scene
+            switchScene("src/views/GamePlay.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Load Error");
+            alert.setHeaderText("Failed to load game");
+            alert.setContentText("There was an error loading the selected save file.");
+            alert.showAndWait();
+        }
+    }
+
+    /**
+     * Checks if current time is within allowed play time from parental controls
+     * @return true if allowed to play, false if outside allowed hours
+     */
+    private boolean checkParentalTimeLimits() {
+    try {
+        ReadWriteFile fileReader = new ReadWriteFile();
+        Map<String, String> timeLimit = fileReader.readFromStatsCSV("parent.csv");
+        
+        // If parental controls are enabled, check time limits
+        if (timeLimit.containsKey("is_enabled") && timeLimit.get("is_enabled").equals("Y")) {
+            String startTime = timeLimit.get("start_time");
+            String endTime = timeLimit.get("end_time");
+            
+            LocalTime currentTime = LocalTime.now();
+            LocalTime start = LocalTime.parse(startTime);
+            LocalTime end = LocalTime.parse(endTime);
+            
+            // Check if current time is between allowed hours
+            return isBetweenTimes(currentTime, start, end);
+        }
+        return true; // No time limits or disabled
+    } catch (Exception e) {
+        // If file doesn't exist or error reading, assume no restrictions
+        return true;
+    }
+}
+
+    /**
+     * Checks if a time is between two other times
+     */
+    private boolean isBetweenTimes(LocalTime time, LocalTime start, LocalTime end) {
+        return !time.isBefore(start) && !time.isAfter(end);
     }
 
     private void switchScene(String fxmlFile) {
-        try {
-            Stage stage = (Stage) newGameBtn.getScene().getWindow();
-            Scene newScene = new Scene(FXMLLoader.load(getClass().getResource("/" + fxmlFile)));
-            stage.setScene(newScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try {
+        Stage stage = (Stage) newGameBtn.getScene().getWindow();
+        Scene newScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource(fxmlFile.replace("src/", ""))));
+        
+        stage.setScene(newScene);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
     }
 
     private void exitGame() {
@@ -103,4 +195,45 @@ public class MainMenuController {
         }
         return true;
     }
+
+    /**
+     * Reads save files and populates dropdown list with formatted pet data
+     */
+    public void populateGamesList() {
+        ReadWriteFile fileReader = new ReadWriteFile();
+        File saveDir = new File("saves");
+        boolean filesFound = false;
+        
+        if (saveDir.exists() && saveDir.isDirectory()) {
+            File[] saveFiles = saveDir.listFiles((dir, name) -> name.endsWith(".csv"));
+            
+            if (saveFiles != null && saveFiles.length > 0) {
+                filesFound = true;
+                for (File file : saveFiles) {
+                    Map<String, String> petData = fileReader.readFromStatsCSV(file.getPath());
+                    String petName = petData.get("Name");
+                    String petType = petData.get("Sprite");
+                    
+                    if (petName != null && petType != null) {
+                        String displayText = dictionaryToString(petName, petType);
+                        prevGames.getItems().add(displayText);
+                    }
+                }
+            }
+        }
+        // Disable the load button if no files were found
+        if (!filesFound) {
+            loadGameBtn.setDisable(true);
+        }
+    }
+
+    /**
+     * Formats pet data into display strings for the dropdown
+     * @param petName Name of the pet
+     * @param petType Type/sprite of the pet
+     * @return Formatted string in the form "Pet Name: X; Animal: Y"
+     */
+    private String dictionaryToString(String petName, String petType) {
+        return "Pet Name: " + petName + "; Animal: " + petType;
+    }   
 }

@@ -95,4 +95,8 @@ public class Events{
      * @param minus points to deduct from score if incorrect
      * @param item item to reward if correct
      */
+    private void addEvent(String question, List<String> options, int correctAnswer, int plus, int minus,String itemType, String item){
+        Event newEvent = new Event(question, options, correctAnswer, plus, minus,itemType, item);
+        events.add(newEvent);
+    }
 }
