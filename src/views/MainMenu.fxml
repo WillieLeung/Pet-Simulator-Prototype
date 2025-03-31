@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.MainMenuController">
+<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainMenuController">
 
     <top>
         <HBox alignment="TOP_RIGHT" spacing="10" BorderPane.alignment="TOP_RIGHT">
@@ -42,11 +42,13 @@
             <ComboBox fx:id="prevGames" prefWidth="300" promptText="Select Previous Game" />
         </VBox>
     </center>
-
-    <bottom>
-        <VBox alignment="CENTER">
-            <Button fx:id="exitBtn" text="Exit Game" />
-        </VBox>
-    </bottom>
+   <bottom>
+      <HBox alignment="CENTER" prefHeight="35.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Created Winter 2025 as part of CS2212 at Western University" wrappingWidth="643.7368056774139" />
+               <Button fx:id="exitBtn" text="Exit Game" />
+         </children>
+      </HBox>
+   </bottom>
 
 </BorderPane>

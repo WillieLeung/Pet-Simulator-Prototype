@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/23.0.1"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controllers.ParentalControlsController"
-      alignment="CENTER" spacing="20"
-      minHeight="356.0" minWidth="536.0"
-      prefHeight="600.0" prefWidth="800.0">
+<VBox alignment="CENTER" minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" spacing="20" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ParentalControlsController">
 
-    <CheckBox fx:id="limitPlayTime" text="Play Time Limit"/>
+    <CheckBox fx:id="limitPlayTime" text="Play Time Limit" />
 
-    <TextField fx:id="startTimeField" promptText="Input start time (hh:mm)" maxWidth="200"/>
-    <TextField fx:id="endTimeField" promptText="Input end time (hh:mm)" maxWidth="200"/>
+    <TextField fx:id="startTimeField" maxWidth="200" promptText="Input start time (hh:mm)" />
+    <TextField fx:id="endTimeField" maxWidth="200" promptText="Input end time (hh:mm)" />
+   <Button fx:id="setLimBtn" mnemonicParsing="false" text="Set Limits" />
 
-    <Label text="Play Statistics" style="-fx-font-weight: bold;"/>
-    <Label fx:id="statsLabel" text="Total Time Played: XX hours XX min&#10;Average play time per session: XX hours XX min"
-           wrapText="true" maxWidth="400"/>
+    <Label style="-fx-font-weight: bold;" text="Play Statistics" />
+    <Label fx:id="statsLabel" maxWidth="400" text="Total Time Played: XX hours XX min&#10;Average play time per session: XX hours XX min" wrapText="true" />
 
     <Button fx:id="resetStatsBtn" text="Reset Statistics" />
 
-    <Label text="Revive Pet" style="-fx-font-weight: bold;"/>
-    <ComboBox fx:id="reviveList" promptText="Select Pet to Revive" maxWidth="300"/>
-    <Button fx:id="reviveBtn" text="Revive Pet"/>
+    <Label style="-fx-font-weight: bold;" text="Revive Pet" />
+    <ComboBox fx:id="reviveList" maxWidth="300" promptText="Select Pet to Revive" />
+    <Button fx:id="reviveBtn" text="Revive Pet" />
 
-    <Label fx:id="notificationLabel" text="" textFill="green" wrapText="true" maxWidth="500"/>
+    <Label fx:id="notificationLabel" maxWidth="500" text="" textFill="green" wrapText="true" />
 
     <Separator />
 
-    <Button fx:id="backBtn" text="Return to Main Menu"/>
+    <Button fx:id="backBtn" text="Return to Main Menu" />
 </VBox>

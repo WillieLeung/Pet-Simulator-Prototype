@@ -16,7 +16,7 @@ public class ParentalControlsController {
     @FXML private TextField startTimeField, endTimeField;
     @FXML private Label statsLabel;
     @FXML private Label notificationLabel;
-    @FXML private Button resetStatsBtn, reviveBtn, backBtn;
+    @FXML private Button resetStatsBtn, reviveBtn, backBtn, setLimBtn;
     @FXML private ComboBox<String> reviveList;
 
     // Variables to track user input and state
@@ -39,13 +39,15 @@ public class ParentalControlsController {
                 "Pet Name: Bobby; Animal: Dog"
         );
 
-        // Listeners and actions
+        // Listeners and actions for playtime limit check box
         limitPlayTime.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            isTimeLimitEnabled = newVal;
+            isTimeLimitEnabled = newVal; //set playtime limit to true or false if changed
         });
 
         reviveList.setOnAction(e -> selectedPetToRevive = reviveList.getValue());
 
+        //When revive button pressed,
+        setLimBtn.setOnAction(e -> setLimits());
         reviveBtn.setOnAction(e -> {
             startTime = startTimeField.getText();
             endTime = endTimeField.getText();
@@ -66,7 +68,7 @@ public class ParentalControlsController {
 
         // Bind notification text to label
         notificationLabel.textProperty().bind(notification);
-
+        //Get stats and update UI
         updateStatsLabel();
 
         backBtn.setOnAction(e -> returnToMainMenu());
@@ -91,5 +93,32 @@ public class ParentalControlsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+//validate time limit inputs & store limits in file
+    private void setLimits() {
+        String startInput = startTimeField.getText();
+        String endInput = endTimeField.getText();
+
+        //val
+        if (isValidTimeFormat(startInput) && isValidTimeFormat(endInput)) {
+            startTime = startInput;
+            endTime = endInput;
+            notification.set("Time limits set: " + startTime + " - " + endTime);
+            saveLimits();
+        } else {
+            notification.set("Incorrect input format. Please use HH:mm (i.e., 23:00).");
+        }
+    }
+// checks if time inputs are valid format
+    private boolean isValidTimeFormat(String time) {
+        return time != null && time.matches("^([01]\\d|2[0-3]):[0-5]\\d$");
+    }
+
+    // save limits values in CSV/json
+    private void saveLimits(){
+        String startInput = startTimeField.getText();
+        String endInput = endTimeField.getText();
+        System.out.println("Time limits set: " + startTime + " - " + endTime);
     }
 }
