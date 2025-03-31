@@ -2,7 +2,6 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -24,9 +23,9 @@ public class Events{
      */
     public Events(String filename){
         ReadWriteFile reader = new ReadWriteFile();
-        Map<String, List<String>> mappedEvents = reader.readEventCSV(filename);
-        for(String key : mappedEvents.keySet()){
-            addEvent(key, mappedEvents.get(key), 1, 50, -75,"Food", "Pizza");
+        List<Event> events = reader.readEventCSV(filename);
+        for(Event event : events){
+            addEvent(event.getQuestion(), event.getOptions(), event.getAnswerIndex(), event.getPlusScore(), event.getMinusScore(), event.getItemType(), event.getItem());
         }
         newEvent();
     }

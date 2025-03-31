@@ -738,7 +738,7 @@ public class GamePlayController {
      */
     private void showEventPopup() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/src/views/EventPopup.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("views/EventPopup.fxml"));
             Scene popupScene = new Scene(loader.load());
             Stage popupStage = new Stage();
             popupStage.setScene(popupScene);
@@ -825,7 +825,7 @@ public class GamePlayController {
         stats.put("Sprite", pet.getSprite());
         stats.put("Score", String.valueOf(pet.getScore()));
         stats.put("Name", pet.getPetName());
-        file.writeStatsCSV("saves/" + petName + ".csv", stats);
+        file.writeStatsCSV("saves/" + pet.getPetName() + ".csv", stats);
 
         System.out.println("Saving and Exiting to Main Menu");
 
@@ -836,14 +836,14 @@ public class GamePlayController {
      * Function switched to main menu
      */
     private void switchToMainMenu() {
-        try {
-            Stage stage = (Stage) saveExitBtn.getScene().getWindow();
-            Scene newScene = new Scene(FXMLLoader.load(getClass().getResource("/src/views/MainMenu.fxml")));
-            stage.setScene(newScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try {
+        Stage stage = (Stage) saveExitBtn.getScene().getWindow();
+        Scene newScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("views/MainMenu.fxml")));
+        stage.setScene(newScene);
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
 
     /**
      * Function shows a warning for not selecting a food item in the food inventory

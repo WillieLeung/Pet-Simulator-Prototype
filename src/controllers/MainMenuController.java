@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.Map;
 import javafx.scene.control.Alert;
@@ -164,13 +165,14 @@ public class MainMenuController {
     }
 
     private void switchScene(String fxmlFile) {
-        try {
-            Stage stage = (Stage) newGameBtn.getScene().getWindow();
-            Scene newScene = new Scene(FXMLLoader.load(getClass().getResource("/" + fxmlFile)));
-            stage.setScene(newScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try {
+        Stage stage = (Stage) newGameBtn.getScene().getWindow();
+        Scene newScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource(fxmlFile.replace("src/", ""))));
+        
+        stage.setScene(newScene);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
     }
 
     private void exitGame() {

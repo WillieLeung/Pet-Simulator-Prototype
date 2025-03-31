@@ -100,4 +100,14 @@ public class NewGameController {
     private String dictionaryToString(String petName, String animalType) {
         return "Pet Name: " + petName + "; Animal: " + animalType;
     }
+
+    private void switchToMainMenu() {
+        try {
+            Stage stage = (Stage) createBtn.getScene().getWindow();
+            Scene newScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("views/MainMenu.fxml")));
+            stage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
