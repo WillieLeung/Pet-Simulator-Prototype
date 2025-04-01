@@ -8,14 +8,16 @@ public class Event {
     int correctAnswer;
     int plusScore;
     int minusScore;
+    String itemType;
     String item;
 
-    public Event(String question, List<String> options, int correctAnswer, int plusScore, int minusScore, String item) {
+    public Event(String question, List<String> options, int correctAnswer, int plusScore, int minusScore, String itemType, String item) {
         this.question = question;
         this.options = options;
         this.correctAnswer = correctAnswer;
         this.plusScore = plusScore;
         this.minusScore = minusScore;
+        this.itemType = itemType;
         this.item = item;
     }
 
@@ -43,14 +45,11 @@ public class Event {
         return minusScore;
     }
 
-    public int getScore(int optionIndex){
-        if(optionIndex == correctAnswer){
-            return plusScore;
-        }
-        return minusScore;
+    public String getItemType() {
+        return itemType;
     }
-
     public String getItem(){
         return item;
     }
 }
+
