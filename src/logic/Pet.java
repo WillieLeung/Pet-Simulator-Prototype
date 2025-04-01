@@ -1,3 +1,5 @@
+package logic;
+
 /**
  * This class represents a pet in the game
  *

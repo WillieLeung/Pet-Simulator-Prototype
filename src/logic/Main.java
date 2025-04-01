@@ -1,4 +1,4 @@
-package src;
+package logic;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +12,7 @@ public class Main extends Application {
         System.out.println("Alternative path: " + getClass().getClassLoader().getResource("views/MainMenu.fxml"));
 
         // Try different paths:
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("views/MainMenu.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("../views/MainMenu.fxml"));
         Scene scene = new Scene(loader.load(), 800, 600);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Pet Simulator");

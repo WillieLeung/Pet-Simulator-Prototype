@@ -43,15 +43,10 @@ import java.time.*;
 public class GamePlayController {
 
     @FXML
-    private Label inventoryErrorLabel, cooldownLabel;
-    @FXML
     private Button sleepButton, feedButton, giftButton, vetButton, playButton,
             exerciseButton, triggerEventBtn, saveExitBtn;
     @FXML //Declare image views
     private ImageView petImage, statusImage, backgroundImage;
-
-    @FXML
-    private ComboBox<String> giftInventory, foodInventory;
 
     @FXML private ProgressBar healthBar, sleepBar, happinessBar, fullnessBar;
     @FXML private StackPane rootPane;
