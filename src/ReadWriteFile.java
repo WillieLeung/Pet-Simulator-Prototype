@@ -1,3 +1,5 @@
+package logic;
+
 /**
  * This class represents reading and writing to both JSON and CSV files
  *
@@ -38,47 +40,80 @@ public class ReadWriteFile {
     }
 
 
-    /**
-     * Function reads event-based CSV where the first row contains event names,
-     * and subsequent rows contain options for each event.
-     *
-     * @param csvFile The path to the CSV file
-     * @return A Map where each event name is associated with a list of options
-     */
-    public Map<String, List<String>> readEventCSV(String csvFile) {
-        Map<String, List<String>> eventsOptionsMap = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            String line;
-            List<String> events = null;
-            List<List<String>> options = new ArrayList<>();
+ /**
+ * Function reads event-based CSV in vertical format where:
+ * - First row contains event names/questions
+ * - Rows 2-5 contain options for each event (with (C) marking correct answers)
+ * - Row 6 contains item types (food or gift)
+ * - Row 7 contains specific item names
+ *
+ * @param csvFile The path to the CSV file
+ * @return A List of Event objects for use in the game
+ */
+public List<Event> readEventCSV(String csvFile) {
+    List<Event> eventsList = new ArrayList<>();
 
-            // Read first row (event names)
-            if ((line = br.readLine()) != null) {
-                events = Arrays.asList(line.split(","));
-            }
-
-            // Read subsequent rows (options for each event)
-            while ((line = br.readLine()) != null) {
-                List<String> optionRow = Arrays.asList(line.split(","));
-                options.add(optionRow);
-            }
-            // Map each event to the options under it
-            if (events != null && !events.isEmpty()) {
-                for (int i = 0; i < events.size(); i++) {
-                    List<String> eventOptions = new ArrayList<>();
-                    for (List<String> optionRow : options) {
-                        if (i < optionRow.size()) {
-                            eventOptions.add(optionRow.get(i));
-                        }
-                    }
-                    eventsOptionsMap.put(events.get(i), eventOptions);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+        List<String> allLines = new ArrayList<>();
+        String line;
+        while ((line = br.readLine()) != null) {
+            allLines.add(line);
         }
-        return eventsOptionsMap;
+
+        // Need at least questions + options + item type + item name (7 rows)
+        if (allLines.size() >= 6) {
+            // First row: event names/questions
+            String[] questions = allLines.get(0).split(",");
+
+            // Process each event (column)
+            for (int col = 0; col < questions.length; col++) {
+                // Get event question
+                String question = questions[col].trim();
+
+                // Get options and find correct answer
+                List<String> options = new ArrayList<>();
+                int correctAnswer = -1;
+
+                // Read options from rows 1-4
+                for (int row = 1; row <= 4; row++) {
+                    String[] rowValues = allLines.get(row).split(",");
+                    if (col < rowValues.length) {
+                        String option = rowValues[col].trim();
+
+                        // Check if this option is marked correct
+                        if (option.contains("(C)")) {
+                            correctAnswer = row - 1; // Option index (0-3)
+                            option = option.replace("(C)", "").trim();
+                        }
+
+                        options.add(option);
+                    }
+                }
+
+                // Get item type (food or gift)
+                String[] itemTypes = allLines.get(5).split(",");
+                String itemType = (col < itemTypes.length) ? itemTypes[col].trim() : "Food";
+
+                //  Get item name (if available)
+                String item = "Pizza"; // Default item
+                if (allLines.size() >= 7) {
+                    String[] itemNames = allLines.get(6).split(",");
+                    if (col < itemNames.length) {
+                        item = itemNames[col].trim();
+                    }
+                }
+
+                // Create Event object with default scores (can be customized)
+                Event event = new Event(question, options, correctAnswer, 10, 5, itemType, item);
+                eventsList.add(event);
+            }
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+
+    return eventsList;
+}
 
     public void writeStatsCSV(String csvFile, Map<String, String> stats) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
@@ -126,17 +161,12 @@ public class ReadWriteFile {
      * Function reads specified inventory from JSON inventory file.
      * Returns an array of hashmaps for each type of item.
      *
-     * @param saveSlot, Integer
+     * @param petName, String
      *
      * @return items, HashMap<String, Integer>[]
      */
-    public HashMap<String, Integer>[] readInventory(String saveSlot) {
+    public HashMap<String, Integer>[] readInventory(String petName) {
         try {
-            // Check to make sure that the save slot is valid.
-            if ((Integer.parseInt(saveSlot) > 3) || (Integer.parseInt(saveSlot) < 1)) {
-                throw new IllegalArgumentException("No such save slot exists.");
-            }
-
             // Initialize the hashmaps and the return array.
             HashMap<String, Integer> foodItems = new HashMap<String, Integer>();
             HashMap<String, Integer> giftItems = new HashMap<String, Integer>();
@@ -144,8 +174,15 @@ public class ReadWriteFile {
 
             // Extract the inventories from the JSON file.
             JSONObject inventories = new JSONObject(Files.readString(Paths.get("inventory.json")));
-            // Extract the inventory for the save slot in question.
-            JSONObject inventory = inventories.getJSONObject(saveSlot);
+
+            // Check if the petName exists in the JSON file
+            if (!inventories.has(petName)) {
+                throw new IllegalArgumentException("No such pet exists.");
+            }
+
+            // Extract the inventory for the pet in question.
+            JSONObject inventory = inventories.getJSONObject(petName);
+
             // Extract the nested foods and gifts dictionaries from the inventory.
             JSONObject foods = inventory.getJSONObject("foods");
             JSONObject gifts = inventory.getJSONObject("gifts");
@@ -156,7 +193,7 @@ public class ReadWriteFile {
             foodItems.put("Leaves", foods.getInt("Leaves"));
             foodItems.put("Chicken", foods.getInt("Chicken"));
 
-            // Add each gift and quantity to the foodItems hashmap.
+            // Add each gift and quantity to the giftItems hashmap.
             giftItems.put("Ball", gifts.getInt("Ball"));
             giftItems.put("Yarn", gifts.getInt("Yarn"));
             giftItems.put("Coin", gifts.getInt("Coin"));
@@ -189,29 +226,51 @@ public class ReadWriteFile {
 
     /**
      * Function reads specified inventory from JSON inventory file.
+     * If the inventory doesn't exist, it is created.
      * Updates values in JSON inventory file using values in given hashmaps.
      * Returns true/false based on if the update is successful.
      *
-     * @param saveSlot, Integer
+     * @param petName, Integer
      * @param items, HashMap<String, Integer>[]
      *
      * @return boolean
      */
-    public boolean updateInventory(String saveSlot, HashMap<String, Integer>[] items) {
+    public boolean updateInventory(String petName, HashMap<String, Integer>[] items) {
         try {
-            // Check to make sure that the save slot is valid.
-            if ((Integer.parseInt(saveSlot) > 3) || (Integer.parseInt(saveSlot) < 1)) {
-                throw new IllegalArgumentException("No such save slot exists.");
-            }
-
             // Get the hashmaps from the given array.
             HashMap<String, Integer> foodItems = items[0];
             HashMap<String, Integer> giftItems = items[1];
 
             // Extract the inventories from the JSON file.
             JSONObject inventories = new JSONObject(Files.readString(Paths.get("inventory.json")));
+
+            // Check if the pet name exists in the JSON file.
+            if (!inventories.has(petName)) {
+                // Add the new pet if it doesn't exist.
+                JSONObject newInventory = new JSONObject();
+                newInventory.put("foods", foodItems);
+                newInventory.put("gifts", giftItems);
+
+                // Set the item quantities to zero.
+                foodItems.put("Pizza", 0);
+                foodItems.put("Chocolate", 0);
+                foodItems.put("Leaves", 0);
+                foodItems.put("Chicken", 0);
+                giftItems.put("Ball", 0);
+                giftItems.put("Yarn", 0);
+                giftItems.put("Coin", 0);
+                giftItems.put("Wood", 0);
+                inventories.put(petName, newInventory);
+
+                // Update the JSON file.
+                Files.write(Paths.get("inventory.json"), inventories.toString(4).getBytes());
+
+                // Return true.
+                return true;
+            }
+
             // Extract the inventory for the save slot in question.
-            JSONObject inventory = inventories.getJSONObject(saveSlot);
+            JSONObject inventory = inventories.getJSONObject(petName);
             // Extract the nested foods and gifts dictionaries from the inventory.
             JSONObject foods = inventory.getJSONObject("foods");
             JSONObject gifts = inventory.getJSONObject("gifts");
