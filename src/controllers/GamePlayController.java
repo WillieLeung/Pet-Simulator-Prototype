@@ -42,6 +42,9 @@ import java.time.*;
 
 public class GamePlayController {
 
+    @FXML //Declare labels
+    private Label cooldownLabel, scoreLabel, petStateLabel;
+
     @FXML
     private Button sleepButton, feedButton, giftButton, vetButton, playButton,
             exerciseButton, triggerEventBtn, saveExitBtn;
@@ -198,9 +201,11 @@ public class GamePlayController {
         saveExitBtn.setOnAction(e -> saveAndExit(pet));
         sleepButton.setOnAction(e -> {
             loadImage(statusImage, "sleeping");
+            playSound("sleep");
             statusImage.setVisible(true);
             pausePetFlipTimer();
             sleepFull(actions, pet, 1, actionsModifier[1]);
+
         });
         feedButton.setOnAction(e -> {
             if (foodInventory.getItems().isEmpty()){
@@ -219,7 +224,7 @@ public class GamePlayController {
                     fullness.set(pet.getFullness());
                     score.set(pet.getScore());
                     updateInventory(pet);
-                    startCooldown(feedButton, feedCooldownLabel);
+                    startCooldown(feedButton, null);
                 }
             }
         });
@@ -240,7 +245,7 @@ public class GamePlayController {
                     happiness.set(pet.getHappiness());
                     score.set(pet.getScore());
                     updateInventory(pet);
-                    startCooldown(giftButton, giftCooldownLabel);
+                    startCooldown(giftButton, null);
                 }
             }
         });
@@ -250,7 +255,7 @@ public class GamePlayController {
             pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            startCooldown(vetButton, vetCooldownLabel);
+            startCooldown(vetButton, null);
         });
         playButton.setOnAction(e -> {
             playSound("play");
@@ -258,7 +263,7 @@ public class GamePlayController {
             pet.statLimit();
             happiness.set(pet.getHappiness());
             score.set(pet.getScore());
-            startCooldown(playButton, playCooldownLabel);
+            startCooldown(playButton, null);
         });
         exerciseButton.setOnAction(e -> {
             playSound("excercise");
@@ -266,14 +271,14 @@ public class GamePlayController {
             pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            startCooldown(exerciseButton, exerciseCooldownLabel);
+            startCooldown(exerciseButton, null);
         });
         triggerEventBtn.setOnAction(e -> {
             playSound("event");
             showEventPopup();
             pet.statLimit();
             score.set(pet.getScore());
-            startCooldown(triggerEventBtn, eventCooldownLabel);
+            startCooldown(triggerEventBtn, null);
             updateInventory(pet);
         });
     }
@@ -471,7 +476,10 @@ public class GamePlayController {
                 score.set(pet.getScore());
                 statusImage.setVisible(false);
                 pet.statLimit();
-                startCooldown(sleepButton, sleepCooldownLabel);
+                startCooldown(sleepButton, () -> {
+                    status.set("normal");          // pet wakes up
+                    resumePetFlipTimer();         // resume flipping
+                });
                 resumePetFlipTimer();
                 pet.setState("Normal");
                 status.set(pet.getState());
@@ -877,4 +885,22 @@ public class GamePlayController {
         alert.setContentText("Obtain some through events");
         alert.showAndWait();
     }
+
+    //plays sound
+    public void playSound(String fileName) {
+        try {
+            // Load the resource from the classpath
+            URL soundURL = getClass().getResource("/resources/sounds/" + fileName+".mp3");
+            if (soundURL == null) {
+                System.out.println("Sound file not found: " + fileName);
+                return;
+            }
+            Media sound = new Media(soundURL.toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

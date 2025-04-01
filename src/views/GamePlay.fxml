@@ -18,7 +18,7 @@
    <children>
       <ImageView fx:id="backgroundImage" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" StackPane.alignment="TOP_CENTER">
          <image>
-            <Image url="@../../resources/images/background.png" />
+            <Image url="@/resources/images/background.png" />
          </image>
          <viewport>
             <Rectangle2D />
