@@ -40,7 +40,6 @@ public class EventPopupController {
                     pet.getInventory().addFoodItems(events.getEventItem(), 1);
                 }
                 else {
-                    System.out.println("gift");
                     pet.getInventory().addGiftItems(events.getEventItem(), 1);
                 }
                 pet.setScore(pet.getScore() + events.getEventPlus());

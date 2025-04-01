@@ -192,3 +192,4 @@ public class Pet {
         else {state = "Normal";} //If none of the above, then state is normal
     }
 }
+
