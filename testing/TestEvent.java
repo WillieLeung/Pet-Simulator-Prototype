@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for logic.Actions class
+ * Unit tests for logic.Event class
  *
  * @author Logan Ouellette
  * @version 1.0
