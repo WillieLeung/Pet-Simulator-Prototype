@@ -886,7 +886,9 @@ public class GamePlayController {
         alert.showAndWait();
     }
 
-    //plays sound
+    /**
+     * Function plays sound of the given file name
+     */
     public void playSound(String fileName) {
         try {
             // Load the resource from the classpath
@@ -902,5 +904,4 @@ public class GamePlayController {
             e.printStackTrace();
         }
     }
-
 }

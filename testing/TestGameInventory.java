@@ -17,8 +17,8 @@ public class TestGameInventory {
 
     @Test
     public void testGetSaveSlot(){
-        String expectedValue = "1";
-        GameInventory instance = new GameInventory("1");
+        String expectedValue = "Drake";
+        GameInventory instance = new GameInventory("Drake");
         assertEquals(expectedValue, instance.getSaveSlot());
     }
 
@@ -31,8 +31,8 @@ public class TestGameInventory {
         expectedInventory.put("Pizza", 5);
         expectedInventory.put("Chocolate", 2);
         expectedInventory.put("Leaves", 3);
-        expectedInventory.put("Chicken", 2);
-        GameInventory instance = new GameInventory("1");
+        expectedInventory.put("Chicken", 1);
+        GameInventory instance = new GameInventory("Drake");
         assertEquals(expectedInventory, instance.getFoodItems());
     }
 
@@ -42,11 +42,11 @@ public class TestGameInventory {
     @Test
     public void testGetGiftItems() {
         HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Ball", 3);
-        expectedInventory.put("Yarn", 2);
+        expectedInventory.put("Ball", 6);
+        expectedInventory.put("Yarn", 1);
         expectedInventory.put("Coin", 1);
-        expectedInventory.put("Wood", 1);
-        GameInventory instance = new GameInventory("2");
+        expectedInventory.put("Wood", 4);
+        GameInventory instance = new GameInventory("Drake");
         assertEquals(expectedInventory, instance.getGiftItems());
     }
 
@@ -56,11 +56,11 @@ public class TestGameInventory {
     @Test
     public void testAddFoodItems() {
         HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Pizza", 2);
-        expectedInventory.put("Chocolate", 0);
-        expectedInventory.put("Leaves", 0);
-        expectedInventory.put("Chicken", 7);
-        GameInventory instance = new GameInventory("3");
+        expectedInventory.put("Pizza", 7);
+        expectedInventory.put("Chocolate", 2);
+        expectedInventory.put("Leaves", 3);
+        expectedInventory.put("Chicken", 8);
+        GameInventory instance = new GameInventory("Drake");
         instance.addFoodItems("Pizza", 2);
         instance.addFoodItems("Chicken", 7);
         assertEquals(expectedInventory, instance.getFoodItems());
@@ -75,8 +75,8 @@ public class TestGameInventory {
         expectedInventory.put("Pizza", 5);
         expectedInventory.put("Chocolate", 1);
         expectedInventory.put("Leaves", 0);
-        expectedInventory.put("Chicken", 2);
-        GameInventory instance = new GameInventory("1");
+        expectedInventory.put("Chicken", 1);
+        GameInventory instance = new GameInventory("Drake");
         instance.depleteFoodItems("Leaves", 3);
         instance.depleteFoodItems("Chocolate", 1);
         assertEquals(expectedInventory, instance.getFoodItems());
@@ -88,11 +88,11 @@ public class TestGameInventory {
     @Test
     public void testAddGiftItems() {
         HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Ball", 6);
-        expectedInventory.put("Yarn", 2);
+        expectedInventory.put("Ball", 9);
+        expectedInventory.put("Yarn", 1);
         expectedInventory.put("Coin", 2);
-        expectedInventory.put("Wood", 1);
-        GameInventory instance = new GameInventory("2");
+        expectedInventory.put("Wood", 4);
+        GameInventory instance = new GameInventory("Drake");
         instance.addGiftItems("Ball", 3);
         instance.addGiftItems("Coin", 1);
         assertEquals(expectedInventory, instance.getGiftItems());
@@ -104,11 +104,11 @@ public class TestGameInventory {
     @Test
     public void testDepleteGiftItems() {
         HashMap<String, Integer> expectedInventory = new HashMap<String, Integer>();
-        expectedInventory.put("Ball", 1);
-        expectedInventory.put("Yarn", 0);
+        expectedInventory.put("Ball", 5);
+        expectedInventory.put("Yarn", 1);
         expectedInventory.put("Coin", 1);
         expectedInventory.put("Wood", 1);
-        GameInventory instance = new GameInventory("1");
+        GameInventory instance = new GameInventory("Drake");
         instance.depleteGiftItems("Ball", 1);
         instance.depleteGiftItems("Wood", 3);
         assertEquals(expectedInventory, instance.getGiftItems());
