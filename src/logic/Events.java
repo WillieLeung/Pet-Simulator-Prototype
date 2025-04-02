@@ -63,7 +63,7 @@ public class Events{
     }
 
     /**
-     * Function to get score based on option chosen
+     * Gets score rewarded for correct answer
      * @param index
      * @return int score based on index
      */
@@ -71,6 +71,10 @@ public class Events{
         return currentEvent.getPlusScore();
     }
 
+    /**
+     * Get score deducted for wrong answer
+     * @return int score
+     */
     public int getEventMinus(){
         return currentEvent.getMinusScore();
     }
@@ -96,7 +100,7 @@ public class Events{
      * @param minus points to deduct from score if incorrect
      * @param item item to reward if correct
      */
-    private void addEvent(String question, List<String> options, int correctAnswer, int plus, int minus,String itemType, String item){
+    public void addEvent(String question, List<String> options, int correctAnswer, int plus, int minus,String itemType, String item){
         Event newEvent = new Event(question, options, correctAnswer, plus, minus,itemType, item);
         events.add(newEvent);
     }

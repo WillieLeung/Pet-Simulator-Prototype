@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for logic.Actions class
+ * Unit tests for logic.Eventsclass
  *
  * @author Logan Ouellette
  * @version 1.0
@@ -20,79 +20,44 @@ import static org.junit.jupiter.api.Assertions.*;
 class TestEvents {
 
     @Test
-    public void newEvent() {
-        List<String> options = new ArrayList<String>();
-        options.add("A");
-        options.add("B");
-        options.add("C");
-        Event event = new Event("Hello", options, 1, 5, 10, "Food", "Pizza");
-        String question = event.getQuestion();
-        assertEquals(question, "Hello");
-    }
-
-    @Test
-    public void getEventOptions() {
-        List<String> options = new ArrayList<String>();
-        options.add("A");
-        options.add("B");
-        options.add("C");
-        Event event = new Event("Hello", options, 1, 5, 10, "Food", "Pizza");
-        List<String> options2 = event.getOptions();
-        assertEquals(options, options2);
+    public void getEventQuestion(){
+        Events events = new Events("testEvents.csv");
+        String answer = events.getEventQuestion();
+        assertEquals(answer, "check");
     }
 
     @Test
     public void getEventAnswer(){
-        List<String> options = new ArrayList<String>();
-        options.add("A");
-        options.add("B");
-        options.add("C");
-        Event event = new Event("Hello", options, 1, 5, 10, "Food", "Pizza");
-        String answer = event.getAnswer();
+        Events events = new Events("testEvents.csv");
+        String answer = events.getEventAnswer();
         assertEquals(answer, "B");
     }
 
     @Test
     public void getEventPlus(){
-        List<String> options = new ArrayList<String>();
-        options.add("A");
-        options.add("B");
-        options.add("C");
-        Event event = new Event("Hello", options, 1, 5, 10, "Food", "Pizza");
-        int index = event.getAnswerIndex();
-        assertEquals(index, 1);
+        Events events = new Events("testEvents.csv");
+        int score = events.getEventPlus();
+        assertEquals(score, 10);
     }
 
     @Test
     public void getEventMinus() {
-        List<String> options = new ArrayList<String>();
-        options.add("A");
-        options.add("B");
-        options.add("C");
-        Event event = new Event("Hello", options, 1, 5, 10, "Food", "Pizza");
-        int plus = event.getPlusScore();
-        assertEquals(plus, 5);
+        Events events = new Events("testEvents.csv");
+        int score = events.getEventMinus();
+        assertEquals(score, 5);
+    }
+
+    @Test
+    public void getEventItemType() {
+        Events events = new Events("testEvents.csv");
+        String type = events.getEventType();
+        assertEquals(type, "Food");
     }
 
     @Test
     public void getEventItem() {
-        List<String> options = new ArrayList<String>();
-        options.add("A");
-        options.add("B");
-        options.add("C");
-        Event event = new Event("Hello", options, 1, 5, 10, "Food", "Pizza");
-        int minus = event.getMinusScore();
-        assertEquals(minus, 10);
-    }
-
-    @Test
-    public void addEvent(){
-        List<String> options = new ArrayList<String>();
-        options.add("A");
-        options.add("B");
-        options.add("C");
-        Event event = new Event("Hello", options, 1, 5, 10, "Food", "Pizza");
-        String itemType = event.getItemType();
-        assertEquals(itemType, "Food");
+        Events events = new Events("testEvents.csv");
+        String item = events.getEventItem();
+        assertEquals(item, "Pizza");
     }
 }
