@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 public class InstructionsController {
     @FXML private Button returnBtn;
 
+    /**
+     * Returns to main menu
+     */
     @FXML
     public void initialize() {
         returnBtn.setOnAction(e -> {

@@ -15,10 +15,6 @@ import java.time.LocalTime;
 import java.util.Map;
 import javafx.scene.control.Alert;
 
-/**
- * Note needs heavy debugging.
- */ 
-
 public class MainMenuController {
 
     //Pet variable that will be accessible in GamePlayController

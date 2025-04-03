@@ -48,7 +48,9 @@ public class ParentalControlsController {
     private final StringProperty errorNotification = new SimpleStringProperty("");
     private final StringProperty successNotification = new SimpleStringProperty("");
 
-    // Initialize data.
+    /**
+     * Initalize data
+     */
     @FXML
     public void initialize() {
         // Display the current time limit.
@@ -224,8 +226,9 @@ public class ParentalControlsController {
         backBtn.setOnAction(e -> returnToMainMenu());
     }
 
-
-
+    /**
+     * Updates play time stats labels
+     */
     private void updateStatsLabel() {
         // Calculate the display time data.
         int hoursPlayed = totalMinutesPlayed / 60;

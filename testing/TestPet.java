@@ -234,6 +234,9 @@ public class TestPet {
         assertEquals(expectedInventory, instance.getInventory());
     }
 
+    /**
+     * Test stat limiting pet if stat is over 100
+     */
     @Test
     public void testStatLimitMax(){
         int expectedValue = 100;
@@ -242,6 +245,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getHealth());
     }
 
+    /**
+     * Test stat limiting pet if stat is negative
+     */
     @Test
     public void testStatLimitHealthMin(){
         int expectedValue = 0;
@@ -250,6 +256,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getSleepiness());
     }
 
+    /**
+     * Test checking if pet is dead
+     */
     @Test
     public void testCheckStateDead(){
         String expectedValue = "Dead";
@@ -258,6 +267,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getState());
     }
 
+    /**
+     * Test checking if pet is angry
+     */
     @Test
     public void testCheckStateAngry(){
         String expectedValue = "Angry";
@@ -266,6 +278,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getState());
     }
 
+    /**
+     * Test checking if pet is still angry if stat is angry and happiness is under 50%
+     */
     @Test
     public void testCheckStateStillAngry(){
         String expectedValue = "Angry";
@@ -274,6 +289,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getState());
     }
 
+    /**
+     * Test checking if pet is sleeping
+     */
     @Test
     public void testCheckStateSleeping(){
         String expectedValue = "Sleeping";
@@ -282,6 +300,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getState());
     }
 
+    /**
+     * Test checking if pet is still sleeping if pet is sleeping and sleep stat is not full
+     */
     @Test
     public void testCheckStateStillSleeping(){
         String expectedValue = "Sleeping";
@@ -290,6 +311,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getState());
     }
 
+    /**
+     * Test checking if pet is hungry
+     */
     @Test
     public void testCheckStateHungry(){
         String expectedValue = "Hungry";
@@ -298,6 +322,9 @@ public class TestPet {
         assertEquals(expectedValue, instance.getState());
     }
 
+    /**
+     * Test checking if pet is in a normal state
+     */
     @Test
     public void testCheckStateNormal(){
         String expectedValue = "Normal";
