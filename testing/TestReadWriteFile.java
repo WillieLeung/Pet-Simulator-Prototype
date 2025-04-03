@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -129,16 +131,92 @@ public class TestReadWriteFile {
     @Test
     public void testWriteStatsCSV() {
         System.out.println("\nWrite Stats CSV");
-        fail();
+        
+        // Create test data
+        Map<String, String> stats = new HashMap<>();
+        stats.put("Health", "100");
+        stats.put("Happiness", "80");
+        stats.put("Score", "450");
+        
+        // Create a temporary file for testing
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("test-stats", ".csv");
+            String testFile = tempFile.getAbsolutePath();
+            
+            // Write to the file
+            ReadWriteFile instance = new ReadWriteFile();
+            instance.writeStatsCSV(testFile, stats);
+            
+            // Verify the file was created and has content
+            assertTrue(tempFile.exists());
+            assertTrue(tempFile.length() > 0);
+            
+            // Read the content to verify
+            List<String> lines = Files.readAllLines(Paths.get(testFile));
+            assertEquals(2, lines.size()); // Header line and values line
+            
+            // Since HashMap doesn't guarantee order, we need to check differently
+            String[] headers = lines.get(0).split(",");
+            String[] values = lines.get(1).split(",");
+            
+            Map<String, String> readStats = new HashMap<>();
+            for (int i = 0; i < headers.length; i++) {
+                readStats.put(headers[i], values[i]);
+            }
+            
+            assertEquals("100", readStats.get("Health"));
+            assertEquals("80", readStats.get("Happiness"));
+            assertEquals("450", readStats.get("Score"));
+            
+        } catch (IOException e) {
+            fail("Exception occurred: " + e.getMessage());
+        } finally {
+            // Clean up
+            if (tempFile != null && tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
     }
-
 
     @Test
     public void testReadFromStatsCSV() {
         System.out.println("\nRead Stats CSV");
-        fail();
+        
+        // Create a temporary file with test data
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("test-stats-read", ".csv");
+            String testFile = tempFile.getAbsolutePath();
+            
+            // Write test data to the file
+            List<String> lines = Arrays.asList(
+                "Health,Happiness,Score,Name",
+                "100,75,350,Max"
+            );
+            Files.write(Paths.get(testFile), lines);
+            
+            // Read the file
+            ReadWriteFile instance = new ReadWriteFile();
+            Map<String, String> stats = instance.readFromStatsCSV(testFile);
+            
+            // Verify the results
+            assertNotNull(stats);
+            assertEquals(4, stats.size());
+            assertEquals("100", stats.get("Health"));
+            assertEquals("75", stats.get("Happiness"));
+            assertEquals("350", stats.get("Score"));
+            assertEquals("Max", stats.get("Name"));
+            
+        } catch (IOException e) {
+            fail("Exception occurred: " + e.getMessage());
+        } finally {
+            // Clean up
+            if (tempFile != null && tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
     }
-
 
     /**
      * Test reading inventory file.
