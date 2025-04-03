@@ -322,10 +322,10 @@ public class GamePlayController {
      */
     private int getFoodValue(String food){
         switch (food){
-            case "Pizza":return 20;
+            case "Pizza":return 25;
             case "Leaves": return 15;
             case "Chocolate": return 10;
-            case "Chicken": return 5;
+            case "Chicken": return 20;
         }
         return 0;
     }
@@ -338,10 +338,10 @@ public class GamePlayController {
      */
     private int getGiftValue(String gift){
         switch (gift){
-            case "Ball": return 20;
-            case "Coin": return 15;
-            case "Wood": return 10;
-            case "Yarn": return 5;
+            case "Ball": return 25;
+            case "Coin": return 20;
+            case "Wood": return 15;
+            case "Yarn": return 10;
         }
         return 0;
     }

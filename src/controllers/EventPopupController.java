@@ -40,13 +40,14 @@ public class EventPopupController {
                 return;
             }
             if (choice.equals(events.getEventAnswer())) {
-                resultLabel.setText("✅ Correct! You earned a " + events.getEventItem() + "!");
+                int numReward = (int)(Math.random() * 3 + 1);
+                resultLabel.setText("✅ Correct! You earned " + Integer.toString(numReward) + " " + events.getEventItem() + "!");
                 resultLabel.setTextFill(Color.GREEN);
                 if(events.getEventType().equals("Food")){
-                    pet.getInventory().addFoodItems(events.getEventItem(), 1);
+                    pet.getInventory().addFoodItems(events.getEventItem(), numReward);
                 }
                 else {
-                    pet.getInventory().addGiftItems(events.getEventItem(), 1);
+                    pet.getInventory().addGiftItems(events.getEventItem(), numReward);
                 }
                 pet.setScore(pet.getScore() + events.getEventPlus());
             } else {

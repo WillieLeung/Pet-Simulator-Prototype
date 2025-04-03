@@ -184,10 +184,10 @@ public List<Event> readEventCSV(String csvFile) {
         // Check to see if this is a JUnit test.
         String jsonFile;
         if (testing == true) {
-            jsonFile = "test_inventory.json";
+            jsonFile = "inventories/test_inventory.json";
         }
         else {
-            jsonFile = "inventory.json";
+            jsonFile = "inventories/inventory.json";
         }
 
         try {
@@ -263,10 +263,10 @@ public List<Event> readEventCSV(String csvFile) {
         // Check to see if this is a JUnit test.
         String jsonFile;
         if (testing == true) {
-            jsonFile = "test_inventory.json";
+            jsonFile = "inventories/test_inventory.json";
         }
         else {
-            jsonFile = "inventory.json";
+            jsonFile = "inventories/inventory.json";
         }
 
         try {
@@ -281,8 +281,8 @@ public List<Event> readEventCSV(String csvFile) {
             if (!inventories.has(petName)) {
                 // Add the new pet if it doesn't exist.
                 JSONObject newInventory = new JSONObject();
-                newInventory.put("foods", foodItems);
-                newInventory.put("gifts", giftItems);
+                foodItems = new HashMap<>();
+                giftItems = new HashMap<>();
 
                 // Set the item quantities to zero.
                 foodItems.put("Pizza", 0);
@@ -293,6 +293,11 @@ public List<Event> readEventCSV(String csvFile) {
                 giftItems.put("Yarn", 0);
                 giftItems.put("Coin", 0);
                 giftItems.put("Wood", 0);
+
+                // Add the items to the new inventory.
+                newInventory.put("foods", foodItems);
+                newInventory.put("gifts", giftItems);
+                // Add the new inventory.
                 inventories.put(petName, newInventory);
 
                 // Update the JSON file.
