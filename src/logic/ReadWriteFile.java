@@ -162,9 +162,18 @@ public List<Event> readEventCSV(String csvFile) {
      *
      * @param petName, String
      *
-     * @return items, HashMap<String, Integer>[]
+     * @return an array of hashmaps with items.
      */
-    public HashMap<String, Integer>[] readInventory(String petName) {
+    public HashMap<String, Integer>[] readInventory(String petName, boolean testing) {
+        // Check to see if this is a JUnit test.
+        String jsonFile;
+        if (testing == true) {
+            jsonFile = "test_inventory.json";
+        }
+        else {
+            jsonFile = "inventory.json";
+        }
+
         try {
             // Initialize the hashmaps and the return array.
             HashMap<String, Integer> foodItems = new HashMap<String, Integer>();
@@ -172,7 +181,7 @@ public List<Event> readEventCSV(String csvFile) {
             HashMap<String, Integer>[] items = new HashMap[]{foodItems, giftItems};
 
             // Extract the inventories from the JSON file.
-            JSONObject inventories = new JSONObject(Files.readString(Paths.get("inventory.json")));
+            JSONObject inventories = new JSONObject(Files.readString(Paths.get(jsonFile)));
 
             // Check if the petName exists in the JSON file
             if (!inventories.has(petName)) {
@@ -232,16 +241,25 @@ public List<Event> readEventCSV(String csvFile) {
      * @param petName, Integer
      * @param items, HashMap<String, Integer>[]
      *
-     * @return boolean
+     * @return true if update is successful, false if unsuccessful
      */
-    public boolean updateInventory(String petName, HashMap<String, Integer>[] items) {
+    public boolean updateInventory(String petName, HashMap<String, Integer>[] items, boolean testing) {
+        // Check to see if this is a JUnit test.
+        String jsonFile;
+        if (testing == true) {
+            jsonFile = "test_inventory.json";
+        }
+        else {
+            jsonFile = "inventory.json";
+        }
+
         try {
             // Get the hashmaps from the given array.
             HashMap<String, Integer> foodItems = items[0];
             HashMap<String, Integer> giftItems = items[1];
 
             // Extract the inventories from the JSON file.
-            JSONObject inventories = new JSONObject(Files.readString(Paths.get("inventory.json")));
+            JSONObject inventories = new JSONObject(Files.readString(Paths.get(jsonFile)));
 
             // Check if the pet name exists in the JSON file.
             if (!inventories.has(petName)) {
@@ -262,7 +280,7 @@ public List<Event> readEventCSV(String csvFile) {
                 inventories.put(petName, newInventory);
 
                 // Update the JSON file.
-                Files.write(Paths.get("inventory.json"), inventories.toString(4).getBytes());
+                Files.write(Paths.get(jsonFile), inventories.toString(4).getBytes());
 
                 // Return true.
                 return true;
@@ -327,7 +345,7 @@ public List<Event> readEventCSV(String csvFile) {
             }
 
             // Update the JSON file.
-            Files.write(Paths.get("inventory.json"), inventories.toString(4).getBytes());
+            Files.write(Paths.get(jsonFile), inventories.toString(4).getBytes());
 
             // Return true.
             return true;

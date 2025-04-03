@@ -18,7 +18,7 @@
     <TextField fx:id="startTimeField" promptText="Input start time (hh:mm)" maxWidth="200"/>
     <TextField fx:id="endTimeField" promptText="Input end time (hh:mm)" maxWidth="200"/>
 
-    <Button fx:id="setPlayTimeLimitBtn" text="Set Playtime Limit" />
+    <Button fx:id="setPlayTimeLimitBtn" text="Set Play Time Limit" />
 
     <Label text="Play Statistics" style="-fx-font-weight: bold;"/>
     <Label fx:id="statsLabel" text="Total Time Played: XX hours XX min&#10;Average play time per session: XX hours XX min"
@@ -30,7 +30,10 @@
     <ComboBox fx:id="reviveList" promptText="Select Pet to Revive" maxWidth="300"/>
     <Button fx:id="reviveBtn" text="Revive Pet"/>
 
-    <Label fx:id="notificationLabel" text="" textFill="red" wrapText="true" maxWidth="500"/>
+    <HBox alignment="CENTER">
+        <Label fx:id="errorNotificationLabel" text="" textFill="red" wrapText="true" maxWidth="500"/>
+        <Label fx:id="successNotificationLabel" text="" textFill="green" wrapText="true" maxWidth="500"/>
+    </HBox>
 
     <Separator />
 

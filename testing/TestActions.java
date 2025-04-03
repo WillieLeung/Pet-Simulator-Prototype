@@ -21,7 +21,7 @@ class TestActions {
     @Test
     public void feedPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake", true));
         int expectedResult = 110;
         actions.feedPet(pet, "Pizza", 10);
         int result = pet.getFullness();
@@ -34,7 +34,7 @@ class TestActions {
     @Test
     void giftPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake", true));
         int expectedResult = 110;
         actions.giftPet(pet,"Coin", 10);
         int result = pet.getHappiness();
@@ -47,7 +47,7 @@ class TestActions {
     @Test
     void vetPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake", true));
         int expectedResult = 110;
         actions.vetPet(pet, 10);
         int result = pet.getHealth();
@@ -60,7 +60,7 @@ class TestActions {
     @Test
     void sleepPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake", true));
         int expectedResult = 110;
         actions.sleepPet(pet, 10);
         int result = pet.getSleepiness();
@@ -73,7 +73,7 @@ class TestActions {
     @Test
     void playPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake", true));
         int expectedResult = 110;
         actions.playPet(pet, 10);
         int result = pet.getHappiness();
@@ -86,7 +86,7 @@ class TestActions {
     @Test
     void exercisePet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake", true));
         int expectedResult = 110;
         actions.exercisePet(pet, 10, 5, 5);
         int result = pet.getHealth();
@@ -99,7 +99,7 @@ class TestActions {
     @Test
     void score() {
         Actions actions = new Actions(1, 2, 3, 4, 5, 6);
-        Pet pet = new Pet(100, 100, 100, 100, 100, "BOB", "Moody", "Sprite", new GameInventory("Drake"));
+        Pet pet = new Pet(100, 100, 100, 100, 100, "BOB", "Moody", "Sprite", new GameInventory("Drake", true));
         int expectedResult = 106;
         actions.exercisePet(pet, 10,5,5);
         int result = pet.getScore();
