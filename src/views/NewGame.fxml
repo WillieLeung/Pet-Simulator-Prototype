@@ -34,5 +34,5 @@
     <ComboBox fx:id="petTypes" promptText="Select Pet Option" />
     <Button fx:id="createBtn" text="Select Pet and Create new game!" />
    <Label fx:id="errorLabel" prefHeight="18.0" prefWidth="114.0" textAlignment="CENTER" textFill="#ff0303" />
-   <Button fx:id="backBtn" mnemonicParsing="false" text="Return to main menu" />
+   <Button fx:id="returnMainBton" mnemonicParsing="false" text="Return to main menu" />
 </VBox>

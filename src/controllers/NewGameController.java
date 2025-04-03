@@ -19,7 +19,7 @@ public class NewGameController {
     @FXML private ImageView snakeImage, dragonImage, dogImage, goombaImage;
     @FXML private TextField nameField;
     @FXML private ComboBox<String> petTypes;
-    @FXML private Button createBtn;
+    @FXML private Button createBtn, returnMainBton;
 
     private String petName;
 
@@ -32,6 +32,7 @@ public class NewGameController {
 
         petTypes.getItems().addAll("Snake", "Dragon", "Dog", "Goomba");
 
+        returnMainBton.setOnAction(e -> {switchToMainMenu();});
         createBtn.setOnAction(e -> {
             writeNewGame();
             switchToMainMenu();
