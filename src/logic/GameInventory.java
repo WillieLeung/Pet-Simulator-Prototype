@@ -28,9 +28,16 @@ public class GameInventory {
         this.saveslot = saveSlot;
         ReadWriteFile file = new ReadWriteFile();
         HashMap<String, Integer>[] inventories = file.readInventory(saveSlot, testing);
-
-        foodItems = inventories[0];
-        giftItems = inventories[1];
+        if (inventories == null) {
+            file.updateInventory(saveSlot, new HashMap[2], testing);
+            inventories = file.readInventory(saveSlot, testing);
+            foodItems = inventories[0];
+            giftItems = inventories[1];
+        }
+        else {
+            foodItems = inventories[0];
+            giftItems = inventories[1];
+        }
     }
 
     /**

@@ -7,7 +7,7 @@
             "Chicken": 0
         },
         "gifts": {
-            "Ball": 1,
+            "Ball": 0,
             "Coin": 0,
             "Wood": 0,
             "Yarn": 0
@@ -32,7 +32,7 @@
             "Pizza": 0,
             "Leaves": 0,
             "Chocolate": 0,
-            "Chicken": 0
+            "Chicken": 1
         },
         "gifts": {
             "Ball": 0,

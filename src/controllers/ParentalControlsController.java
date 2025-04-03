@@ -180,9 +180,7 @@ public class ParentalControlsController {
                 saveFile.put("Sleepiness", "100");
                 saveFile.put("State", "Normal");
                 saveFile.put("Fullness", "100");
-                if (saveFile.get("Sprite").equals("Snake")) saveFile.put("Health", "150");
-                else if (saveFile.get("Sprite").equals("Dragon")) saveFile.put("Health", "200");
-                else saveFile.put("Health", "100");
+                saveFile.put("Health", "100");
                 // Update the pet stats file and notify the user.
                 fileParser.writeStatsCSV("saves/"+saveFileName+".csv", saveFile);
                 successNotification.set("Pet has been revived: " + saveFileName);
