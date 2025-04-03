@@ -3,6 +3,13 @@ package testing;
 import logic.ReadWriteFile;
 import org.junit.jupiter.api.*;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -15,17 +22,109 @@ public class TestReadWriteFile {
 
     @Test
     public void testWriteEventCSV() {
-        System.out.println("\nWrite logic.Event CSV");
-        fail();
+        System.out.println("\nWrite Event CSV");
+        
+        // Create test data
+        List<String> events = new ArrayList<>();
+        events.add("Event 1");
+        events.add("Event 2");
+        
+        List<List<String>> optionsData = new ArrayList<>();
+        
+        List<String> row1 = new ArrayList<>();
+        row1.add("Option 1(C)");
+        row1.add("Option A");
+        optionsData.add(row1);
+        
+        List<String> row2 = new ArrayList<>();
+        row2.add("Option 2");
+        row2.add("Option B(C)");
+        optionsData.add(row2);
+        
+        // Create a temporary file for testing
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("test-events", ".csv");
+            String testFile = tempFile.getAbsolutePath();
+            
+            // Write to the file
+            ReadWriteFile instance = new ReadWriteFile();
+            instance.writeEventCSV(testFile, optionsData, events);
+            
+            // Verify the file was created and has content
+            assertTrue(tempFile.exists());
+            assertTrue(tempFile.length() > 0);
+            
+            // Verify content if needed using BufferedReader
+            List<String> fileLines = Files.readAllLines(Paths.get(testFile));
+            assertEquals("Event 1,Event 2", fileLines.get(0));
+            assertEquals("Option 1(C),Option A", fileLines.get(1));
+            assertEquals("Option 2,Option B(C)", fileLines.get(2));
+            
+        } catch (IOException e) {
+            fail("Exception occurred: " + e.getMessage());
+        } finally {
+            // Clean up
+            if (tempFile != null && tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
     }
-
 
     @Test
     public void testReadEventCSV() {
-        System.out.println("\nRead logic.Event CSV");
-        fail();
+        System.out.println("\nRead Event CSV");
+        
+        // Create a temporary file with test data
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("test-events-read", ".csv");
+            String testFile = tempFile.getAbsolutePath();
+            
+            // Write test data to the file
+            List<String> lines = Arrays.asList(
+                "Question 1,Question 2",
+                "Option A,Option X",
+                "Option B(C),Option Y(C)",
+                "Option C,Option Z",
+                "Option D,Option W",
+                "Food,Gift",
+                "Pizza,Ball"
+            );
+            Files.write(Paths.get(testFile), lines);
+            
+            // Read the file
+            ReadWriteFile instance = new ReadWriteFile();
+            List<Event> events = instance.readEventCSV(testFile);
+            
+            // Verify the results
+            assertNotNull(events);
+            assertEquals(2, events.size());
+            
+            // Check first event
+            Event event1 = events.get(0);
+            assertEquals("Question 1", event1.getQuestion());
+            assertEquals(4, event1.getOptions().size());
+            assertEquals(1, event1.getAnswerIndex()); // Index for Option B(C)
+            assertEquals("Option B", event1.getAnswer());
+            assertEquals("Food", event1.getItemType());
+            assertEquals("Pizza", event1.getItem());
+            
+            // Check second event
+            Event event2 = events.get(1);
+            assertEquals("Question 2", event2.getQuestion());
+            assertEquals(1, event2.getAnswerIndex()); // Index for Option Y(C)
+            assertEquals("Gift", event2.getItemType());
+            
+        } catch (IOException e) {
+            fail("Exception occurred: " + e.getMessage());
+        } finally {
+            // Clean up
+            if (tempFile != null && tempFile.exists()) {
+                tempFile.delete();
+            }
+        }
     }
-
 
     @Test
     public void testWriteStatsCSV() {
