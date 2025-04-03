@@ -25,9 +25,7 @@ import javafx.beans.property.StringProperty;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import java.time.*;
 
@@ -77,6 +75,9 @@ public class GamePlayController {
     private final LocalTime seshStart = LocalTime.now();
 
     private final int value = 4; //Default stat increase and decrease value
+    //stores lists of active mediaplayers to prevent garbage collecter from stopping sounds before they're finished
+    private final List<MediaPlayer> activePlayers = new ArrayList<>();
+
 
     public void initialize() {
         Pet pet = MainMenuController.myPet;
@@ -224,7 +225,6 @@ public class GamePlayController {
                     fullness.set(pet.getFullness());
                     score.set(pet.getScore());
                     updateInventory(pet);
-                    startCooldown(feedButton, null);
                 }
             }
         });
@@ -245,7 +245,6 @@ public class GamePlayController {
                     happiness.set(pet.getHappiness());
                     score.set(pet.getScore());
                     updateInventory(pet);
-                    startCooldown(giftButton, null);
                 }
             }
         });
@@ -271,14 +270,12 @@ public class GamePlayController {
             pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            startCooldown(exerciseButton, null);
         });
         triggerEventBtn.setOnAction(e -> {
             playSound("event");
             showEventPopup();
             pet.statLimit();
             score.set(pet.getScore());
-            startCooldown(triggerEventBtn, null);
             updateInventory(pet);
         });
     }
@@ -476,10 +473,6 @@ public class GamePlayController {
                 score.set(pet.getScore());
                 statusImage.setVisible(false);
                 pet.statLimit();
-                startCooldown(sleepButton, () -> {
-                    status.set("normal");          // pet wakes up
-                    resumePetFlipTimer();         // resume flipping
-                });
                 resumePetFlipTimer();
                 pet.setState("Normal");
                 status.set(pet.getState());
@@ -750,7 +743,7 @@ public class GamePlayController {
      */
     private void startCooldown(Button button, Runnable onCooldownEnd) {
         Label label= cooldownLabel;
-        int secondsStart = 5;
+        int secondsStart = 10;
         if (button == null || label == null) return;
 
         //Stop any previous cooldowns running on this label
@@ -758,7 +751,8 @@ public class GamePlayController {
         final int[] seconds = {secondsStart};
 
         label.setText("Cooldown: " + seconds[0]);
-        setGameplayButtonsDisabled(true);  //disable all buttons
+        button.setDisable(true);
+        //setGameplayButtonsDisabled(true);  //disable all buttons
 
         Timeline finalCooldownTimer = cooldownTimer;
         cooldownTimer = new Timeline(new KeyFrame(seconds(1), e -> {
@@ -768,7 +762,8 @@ public class GamePlayController {
             }
             if (seconds[0] == 0) {
                 label.setText("Ready");
-                setGameplayButtonsDisabled(false); //re-enable the button
+                button.setDisable(false);
+                //setGameplayButtonsDisabled(false); //re-enable the button
                 finalCooldownTimer.stop();
                 if (onCooldownEnd != null) onCooldownEnd.run(); // <-Execute functions after
             }
@@ -891,17 +886,33 @@ public class GamePlayController {
      */
     public void playSound(String fileName) {
         try {
-            // Load the resource from the classpath
-            URL soundURL = getClass().getResource("/resources/sounds/" + fileName+".mp3");
+            //store path to file
+            URL soundURL = getClass().getResource("/resources/sounds/"+fileName+".mp3");
+
+            //if no sound file found print error
             if (soundURL == null) {
                 System.out.println("Sound file not found: " + fileName);
                 return;
             }
+            // load and prepare an audio file for playback using JavaFX.
             Media sound = new Media(soundURL.toExternalForm());
-            MediaPlayer mediaPlayer = new MediaPlayer(sound);
-            mediaPlayer.play();
+            //creating a player specifically for the sound just loaded
+            MediaPlayer player= new MediaPlayer(sound);
+            activePlayers.add(player); // Keep reference
+            //Prevent garbage collection and remove reference after playback (since a new object is instantiated everytime
+            // method is called)
+
+            //when sound finished playing
+            player.setOnEndOfMedia(()->{
+                //remove player from list and remove from heap
+                player.dispose();
+                activePlayers.remove(player);//Clean up after playback
+            });
+            player.play();
         } catch (Exception e) {
+            // print errors
             e.printStackTrace();
         }
     }
+
 }
