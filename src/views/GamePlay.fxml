@@ -30,7 +30,7 @@
                <children>
                   <Button fx:id="saveExitBtn" text="Exit and Save Game">
                      <HBox.margin>
-                        <Insets top="10.0" />
+                        <Insets right="10.0" top="10.0" />
                      </HBox.margin></Button>
                </children>
             </HBox>
@@ -85,11 +85,17 @@
                         </ImageView>
                         <Label fx:id="scoreLabel" text="Score: 0 XP"><font>
                            <Font name="System Bold" size="12.0" />
-                        </font></Label>
+                        </font>
+                           <VBox.margin>
+                              <Insets bottom="20.0" />
+                           </VBox.margin></Label>
                         <Label fx:id="petStateLabel" text="Current Pet State: Normal">
                            <font>
                               <Font name="System Bold" size="12.0" />
-                           </font></Label>
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin></Label>
                      </children>
                   </VBox>
                </children>
@@ -100,42 +106,61 @@
                <children>
                   <VBox alignment="CENTER">
                      <children>
-                        <Button fx:id="sleepButton" text="(S) Go to Sleep" />
+                        <Button fx:id="sleepButton" text="(S) Go to Sleep">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Button fx:id="feedButton" text="(F) Feed" />
+                        <Button fx:id="feedButton" text="(F) Feed">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Button fx:id="giftButton" text="(G) Gift" />
+                        <Button fx:id="giftButton" text="(G) Gift">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
+                        <Label fx:id="vetCoolDownLabel" text="Ready">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font>
+                        </Label>
                         <Button fx:id="vetButton" text="(V) Take to the Vet" />
                      </children>
                   </VBox>
-                  <Label fx:id="cooldownLabel" text="Ready">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
                   <VBox alignment="CENTER">
                      <children>
+                        <Label fx:id="playCoolDownLabel" text="Ready">
+                           <font>
+                              <Font name="System Italic" size="12.0" />
+                           </font></Label>
                         <Button fx:id="playButton" text="(P) Play" />
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Button fx:id="exerciseButton" text="(E) Exercise" />
+                        <Button fx:id="exerciseButton" text="(E) Exercise">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                   <VBox alignment="CENTER">
                      <children>
-                        <Button fx:id="triggerEventBtn" text="(T) Start Event" />
+                        <Button fx:id="triggerEventBtn" text="(T) Start Event">
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin></Button>
                      </children>
                   </VBox>
                </children>

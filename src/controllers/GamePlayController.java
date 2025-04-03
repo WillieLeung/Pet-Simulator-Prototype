@@ -41,7 +41,7 @@ import java.time.*;
 public class GamePlayController {
 
     @FXML //Declare labels
-    private Label cooldownLabel, scoreLabel, petStateLabel;
+    private Label cooldownLabel, scoreLabel, petStateLabel, vetCoolDownLabel, playCoolDownLabel;
 
     @FXML
     private Button sleepButton, feedButton, giftButton, vetButton, playButton,
@@ -254,7 +254,7 @@ public class GamePlayController {
             pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            startCooldown(vetButton, null);
+            startCooldown(vetButton, vetCoolDownLabel, null);
         });
         playButton.setOnAction(e -> {
             playSound("play");
@@ -262,7 +262,7 @@ public class GamePlayController {
             pet.statLimit();
             happiness.set(pet.getHappiness());
             score.set(pet.getScore());
-            startCooldown(playButton, null);
+            startCooldown(playButton, playCoolDownLabel, null);
         });
         exerciseButton.setOnAction(e -> {
             playSound("excercise");
@@ -741,8 +741,8 @@ public class GamePlayController {
      * @param button, button to disable
      * @param label, label to show the countdown on
      */
-    private void startCooldown(Button button, Runnable onCooldownEnd) {
-        Label label= cooldownLabel;
+    private void startCooldown(Button button, Label label, Runnable onCooldownEnd) {
+
         int secondsStart = 10;
         if (button == null || label == null) return;
 
