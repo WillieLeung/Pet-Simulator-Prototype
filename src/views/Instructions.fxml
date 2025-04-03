@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.InstructionsController">
-
-    <center>
-        <TextArea fx:id="instructionText" wrapText="true" prefRowCount="20">
-            <text>
-                instructions instructions instructions instructions
-                instructions instructions instructions instructions
-                instructions instructions instructions instructions
-                instructions instructions instructions instructions
-            </text>
-        </TextArea>
-    </center>
+<BorderPane minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InstructionsController">
 
     <bottom>
-        <Button fx:id="returnBtn" text="Return to Main Menu" BorderPane.alignment="CENTER"/>
+        <Button fx:id="returnBtn" text="Return to Main Menu" BorderPane.alignment="CENTER" />
     </bottom>
+   <top>
+      <Label text="Intructions" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="39.0" />
+         </font>
+      </Label>
+   </top>
+   <left>
+      <TextArea editable="false" prefHeight="518.0" prefWidth="802.0" text="Objective:&#10; To take care of a pet and keep it happy, healthy, and alive for as long as possible. Throughout the game, you must monitor your pet’s vital stats: health, sleep, fullness, and happiness. These stats decrease over time, and it's your job to keep them up by feeding your pet, letting it sleep, playing with it, giving gifts, or taking it to the vet when needed.&#10;&#10;How to start game:&#10;1. Press &quot;new game&quot;&#10;2. select animal type and type name&#10;3. Save and create new game. This will return you to the main menu.&#10;4. Use drop down to select new game that you created&#10;5. Press Load Game &#10;&#10;&#10;How to play game:&#10;There are 5 main action buttons once you start the game: (F) feed pet, (S) put the pet to sleep, (V) take to vet, (G) give gift, (P) play with pet.&#10;You can use either the keys or the buttons on screen to trigger actions&#10;By using these actions, you will help the pet stay alive and increase your XP.&#10;&#10;Event button (T):&#10;The event button generates a new screen that challenges you to make decisions about an event. If you select the right option from the list, you will be rewarded with a gift. If you select the wrong option, you will be punished a ertain number of XP or have one of you vital stats decreased.&#10;&#10;&#10;&#10;" wrapText="true" BorderPane.alignment="CENTER" />
+   </left>
 </BorderPane>

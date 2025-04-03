@@ -139,4 +139,3 @@ public class GameInventory {
      */
     public HashMap<String, Integer> getGiftItems() {return giftItems;}
 }
-

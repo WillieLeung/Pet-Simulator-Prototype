@@ -23,6 +23,8 @@ public class MainMenuController {
 
     //Pet variable that will be accessible in GamePlayController
     public static Pet myPet;
+    public static int numSesh;
+    public static int minsPlayed;
 
     @FXML private ComboBox<String> prevGames;
     @FXML private Button newGameBtn;
@@ -108,9 +110,11 @@ public class MainMenuController {
             int fullness = Integer.parseInt(petData.getOrDefault("Fullness", "100"));
             int score = Integer.parseInt(petData.getOrDefault("Score", "0"));
             String state = petData.getOrDefault("State", "Normal");
+            numSesh = Integer.parseInt(petData.getOrDefault("Num_session", "0"));
+            minsPlayed = Integer.parseInt(petData.getOrDefault("Play_time", "0"));
             
             // Create a GameInventory for the pet
-            GameInventory inventory = new GameInventory("1"); // Assuming saveSlot is first character
+            GameInventory inventory = new GameInventory(petName); // Assuming saveSlot is first character
             
             // Create the Pet object
             myPet = new Pet(health, happiness, sleep, fullness, score, petName, state, petType, inventory);

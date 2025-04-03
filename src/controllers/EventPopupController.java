@@ -8,6 +8,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import logic.*;
 
+/**
+ * This class controls the event-popup extra functional requirement
+ *
+ * @author Logan Ouellette-Tran
+ * @version 1.0
+ */
 public class EventPopupController {
     private Events events;
     private Pet pet = MainMenuController.myPet;
@@ -40,7 +46,6 @@ public class EventPopupController {
                     pet.getInventory().addFoodItems(events.getEventItem(), 1);
                 }
                 else {
-                    System.out.println("gift");
                     pet.getInventory().addGiftItems(events.getEventItem(), 1);
                 }
                 pet.setScore(pet.getScore() + events.getEventPlus());

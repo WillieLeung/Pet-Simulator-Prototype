@@ -21,8 +21,8 @@ class TestActions {
     @Test
     public void feedPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
-        int expectedResult = 101;
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        int expectedResult = 110;
         actions.feedPet(pet, "Pizza", 10);
         int result = pet.getFullness();
         assertEquals(expectedResult,result);
@@ -34,8 +34,8 @@ class TestActions {
     @Test
     void giftPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
-        int expectedResult = 102;
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        int expectedResult = 110;
         actions.giftPet(pet,"Coin", 10);
         int result = pet.getHappiness();
         assertEquals(expectedResult,result);
@@ -47,8 +47,8 @@ class TestActions {
     @Test
     void vetPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
-        int expectedResult = 103;
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        int expectedResult = 110;
         actions.vetPet(pet, 10);
         int result = pet.getHealth();
         assertEquals(expectedResult,result);
@@ -60,8 +60,8 @@ class TestActions {
     @Test
     void sleepPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
-        int expectedResult = 104;
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        int expectedResult = 110;
         actions.sleepPet(pet, 10);
         int result = pet.getSleepiness();
         assertEquals(expectedResult,result);
@@ -73,8 +73,8 @@ class TestActions {
     @Test
     void playPet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
-        int expectedResult = 105;
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        int expectedResult = 110;
         actions.playPet(pet, 10);
         int result = pet.getHappiness();
         assertEquals(expectedResult,result);
@@ -86,8 +86,8 @@ class TestActions {
     @Test
     void exercisePet() {
         Actions actions = new Actions(1,2,3,4,5,6);
-        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("3"));
-        int expectedResult = 106;
+        Pet pet = new Pet(100,100,100,100,100,"BOB","Moody","Sprite", new GameInventory("Drake"));
+        int expectedResult = 110;
         actions.exercisePet(pet, 10, 5, 5);
         int result = pet.getHealth();
         assertEquals(expectedResult,result);
@@ -99,8 +99,8 @@ class TestActions {
     @Test
     void score() {
         Actions actions = new Actions(1, 2, 3, 4, 5, 6);
-        Pet pet = new Pet(100, 100, 100, 100, 100, "BOB", "Moody", "Sprite", new GameInventory("3"));
-        int expectedResult = 107;
+        Pet pet = new Pet(100, 100, 100, 100, 100, "BOB", "Moody", "Sprite", new GameInventory("Drake"));
+        int expectedResult = 106;
         actions.exercisePet(pet, 10,5,5);
         int result = pet.getScore();
         assertEquals(expectedResult, result);

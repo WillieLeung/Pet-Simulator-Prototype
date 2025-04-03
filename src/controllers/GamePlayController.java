@@ -3,6 +3,9 @@ package controllers;
 import logic.*;
 
 import javafx.beans.property.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.net.URL;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -12,12 +15,16 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import static javafx.util.Duration.seconds;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -36,16 +43,16 @@ import java.time.*;
 public class GamePlayController {
 
     @FXML //Declare labels
-    private Label sleepCooldownLabel, feedCooldownLabel, giftCooldownLabel, vetCooldownLabel,
-            playCooldownLabel, exerciseCooldownLabel, eventCooldownLabel, scoreLabel, petStateLabel;
-    @FXML //Declare buttons
+    private Label cooldownLabel, scoreLabel, petStateLabel;
+
+    @FXML
     private Button sleepButton, feedButton, giftButton, vetButton, playButton,
             exerciseButton, triggerEventBtn, saveExitBtn;
     @FXML //Declare image views
-    private ImageView petImage, statusImage;
+    private ImageView petImage, statusImage, backgroundImage;
 
-    //Declare status bars
     @FXML private ProgressBar healthBar, sleepBar, happinessBar, fullnessBar;
+    @FXML private StackPane rootPane;
     @FXML private ComboBox foodInventory, giftInventory; //Declare inventory dropdowns
 
     private boolean flipped = false;
@@ -65,6 +72,9 @@ public class GamePlayController {
     private final DoubleProperty happiness = new SimpleDoubleProperty(0);
     private final DoubleProperty fullness = new SimpleDoubleProperty(0);
     private final IntegerProperty score = new SimpleIntegerProperty(0);
+
+    // Declare the variable for holding the start time of the game session.
+    private final LocalTime seshStart = LocalTime.now();
 
     private final int value = 4; //Default stat increase and decrease value
 
@@ -92,9 +102,11 @@ public class GamePlayController {
         //Update score at the beginning
         scoreLabel.setText("Score: " + pet.getScore() + " XP");
 
+        // Bind image size to StackPane size
+        backgroundImage.fitWidthProperty().bind(rootPane.widthProperty());
+        backgroundImage.fitHeightProperty().bind(rootPane.heightProperty());
         //Update pet state at the beginning
         petStateLabel.setText("Current Pet State: " + pet.getState());
-
         //Show pet (listens to pet class to assign)
         loadImage(petImage, pet.getSprite());
 
@@ -189,9 +201,11 @@ public class GamePlayController {
         saveExitBtn.setOnAction(e -> saveAndExit(pet));
         sleepButton.setOnAction(e -> {
             loadImage(statusImage, "sleeping");
+            playSound("sleep");
             statusImage.setVisible(true);
             pausePetFlipTimer();
             sleepFull(actions, pet, 1, actionsModifier[1]);
+
         });
         feedButton.setOnAction(e -> {
             if (foodInventory.getItems().isEmpty()){
@@ -202,6 +216,7 @@ public class GamePlayController {
                 feedButton.setDisable(false);
                 if (foodInventory.getValue() == null){showNoSelectedFoodWarningPopup();}
                 else {
+                    playSound("feed");
                     String foodAndAmount = (String) foodInventory.getValue();
                     String food = foodAndAmount.split(" ")[0];
                     actions.feedPet(pet, food, (int)(getFoodValue(food) * actionsModifier[3]));
@@ -209,7 +224,7 @@ public class GamePlayController {
                     fullness.set(pet.getFullness());
                     score.set(pet.getScore());
                     updateInventory(pet);
-                    startCooldown(feedButton, feedCooldownLabel);
+                    startCooldown(feedButton, null);
                 }
             }
         });
@@ -222,6 +237,7 @@ public class GamePlayController {
                 giftButton.setDisable(false);
                 if (giftInventory.getValue() == null){showNoSelectedGiftWarningPopup();}
                 else{
+                    playSound("gift");
                     String giftAndAmount = (String) giftInventory.getValue();
                     String gift = giftAndAmount.split(" ")[0];
                     actions.giftPet(pet, gift, (int)(getGiftValue(gift) * actionsModifier[2]));
@@ -229,36 +245,41 @@ public class GamePlayController {
                     happiness.set(pet.getHappiness());
                     score.set(pet.getScore());
                     updateInventory(pet);
-                    startCooldown(giftButton, giftCooldownLabel);
+                    startCooldown(giftButton, null);
                 }
             }
         });
         vetButton.setOnAction(e -> {
+            playSound("vet");
             actions.vetPet(pet, (int)(value * actionsModifier[0]));
             pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            startCooldown(vetButton, vetCooldownLabel);
+            startCooldown(vetButton, null);
         });
         playButton.setOnAction(e -> {
+            playSound("play");
             actions.playPet(pet, (int)(value * actionsModifier[2]));
             pet.statLimit();
             happiness.set(pet.getHappiness());
             score.set(pet.getScore());
-            startCooldown(playButton, playCooldownLabel);
+            startCooldown(playButton, null);
         });
         exerciseButton.setOnAction(e -> {
+            playSound("excercise");
             actions.exercisePet(pet, (int)(value * actionsModifier[0]), (int)(value * actionsModifier[1]), (int)(value * actionsModifier[3]));
             pet.statLimit();
             health.set(pet.getHealth());
             score.set(pet.getScore());
-            startCooldown(exerciseButton, exerciseCooldownLabel);
+            startCooldown(exerciseButton, null);
         });
         triggerEventBtn.setOnAction(e -> {
+            playSound("event");
             showEventPopup();
             pet.statLimit();
             score.set(pet.getScore());
-            startCooldown(triggerEventBtn, eventCooldownLabel);
+            startCooldown(triggerEventBtn, null);
+            updateInventory(pet);
         });
     }
 
@@ -280,7 +301,7 @@ public class GamePlayController {
      * @param end, end time
      */
     private void checkTimeLimit(Pet pet, LocalTime start, LocalTime end){
-        limitTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        limitTimer = new Timeline(new KeyFrame(seconds(1), e -> {
 
             LocalTime now = LocalTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -388,7 +409,7 @@ public class GamePlayController {
      * Function infinitely focuses on the save and exit button which allows for key shortcuts
      */
     private void focus(){
-        focusTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        focusTimer = new Timeline(new KeyFrame(seconds(1), e -> {
             saveExitBtn.requestFocus();
         }));
         focusTimer.setCycleCount(Timeline.INDEFINITE);
@@ -444,7 +465,7 @@ public class GamePlayController {
             health.set(pet.getHealth());
         }
         disableButtons(true);
-        sleepTimer = new Timeline(new KeyFrame(Duration.seconds(duration), e -> {
+        sleepTimer = new Timeline(new KeyFrame(seconds(duration), e -> {
             if (pet.getSleepiness() < 100) {
                 action.sleepPet(pet, (int)(value * modifier));
                 sleep.set(pet.getSleepiness());
@@ -455,7 +476,10 @@ public class GamePlayController {
                 score.set(pet.getScore());
                 statusImage.setVisible(false);
                 pet.statLimit();
-                startCooldown(sleepButton, sleepCooldownLabel);
+                startCooldown(sleepButton, () -> {
+                    status.set("normal");          // pet wakes up
+                    resumePetFlipTimer();         // resume flipping
+                });
                 resumePetFlipTimer();
                 pet.setState("Normal");
                 status.set(pet.getState());
@@ -523,7 +547,7 @@ public class GamePlayController {
      * @param depleteModifiers, deplete modifiers of the pet
      */
     private void deteriorate(Pet pet, double[] depleteModifiers){
-        deteriorateTimer = new Timeline(new KeyFrame(Duration.seconds(10), e -> {
+        deteriorateTimer = new Timeline(new KeyFrame(seconds(10), e -> {
             if (pet.getState().equals("Hungry")) {
                 pet.setHealth(pet.getHealth() - (int)(value * depleteModifiers[0]));
                 health.set(pet.getHealth());
@@ -568,7 +592,7 @@ public class GamePlayController {
      * Function makes pet flip every 2 seconds
      */
     private void startPetFlipTimer() {
-        petFlipTimer = new Timeline(new KeyFrame(Duration.seconds(2), e -> flipPetImage()));
+        petFlipTimer = new Timeline(new KeyFrame(seconds(2), e -> flipPetImage()));
         petFlipTimer.setCycleCount(Timeline.INDEFINITE);
         petFlipTimer.play();
     }
@@ -579,7 +603,7 @@ public class GamePlayController {
      * @param pet, pet to the status/state of
      */
     private void checkStatus(Pet pet){
-        statusTimer = new Timeline( new KeyFrame(Duration.seconds(1), e -> {
+        statusTimer = new Timeline( new KeyFrame(seconds(1), e -> {
             pet.checkState();
             status.set(pet.getState());
         }));
@@ -724,7 +748,8 @@ public class GamePlayController {
      * @param button, button to disable
      * @param label, label to show the countdown on
      */
-    private void startCooldown(Button button, Label label) {
+    private void startCooldown(Button button, Runnable onCooldownEnd) {
+        Label label= cooldownLabel;
         int secondsStart = 10;
         if (button == null || label == null) return;
 
@@ -733,18 +758,19 @@ public class GamePlayController {
         final int[] seconds = {secondsStart};
 
         label.setText("Cooldown: " + seconds[0]);
-        button.setDisable(true);  //Disable the button
+        setGameplayButtonsDisabled(true);  //disable all buttons
 
         Timeline finalCooldownTimer = cooldownTimer;
-        cooldownTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        cooldownTimer = new Timeline(new KeyFrame(seconds(1), e -> {
             seconds[0]--;
             if (seconds[0] >= 0) {
                 label.setText("Cooldown: " + seconds[0]);
             }
             if (seconds[0] == 0) {
                 label.setText("Ready");
-                button.setDisable(false); //Re-enable the button
+                setGameplayButtonsDisabled(false); //re-enable the button
                 finalCooldownTimer.stop();
+                if (onCooldownEnd != null) onCooldownEnd.run(); // <-Execute functions after
             }
         }));
 
@@ -760,12 +786,17 @@ public class GamePlayController {
     private void saveAndExit(Pet pet) {
         ReadWriteFile file = new ReadWriteFile();
         GameInventory inventory = pet.getInventory();
+        LocalTime seshEnd = LocalTime.now();
 
         //Store inventory
         HashMap<String, Integer>[] inventories = new HashMap[2];
         inventories[0] = inventory.getFoodItems();
         inventories[1] = inventory.getGiftItems();
         file.updateInventory(pet.getInventory().getSaveSlot(), inventories);
+
+        // Get time the user has played for.
+        long playTimeMins = Duration.between(seshStart, seshEnd).toMinutes() + MainMenuController.minsPlayed;
+        String playTime = playTimeMins + "";
 
         //Store stats
         HashMap<String, String> stats = new HashMap<String, String>();
@@ -777,6 +808,8 @@ public class GamePlayController {
         stats.put("Sprite", pet.getSprite());
         stats.put("Score", String.valueOf(pet.getScore()));
         stats.put("Name", pet.getPetName());
+        stats.put("Play_time", playTime);
+        stats.put("Num_session", Integer.toString(MainMenuController.numSesh + 1));
         file.writeStatsCSV("saves/" + pet.getPetName() + ".csv", stats);
 
         System.out.println("Saving and Exiting to Main Menu");
@@ -796,6 +829,18 @@ public class GamePlayController {
         e.printStackTrace();
     }
 }
+
+    //disable all buttons easily
+    private void setGameplayButtonsDisabled(boolean disabled) {
+        sleepButton.setDisable(disabled);
+        feedButton.setDisable(disabled);
+        giftButton.setDisable(disabled);
+        vetButton.setDisable(disabled);
+        playButton.setDisable(disabled);
+        exerciseButton.setDisable(disabled);
+        triggerEventBtn.setDisable(disabled);
+        // saveExitBtn intentionally left out
+    }
 
     /**
      * Function shows a warning for not selecting a food item in the food inventory
@@ -839,5 +884,24 @@ public class GamePlayController {
         alert.setHeaderText("NO MORE GIFT ITEMS!!!");
         alert.setContentText("Obtain some through events");
         alert.showAndWait();
+    }
+
+    /**
+     * Function plays sound of the given file name
+     */
+    public void playSound(String fileName) {
+        try {
+            // Load the resource from the classpath
+            URL soundURL = getClass().getResource("/resources/sounds/" + fileName+".mp3");
+            if (soundURL == null) {
+                System.out.println("Sound file not found: " + fileName);
+                return;
+            }
+            Media sound = new Media(soundURL.toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

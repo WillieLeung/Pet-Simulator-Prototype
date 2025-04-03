@@ -1,19 +1,19 @@
 {
-    "1": {
+    "CoolDog": {
         "foods": {
-            "Pizza": 6,
-            "Leaves": 3,
-            "Chocolate": 2,
-            "Chicken": 1
+            "Pizza": 0,
+            "Leaves": 0,
+            "Chocolate": 0,
+            "Chicken": 0
         },
         "gifts": {
-            "Ball": 6,
-            "Coin": 1,
-            "Wood": 4,
-            "Yarn": 1
+            "Ball": 1,
+            "Coin": 0,
+            "Wood": 0,
+            "Yarn": 0
         }
     },
-    "2": {
+    "Goomba": {
         "foods": {
             "Pizza": 4,
             "Leaves": 2,
@@ -27,18 +27,18 @@
             "Yarn": 2
         }
     },
-    "3": {
+    "Drake": {
         "foods": {
-            "Pizza": 0,
-            "Leaves": 0,
-            "Chocolate": 0,
-            "Chicken": 0
+            "Pizza": 5,
+            "Leaves": 3,
+            "Chocolate": 2,
+            "Chicken": 1
         },
         "gifts": {
-            "Ball": 0,
-            "Coin": 0,
-            "Wood": 0,
-            "Yarn": 0
+            "Ball": 6,
+            "Coin": 1,
+            "Wood": 4,
+            "Yarn": 1
         }
     }
 }
