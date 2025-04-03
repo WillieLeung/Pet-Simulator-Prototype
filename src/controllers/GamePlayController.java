@@ -77,9 +77,12 @@ public class GamePlayController {
     private final int value = 4; //Default stat increase and decrease value
     //stores lists of active mediaplayers to prevent garbage collecter from stopping sounds before they're finished
     private final List<MediaPlayer> activePlayers = new ArrayList<>();
-
+    //player to handle looping background music
+    private MediaPlayer backgroundMusicPlayer;
 
     public void initialize() {
+        //start background music
+        startBackgroundMusic("background");
         Pet pet = MainMenuController.myPet;
         Actions actions = new Actions(10, 1, 10, -10, 10, 10);
         double [] actionsModifier = setActionModifier(pet.getSprite());
@@ -914,5 +917,25 @@ public class GamePlayController {
             e.printStackTrace();
         }
     }
+
+    public void startBackgroundMusic(String fileName) {
+        try {
+            URL musicURL = getClass().getResource("/resources/sounds/" + fileName + ".mp3");
+            if (musicURL == null) {
+                System.out.println("Background music file not found: " + fileName);
+                return;
+            }
+
+            Media music = new Media(musicURL.toExternalForm());
+            backgroundMusicPlayer = new MediaPlayer(music);
+
+            backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);//loop forever
+            backgroundMusicPlayer.setVolume(0.3);//set volume (0.0 to 1.0)
+            backgroundMusicPlayer.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
