@@ -16,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestGameInventory {
 
+    /**
+     * Test returning save slot for saving purposes later
+     */
     @Test
     public void testGetSaveSlot(){
         String expectedValue = "Drake";

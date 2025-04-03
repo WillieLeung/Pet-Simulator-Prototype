@@ -38,6 +38,12 @@ public class NewGameController {
         });
     }
 
+    /**
+     * Loads image
+     *
+     * @param view, view to display image to
+     * @param fileName, file name of image to display
+     */
     private void loadImage(ImageView view, String fileName) {
         Image img = new Image("file:resources/images/" + fileName);
         view.setImage(img);

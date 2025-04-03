@@ -18,6 +18,9 @@ public class ParentalPasswordController {
         backBtn.setOnAction(e -> switchScene("src/views/MainMenu.fxml"));
     }
 
+    /**
+     * Checks for valid password
+     */
     private void checkPassword() {
         String password = passwordField.getText();
         if ("group57".equals(password)) {
@@ -27,6 +30,11 @@ public class ParentalPasswordController {
         }
     }
 
+    /**
+     * Switchs screens
+     *
+     * @param fxmlPath, path of screen to switch to
+     */
     private void switchScene(String fxmlPath) {
         try {
             Stage stage = (Stage) continueBtn.getScene().getWindow();
