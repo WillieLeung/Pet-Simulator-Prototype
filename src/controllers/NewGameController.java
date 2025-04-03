@@ -62,7 +62,7 @@ public class NewGameController {
             }
             
             // Create a new pet with default values
-            Pet newPet = new Pet(100, 100, 100, 100, 0, petName, "Normal", petType, new GameInventory("1"));
+            Pet newPet = new Pet(100, 100, 100, 100, 0, petName, "Normal", petType, new GameInventory("1", false));
             
             // Store in static variable for access in other controllers
             MainMenuController.myPet = newPet;

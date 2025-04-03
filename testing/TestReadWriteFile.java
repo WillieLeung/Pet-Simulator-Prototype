@@ -1,7 +1,6 @@
 package testing;
 
 import logic.ReadWriteFile;
-import org.junit.jupiter.api.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit Tests for logic.ReadWriteFile class
@@ -233,7 +233,7 @@ public class TestReadWriteFile {
         expectedFoods.put("Pizza", 5);
         expectedFoods.put("Chocolate", 2);
         expectedFoods.put("Leaves", 3);
-        expectedFoods.put("Chicken", 2);
+        expectedFoods.put("Chicken", 1);
         expectedGifts.put("Ball", 2);
         expectedGifts.put("Yarn", 0);
         expectedGifts.put("Coin", 1);
@@ -241,7 +241,7 @@ public class TestReadWriteFile {
 
         // Create the file reader and read the inventory file.
         ReadWriteFile instance = new ReadWriteFile();
-        HashMap<String, Integer>[] resultingInventory = instance.readInventory("1");
+        HashMap<String, Integer>[] resultingInventory = instance.readInventory("Drake", true);
 
         // Check the result.
         System.out.println("\tChecking foods...");
@@ -275,10 +275,10 @@ public class TestReadWriteFile {
 
         // Update the second inventory.
         ReadWriteFile instance = new ReadWriteFile();
-        assertTrue(instance.updateInventory("3", items));
+        assertTrue(instance.updateInventory("CoolDog", items, true));
 
         // Ensure the inventory was changed.
-        HashMap<String, Integer>[] resultingInventory = instance.readInventory("3");
+        HashMap<String, Integer>[] resultingInventory = instance.readInventory("CoolDog", true);
         System.out.println("\tChecking foods...");
         assertEquals(foodItems, resultingInventory[0]);
         System.out.println("\tChecking gifts...");

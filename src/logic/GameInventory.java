@@ -22,11 +22,12 @@ public class GameInventory {
      *
      * Initializes food and gift HashMaps
      * @param saveSlot, JSON file to read from to load inventory
+     * @param testing, boolean value that signifies if this is a JUnit test
      */
-    public GameInventory(String saveSlot) {
+    public GameInventory(String saveSlot, boolean testing) {
         this.saveslot = saveSlot;
         ReadWriteFile file = new ReadWriteFile();
-        HashMap<String, Integer>[] inventories = file.readInventory(saveSlot);
+        HashMap<String, Integer>[] inventories = file.readInventory(saveSlot, testing);
 
         foodItems = inventories[0];
         giftItems = inventories[1];

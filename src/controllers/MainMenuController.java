@@ -114,7 +114,7 @@ public class MainMenuController {
             minsPlayed = Integer.parseInt(petData.getOrDefault("Play_time", "0"));
             
             // Create a GameInventory for the pet
-            GameInventory inventory = new GameInventory(petName); // Assuming saveSlot is first character
+            GameInventory inventory = new GameInventory(petName, false);
             
             // Create the Pet object
             myPet = new Pet(health, happiness, sleep, fullness, score, petName, state, petType, inventory);

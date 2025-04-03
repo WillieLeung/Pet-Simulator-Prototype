@@ -750,7 +750,7 @@ public class GamePlayController {
      */
     private void startCooldown(Button button, Runnable onCooldownEnd) {
         Label label= cooldownLabel;
-        int secondsStart = 10;
+        int secondsStart = 5;
         if (button == null || label == null) return;
 
         //Stop any previous cooldowns running on this label
@@ -792,7 +792,7 @@ public class GamePlayController {
         HashMap<String, Integer>[] inventories = new HashMap[2];
         inventories[0] = inventory.getFoodItems();
         inventories[1] = inventory.getGiftItems();
-        file.updateInventory(pet.getInventory().getSaveSlot(), inventories);
+        file.updateInventory(pet.getInventory().getSaveSlot(), inventories, false);
 
         // Get time the user has played for.
         long playTimeMins = Duration.between(seshStart, seshEnd).toMinutes() + MainMenuController.minsPlayed;

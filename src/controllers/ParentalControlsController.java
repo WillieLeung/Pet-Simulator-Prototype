@@ -1,5 +1,6 @@
 package controllers;
 
+// Import libraries.
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -14,14 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ParentalControlsController {
-
-    // Create file readers.
+    // Create instance variables for processing files and player/parent data.
     private final ReadWriteFile fileParser = new ReadWriteFile();
     private final String[] saveFileNames = populateGamesList();
-    private Map<String, Map<String, String>> saveFiles = new HashMap<>();
-//    private Map<String, String> stats1 = fileParser.readFromStatsCSV("statscsv1.csv");
-//    private Map<String, String> stats2 = fileParser.readFromStatsCSV("statscsv2.csv");
-//    private Map<String, String> stats3 = fileParser.readFromStatsCSV("statscsv3.csv");
+    private final Map<String, Map<String, String>> saveFiles = new HashMap<>();
     private final Map<String, String> parent = fileParser.readFromStatsCSV("parent.csv");
 
     // Create JavaFX elements.
@@ -34,7 +31,7 @@ public class ParentalControlsController {
     @FXML
     private Label statsLabel;
     @FXML
-    private Label notificationLabel;
+    private Label errorNotificationLabel, successNotificationLabel;
     @FXML
     private Button resetStatsBtn, reviveBtn, backBtn, setPlayTimeLimitBtn;
     @FXML
@@ -43,20 +40,21 @@ public class ParentalControlsController {
     // Initialize parental screen data variables.
     private String timeLimit = (parent.get("is_enabled").equals("Y")) ? "Current limit: " + parent.get("start_time") + " to " + parent.get("end_time") : "Current limit: None";
     private int totalMinutesPlayed = 0;
-    // Integer.parseInt(stats1.get("Play_time")) + Integer.parseInt(stats2.get("Play_time")) + Integer.parseInt(stats3.get("Play_time"));
     private int numSessions = 0;
-    // Integer.parseInt(stats1.get("Num_session")) + Integer.parseInt(stats2.get("Num_session")) + Integer.parseInt(stats3.get("Num_session"));
     private float averageMinutesPerSession = 0;
-    // (numSessions != 0) ? (float) totalMinutesPlayed / numSessions : 0;
     private String selectedPetToRevive = "";
 
-    // Create the notification.
-    private final StringProperty notification = new SimpleStringProperty("");
+    // Create the notifications.
+    private final StringProperty errorNotification = new SimpleStringProperty("");
+    private final StringProperty successNotification = new SimpleStringProperty("");
 
     // Initialize data.
     @FXML
     public void initialize() {
+        // Display the current time limit.
         currentLimit.setText(timeLimit);
+
+        // Get the items for the dropdown list.
         if (saveFileNames != null) {
             String[] items = new String[saveFileNames.length];
             for (int i = 0; i < saveFileNames.length; i++) {
@@ -73,22 +71,23 @@ public class ParentalControlsController {
             resetStatsBtn.setDisable(true);
         }
 
-
-
         // Initialize the play time data if the user has played before.
         if (saveFileNames != null) {
+            // Get the play time data.
             for (int i = 0; i < saveFileNames.length; i++) {
                 Map<String, String> saveFile = saveFiles.get(saveFileNames[i].split("\\.")[0]);
                 totalMinutesPlayed += Integer.parseInt(saveFile.get("Play_time"));
                 numSessions += Integer.parseInt(saveFile.get("Num_session"));
             }
+            // Calculate the average play time per session.
             averageMinutesPerSession = (numSessions != 0) ? (float) totalMinutesPlayed / numSessions : 0;
         }
 
-
-
         // Set the play time limit.
         setPlayTimeLimitBtn.setOnAction(e -> {
+            // Reset the notifications.
+            errorNotification.set("");
+            successNotification.set("");
             // Get the times from the text fields.
             String startTime = startTimeField.getText();
             String endTime = endTimeField.getText();
@@ -101,7 +100,7 @@ public class ParentalControlsController {
                     // Update the file.
                     fileParser.writeStatsCSV("parent.csv", parent);
                     // Notify the player.
-                    notification.set("Playtime limit has been removed.");
+                    successNotification.set("Play time limit has been removed.");
                     // Update the display.
                     timeLimit = "Current limit: None";
                     currentLimit.setText(timeLimit);
@@ -139,38 +138,44 @@ public class ParentalControlsController {
                                 // Update the file.
                                 fileParser.writeStatsCSV("parent.csv", parent);
                                 // Notify the player.
-                                notification.set("Playtime limit has been set.");
+                                successNotification.set("Play time limit has been set.");
                                 // Update the display.
                                 timeLimit = "Current limit: " + startTime + " to " + endTime;
                                 currentLimit.setText(timeLimit);
                             }
                             // Notify the user that their input is invalid.
-                            else notification.set("Please enter two unique valid times (or no times for resetting).");
+                            else errorNotification.set("Please enter two unique valid times (or no times for resetting).");
                         }
                         catch (NumberFormatException exc) {
                             // Notify the user that their input is invalid.
-                            notification.set("Please enter two valid times (or no times for resetting).");
+                            errorNotification.set("Please enter two valid times (or no times for resetting).");
                         }
                     }
                     // Notify the user that their input is invalid.
-                    else notification.set("Please enter two valid times (or no times for resetting).");
+                    else errorNotification.set("Please enter two valid times (or no times for resetting).");
                 }
                 // Notify the user that their input is invalid.
-                else notification.set("Please enter two valid times (or no times for resetting).");
+                else errorNotification.set("Please enter two valid times (or no times for resetting).");
             }
             // Notify the user that their input is invalid.
-            else notification.set("Please enter two valid times (or no times for resetting).");
+            else errorNotification.set("Please enter two valid times (or no times for resetting).");
         });
 
 
 
         // Get the selected pet to revive.
         reviveList.setOnAction(e -> selectedPetToRevive = reviveList.getValue());
-
+        // Revive the pet.
         reviveBtn.setOnAction(e -> {
+            // Reset the notifications.
+            errorNotification.set("");
+            successNotification.set("");
+            // Ensure a pet is selected.
             if (selectedPetToRevive != null && !selectedPetToRevive.isEmpty()) {
+                // Get the pet data.
                 String saveFileName = selectedPetToRevive.split(";")[0].split(": ")[1];
                 Map<String, String> saveFile = saveFiles.get(saveFileName);
+                // Reset the pet stats.
                 saveFile.put("Happiness", "100");
                 saveFile.put("Sleepiness", "100");
                 saveFile.put("State", "Normal");
@@ -178,79 +183,44 @@ public class ParentalControlsController {
                 if (saveFile.get("Sprite").equals("Snake")) saveFile.put("Health", "150");
                 else if (saveFile.get("Sprite").equals("Dragon")) saveFile.put("Health", "200");
                 else saveFile.put("Health", "100");
+                // Update the pet stats file and notify the user.
                 fileParser.writeStatsCSV("saves/"+saveFileName+".csv", saveFile);
-//                int saveFileNum = Integer.parseInt(selectedPetToRevive.split(" -")[0]);
-//                String name = selectedPetToRevive.split(": ")[1].split(";")[0];
-//                String sprite = selectedPetToRevive.split("l: ")[1];
-////                if (saveFileNum == 1) {
-//                    stats1.put("Happiness", "100");
-//                    stats1.put("Sleep", "100");
-//                    stats1.put("State", "Normal");
-//                    stats1.put("Fullness", "100");
-//                    if (sprite.equals("Snake")) stats1.put("Health", "150");
-//                    else if (sprite.equals("Dragon")) stats1.put("Health", "200");
-//                    else stats1.put("Health", "100");
-//                    fileParser.writeStatsCSV("statscsv1.csv", stats1);
-//                }
-//                else if (saveFileNum == 2) {
-//                    stats2.put("Happiness", "100");
-//                    stats2.put("Sleep", "100");
-//                    stats2.put("State", "Normal");
-//                    stats2.put("Fullness", "100");
-//                    if (sprite.equals("Snake")) stats2.put("Health", "150");
-//                    else if (sprite.equals("Dragon")) stats2.put("Health", "200");
-//                    else stats2.put("Health", "100");
-//                    fileParser.writeStatsCSV("statscsv2.csv", stats2);
-//                }
-//                else {
-//                    stats3.put("Happiness", "100");
-//                    stats3.put("Sleep", "100");
-//                    stats3.put("State", "Normal");
-//                    stats3.put("Fullness", "100");
-//                    if (sprite.equals("Snake")) stats3.put("Health", "150");
-//                    else if (sprite.equals("Dragon")) stats3.put("Health", "200");
-//                    else stats3.put("Health", "100");
-//                    fileParser.writeStatsCSV("statscsv3.csv", stats3);
-//                }
-                notification.set("Pet has been revived: " + saveFileName);
+                successNotification.set("Pet has been revived: " + saveFileName);
             }
             else {
-                notification.set("Please select a pet to revive.");
+                // Notify the user that they need to select a pet.
+                errorNotification.set("Please select a pet to revive.");
             }
         });
 
-
-
+        // Reset the play time stats.
         resetStatsBtn.setOnAction(e -> {
+            // Reset the notifications.
+            errorNotification.set("");
+            successNotification.set("");
+            // Ensure the player has play time data.
             if (saveFileNames != null) {
+                // Update variables.
                 totalMinutesPlayed = 0;
                 averageMinutesPerSession = 0;
+                // Update the save files.
                 for (int i = 0; i < saveFileNames.length; i++) {
                     Map<String, String> saveFile = saveFiles.get(saveFileNames[i].split("\\.")[0]);
                     saveFile.put("Play_time", "0");
                     saveFile.put("Num_session", "0");
                     fileParser.writeStatsCSV("saves/" + saveFileNames[i], saveFile);
                 }
-                //            stats1.put("Play_time","0");
-                //            stats1.put("Num_session","0");
-                //            fileParser.writeStatsCSV("statscsv1.csv", stats1);
-                //
-                //            stats2.put("Play_time","0");
-                //            stats2.put("Num_session","0");
-                //            fileParser.writeStatsCSV("statscsv2.csv", stats2);
-                //
-                //            stats3.put("Play_time","0");
-                //            stats3.put("Num_session","0");
-                //            fileParser.writeStatsCSV("statscsv3.csv", stats3);
-
+                // Update the label and notify the player.
                 updateStatsLabel();
-                notification.set("Stats have been reset.");
+                successNotification.set("Stats have been reset.");
             }
         });
 
-        // Bind notification text to label
-        notificationLabel.textProperty().bind(notification);
+        // Bind notification texts to their respective labels.
+        errorNotificationLabel.textProperty().bind(errorNotification);
+        successNotificationLabel.textProperty().bind(successNotification);
 
+        // Update the stats label.
         updateStatsLabel();
 
         backBtn.setOnAction(e -> returnToMainMenu());
