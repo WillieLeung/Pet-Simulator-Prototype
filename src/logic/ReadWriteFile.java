@@ -19,6 +19,15 @@ import java.util.Map;
 
 public class ReadWriteFile {
 
+     /**
+     * Function writes event data to a CSV file in vertical format
+     *
+     * @param csvFile, String
+     * @param optionsData, List<List<String>>
+     * @param events, List<String>
+     *
+     * @return void
+     */
     public void writeEventCSV(String csvFile, List<List<String>> optionsData, List<String> events) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
             if (optionsData != null && !optionsData.isEmpty() && events != null && !events.isEmpty()) {
@@ -39,16 +48,14 @@ public class ReadWriteFile {
     }
 
 
- /**
- * Function reads event-based CSV in vertical format where:
- * - First row contains event names/questions
- * - Rows 2-5 contain options for each event (with (C) marking correct answers)
- * - Row 6 contains item types (food or gift)
- * - Row 7 contains specific item names
- *
- * @param csvFile The path to the CSV file
- * @return A List of Event objects for use in the game
- */
+
+    /**
+     * Function reads event-based CSV in vertical format
+     *
+     * @param csvFile, String
+     *
+     * @return List<Event> containing Event objects parsed from the CSV file
+     */
 public List<Event> readEventCSV(String csvFile) {
     List<Event> eventsList = new ArrayList<>();
 
@@ -114,6 +121,14 @@ public List<Event> readEventCSV(String csvFile) {
     return eventsList;
 }
 
+    /**
+     * Function writes statistics to a CSV file
+     *
+     * @param csvFile, String
+     * @param stats, Map<String, String>
+     *
+     * @return void
+     */
     public void writeStatsCSV(String csvFile, Map<String, String> stats) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvFile))) {
             if (stats != null && !stats.isEmpty()) {
@@ -130,11 +145,12 @@ public List<Event> readEventCSV(String csvFile) {
         }
     }
 
-
     /**
-     * Function reads from CSV file and returns a list of rows,
+     * Function reads statistics from a CSV file
      *
-     * @return dataList
+     * @param csvFile, String
+     *
+     * @return Map<String, String> containing statistic names and values
      */
     public Map<String, String> readFromStatsCSV(String csvFile) {
         Map<String, String> stats = new HashMap<>();
