@@ -74,7 +74,7 @@
             "Pizza": 6,
             "Leaves": 0,
             "Chocolate": 0,
-            "Chicken": 2
+            "Chicken": 0
         },
         "gifts": {
             "Ball": 0,
@@ -95,6 +95,20 @@
             "Coin": 0,
             "Wood": 0,
             "Yarn": 2
+        }
+    },
+    "Octo": {
+        "foods": {
+            "Pizza": 0,
+            "Leaves": 0,
+            "Chocolate": 0,
+            "Chicken": 0
+        },
+        "gifts": {
+            "Ball": 0,
+            "Coin": 0,
+            "Wood": 0,
+            "Yarn": 0
         }
     },
     "Goomba": {

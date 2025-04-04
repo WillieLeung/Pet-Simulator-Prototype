@@ -215,7 +215,6 @@ public class GamePlayController {
         feedButton.setOnAction(e -> {
             if (foodInventory.getItems().isEmpty()){
                 showEmptyFoodInventoryWarningPopup();
-                feedButton.setDisable(true);
             }
             else {
                 feedButton.setDisable(false);
