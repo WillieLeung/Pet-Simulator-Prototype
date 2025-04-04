@@ -36,17 +36,17 @@ How to start game:
 4. Use drop down to select new game that you created
 5. Press Load Game 
 
-How to play game:
-There are 5 main action buttons once you start the game: (F) feed pet, (S) put the pet to sleep, 
-(V) take to vet, (G) give gift, (P) play with pet. You can use either the keys or the buttons on 
-screen to trigger actions By using these actions, you will help the pet stay alive and increase your XP.
+How to play game:  
+There are 5 main action buttons once you start the game: (F) feed pet, (S) put the pet to sleep,  
+(V) take to vet, (G) give gift, (P) play with pet. You can use either the keys or the buttons on  
+screen to trigger actions By using these actions, you will help the pet stay alive and increase your XP.  
 
-Event button (T):
-The event button generates a new screen that challenges you to make decisions about an event. If you select the 
-right option from the list, you will be rewarded with a gift. If you select the wrong option, you will be 
+Event button (T):  
+The event button generates a new screen that challenges you to make decisions about an event. If you select the  
+right option from the list, you will be rewarded with a gift. If you select the wrong option, you will be  
 punished a certain number of XP or have one of you vital stats decreased.
 
-**Password**
+**Password**  
 Parental Controls: group57
 
 
