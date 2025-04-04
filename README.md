@@ -21,6 +21,13 @@ with food and gifts they can use for their pet.
     - Then you can Run the project  
 
 **Executable:**
+Prerequisites
+    - As outlined previously, you need JavaFX and org.json in order to run the application (not including tests). You will also need the group57.jar file that is provided in the main repository.
+Executing
+    - In order to run the jar file, you must enter this command in the command-line interface in the folder with the .jar file:
+    - java --module-path **<path-to-jaxafx-lib-folder-on-your-machine>** --add-modules javafx.controls,javafx.fxml,javafx.media  --add-opens javafx.base/com.sun.javafx=ALL-UNNAMED -jar group57.jar
+    - Note that for the module-path argument, you must place a string ("") with the path to the javafx lib folder on your machine.
+
 
 **User Guide:**
 Objective:  
