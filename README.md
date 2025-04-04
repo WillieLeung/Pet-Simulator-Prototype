@@ -5,28 +5,28 @@ various actions with an extra feature of having events that reward the user
 with food and gifts they can use for their pet.
 
 **Required Libraries:**
-    - Windows JavaFX SDK version 24 which can be found at https://gluonhq.com/products/javafx/
-    - JSON for Java which can be downloaded here: https://repo1.maven.org/maven2/org/json/json/20250107/
-    - JUnit (for testing) which can be imported as a library in Intellij by clicking file -> project structure
-      -> libraries -> the "+" sign -> from maven and then searching for 
-      "com.github.cschabl.cdi-unit-junit5:cdi-unit-junit5:0.4" (remove comments)
+    - Windows JavaFX SDK version 24 which can be found at https://gluonhq.com/products/javafx/  
+    - JSON for Java which can be downloaded here: https://repo1.maven.org/maven2/org/json/json/20250107/  
+    - JUnit (for testing) which can be imported as a library in Intellij by clicking file -> project structure  
+        -> libraries -> the "+" sign -> from maven and then searching for  
+        "com.github.cschabl.cdi-unit-junit5:cdi-unit-junit5:0.4" (remove comments)
     
 **How to build:**
-    - Download JavaFX (as explained above)
-    - In the top right click Run config -> modify options -> add VM options
-    - In VM options, add: "--module-path "<path/to/JavaFX/lib(include \lib)>" 
-        --add-modules javafx.controls,javafx.fxml,javafx.media  --add-opens javafx.base/com.sun.javafx=ALL-UNNAMED"
+    - Download JavaFX (as explained above)  
+    - In the top right click Run config -> modify options -> add VM options  
+    - In VM options, add: "--module-path "<path/to/JavaFX/lib(include \lib)>"  
+        --add-modules javafx.controls,javafx.fxml,javafx.media  --add-opens javafx.base/com.sun.javafx=ALL-UNNAMED"  
         (remove outer comments)
-    - In project structure, click libraries -> "+" and add the path to your JavaFX lib folder
-    - Then you can Run the project
+    - In project structure, click libraries -> "+" and add the path to your JavaFX lib folder  
+    - Then you can Run the project  
 
 **Executable:**
 
 **User Guide:**
-Objective:
-To take care of a pet and keep it happy, healthy, and alive for as long as possible. Throughout the game, you must 
-monitor your pet’s vital stats: health, sleep, fullness, and happiness. These stats decrease over time, and it's 
-your job to keep them up by feeding your pet, letting it sleep, playing with it, giving gifts, or taking it to 
+Objective:  
+To take care of a pet and keep it happy, healthy, and alive for as long as possible. Throughout the game, you must  
+monitor your pet’s vital stats: health, sleep, fullness, and happiness. These stats decrease over time, and it's  
+your job to keep them up by feeding your pet, letting it sleep, playing with it, giving gifts, or taking it to  
 the vet when needed.
 
 How to start game:
