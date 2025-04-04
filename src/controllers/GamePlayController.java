@@ -88,6 +88,7 @@ public class GamePlayController {
         double [] actionsModifier = setActionModifier(pet.getSprite());
         double [] depleteModifiers = setDepleteModifier(pet.getSprite());
 
+        disableButtons(false);
         //Check if there are parental limits
         ReadWriteFile file = new ReadWriteFile();
         Map<String, String> timeLimit = file.readFromStatsCSV("parent.csv");
@@ -234,10 +235,8 @@ public class GamePlayController {
         giftButton.setOnAction(e -> {
             if (giftInventory.getItems().isEmpty()){
                 showEmptyGiftInventoryWarningPopup();
-                giftButton.setDisable(true);
             }
             else{
-                giftButton.setDisable(false);
                 if (giftInventory.getValue() == null){showNoSelectedGiftWarningPopup();}
                 else{
                     playSound("gift");
@@ -638,8 +637,6 @@ public class GamePlayController {
                 resumeDeteriorateTimer();
                 statusImage.setVisible(false);
                 disableButtons(false);
-                if (foodInventory.getItems().isEmpty()){feedButton.setDisable(true);}
-                if (giftInventory.getItems().isEmpty()){giftButton.setDisable(true);}
                 break;
             case "Sleeping": //Display sleeping sprite
                 loadImage(petImage, "bed");
