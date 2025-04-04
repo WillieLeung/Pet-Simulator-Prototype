@@ -60,7 +60,17 @@
                      <Font name="System Bold" size="12.0" />
                   </font></Label>
                   <ProgressBar fx:id="happinessBar" progress="1" />
+                  <Label text="Food Inventory">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
                   <ComboBox fx:id="foodInventory" promptText="Food Inventory" />
+                  <Label text="Gift Inventory">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
                   <ComboBox fx:id="giftInventory" promptText="Gift Inventory" />
                   <Label fx:id="inventoryErrorLabel" prefHeight="45.0" prefWidth="107.0" textFill="RED" wrapText="true">
                      <font>
