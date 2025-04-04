@@ -91,7 +91,7 @@ public class GamePlayController {
         disableButtons(false);
         //Check if there are parental limits
         ReadWriteFile file = new ReadWriteFile();
-        Map<String, String> timeLimit = file.readFromStatsCSV("parent.csv");
+        Map<String, String> timeLimit = file.readFromStatsCSV("parent/parent.csv");
         String is_enabled = timeLimit.get("is_enabled");
 
         //If there are start loop that checks the time

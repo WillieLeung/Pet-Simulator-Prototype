@@ -19,7 +19,7 @@ public class ParentalControlsController {
     private final ReadWriteFile fileParser = new ReadWriteFile();
     private final String[] saveFileNames = populateGamesList();
     private final Map<String, Map<String, String>> saveFiles = new HashMap<>();
-    private final Map<String, String> parent = fileParser.readFromStatsCSV("parent.csv");
+    private final Map<String, String> parent = fileParser.readFromStatsCSV("parent/parent.csv");
 
     // Create JavaFX elements.
     @FXML
@@ -100,7 +100,7 @@ public class ParentalControlsController {
                     parent.put("end_time", "");
                     parent.put("is_enabled", "N");
                     // Update the file.
-                    fileParser.writeStatsCSV("parent.csv", parent);
+                    fileParser.writeStatsCSV("parent/parent.csv", parent);
                     // Notify the player.
                     successNotification.set("Play time limit has been removed.");
                     // Update the display.
@@ -138,7 +138,7 @@ public class ParentalControlsController {
                                 parent.put("end_time", endTime);
                                 parent.put("is_enabled", "Y");
                                 // Update the file.
-                                fileParser.writeStatsCSV("parent.csv", parent);
+                                fileParser.writeStatsCSV("parent/parent.csv", parent);
                                 // Notify the player.
                                 successNotification.set("Play time limit has been set.");
                                 // Update the display.
