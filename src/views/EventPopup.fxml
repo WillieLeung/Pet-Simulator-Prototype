@@ -2,6 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.*?>
+<!-- Built with Scenebuilder by Gluon https://gluonhq.com/products/scene-builder/ -->
 <VBox spacing="15" alignment="CENTER"
       xmlns="http://javafx.com/javafx/8"
       xmlns:fx="http://javafx.com/fxml"

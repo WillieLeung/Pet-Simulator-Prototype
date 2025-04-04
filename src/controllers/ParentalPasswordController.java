@@ -31,7 +31,7 @@ public class ParentalPasswordController {
     }
 
     /**
-     * Switchs screens
+     * Switches screens
      *
      * @param fxmlPath, path of screen to switch to
      */

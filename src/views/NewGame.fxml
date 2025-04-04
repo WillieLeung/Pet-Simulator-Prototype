@@ -9,6 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<!-- Built with Scenebuilder by Gluon https://gluonhq.com/products/scene-builder/ -->
 
 <VBox alignment="CENTER" minHeight="356.0" minWidth="536.0" prefHeight="600.0" prefWidth="800.0" spacing="10" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.NewGameController">
 

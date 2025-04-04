@@ -78,7 +78,7 @@ public class GamePlayController {
     //stores lists of active mediaplayers to prevent garbage collecter from stopping sounds before they're finished
     private final List<MediaPlayer> activePlayers = new ArrayList<>();
     //player to handle looping background music
-    private MediaPlayer backgroundMusicPlayer;
+    private static MediaPlayer backgroundMusicPlayer;
 
     public void initialize() {
         //start background music
@@ -202,7 +202,7 @@ public class GamePlayController {
         });
 
         //Button actions
-        saveExitBtn.setOnAction(e -> saveAndExit(pet));
+        saveExitBtn.setOnAction(e -> {saveAndExit(pet);stopBackgroundMusic();});
         sleepButton.setOnAction(e -> {
             loadImage(statusImage, "sleeping");
             playSound("sleep");
@@ -681,7 +681,9 @@ public class GamePlayController {
      * Function flips pet sprite
      */
     private void flipPetImage() {
+        //reverse blip bit
         flipped = !flipped;
+        //rescale (flip image) by -1 or 1 depending on the value of flip bool
         petImage.setScaleX(flipped ? -1 : 1);
     }
 
@@ -689,20 +691,19 @@ public class GamePlayController {
      * Function pauses pet flipping
      */
     private void pausePetFlipTimer() {
+        //if flip timer is not null, pause the timer
         if (petFlipTimer != null) {
             petFlipTimer.pause();
-            System.out.println("Pet flip timer paused.");
         }
     }
 
     /**
      * Function resumes pet flipping
      */
-    private void resumePetFlipTimer() {
-        if (petFlipTimer != null) {
-            petFlipTimer.play();
-            System.out.println("Pet flip timer resumed.");
-        }
+    private void resumePetFlipTimer()
+    {   //if flip timer is not null, start flip timer again and print message
+        if (petFlipTimer != null)
+            {petFlipTimer.play();}
     }
 
     /**
@@ -887,7 +888,7 @@ public class GamePlayController {
     /**
      * Function plays sound of the given file name
      */
-    public void playSound(String fileName) {
+    private void playSound(String fileName) {
         try {
             //store path to file
             URL soundURL = getClass().getResource("/resources/sounds/"+fileName+".mp3");
@@ -918,10 +919,13 @@ public class GamePlayController {
         }
     }
 
-    public void startBackgroundMusic(String fileName) {
+    /**
+     * Function plays background music on infinite loop
+     */
+    private void startBackgroundMusic(String fileName) {
         try {
-            URL musicURL = getClass().getResource("/resources/sounds/" + fileName + ".mp3");
-            if (musicURL == null) {
+            URL musicURL= getClass().getResource("/resources/sounds/" + fileName + ".mp3");
+            if (musicURL ==null) {
                 System.out.println("Background music file not found: " + fileName);
                 return;
             }
@@ -937,5 +941,15 @@ public class GamePlayController {
         }
     }
 
-
+    /**
+     * Function stops background music
+     */
+    private static void stopBackgroundMusic()
+    {
+        //Stop the music
+        backgroundMusicPlayer.stop();
+        backgroundMusicPlayer.dispose();
+    }
 }
+
+

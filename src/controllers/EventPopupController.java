@@ -29,7 +29,7 @@ public class EventPopupController {
 
         eventDescription.setText(events.getEventQuestion());
 
-        // Populate dropdown with event options
+        //Populate dropdown with event options
         actionCombo.getItems().addAll(events.getEventOptions());
 
         submitButton.setOnAction(e -> {
@@ -41,7 +41,7 @@ public class EventPopupController {
             }
             if (choice.equals(events.getEventAnswer())) {
                 int numReward = (int)(Math.random() * 3 + 1);
-                resultLabel.setText("✅ Correct! You earned " + Integer.toString(numReward) + " " + events.getEventItem() + "!");
+                resultLabel.setText("Correct! You earned " + Integer.toString(numReward) + " " + events.getEventItem() + "!");
                 resultLabel.setTextFill(Color.GREEN);
                 if(events.getEventType().equals("Food")){
                     pet.getInventory().addFoodItems(events.getEventItem(), numReward);
@@ -51,7 +51,7 @@ public class EventPopupController {
                 }
                 pet.setScore(pet.getScore() + events.getEventPlus());
             } else {
-                resultLabel.setText("❌ Incorrect! Your score has dropped " + events.getEventMinus() + "!");
+                resultLabel.setText("Incorrect! Your score has dropped " + events.getEventMinus() + "!");
                 resultLabel.setTextFill(Color.RED);
                 pet.setScore(pet.getScore() - events.getEventMinus());
             }
